@@ -1018,7 +1018,7 @@ namespace Subtitle
             text63 = "\"" + "That car of yours ruins my driveway." + "\"";
             if (text63b)
             {
-                GUI.Label(new Rect(0, (Screen.height) / 2.35f, Screen.width, Screen.height), text63 + "\n" +"你的车毁了（冲到？）我的车道", myStyle);
+                GUI.Label(new Rect(0, (Screen.height) / 2.35f, Screen.width, Screen.height), text63 + "\n" +"你的车挡住我的车库的车道了", myStyle);
             }
 
             text64 = "\"" + "Come back when you have the money." + "\"";
@@ -1036,7 +1036,7 @@ namespace Subtitle
             text66 = "\"" + "You can take my Ferndale if you need to get back home." + "\"";
             if (text66b)
             {
-                GUI.Label(new Rect(0, (Screen.height) / 2.35f, Screen.width, Screen.height), text66 + "\n" +"如果你需要回家的话，你可以顺便带我Ferndale", myStyle);
+                GUI.Label(new Rect(0, (Screen.height) / 2.35f, Screen.width, Screen.height), text66 + "\n" +"如果你需要回家的话，你可以开我Ferndale回去", myStyle);
             }
 
             text67 = "\"" + "It's Fleetari here! You moron, bring back my car or I make sure your shit bucket car does not see another day!" + "\"";
@@ -1060,7 +1060,7 @@ namespace Subtitle
             text70 = "\"" + "It is Fleetari here. Want to earn 10 bottles of booze? Dump some shit at the front of the Lindell inspection shop. That sucker deserves it." + "\"";
             if (text70b)
             {
-                GUI.Label(new Rect(0, (Screen.height) / 2.35f, Screen.width, Screen.height), text70 + "\n" +"这是Fleetari。想赚10瓶酒吗？把一些(抽出来的）屎扔到Lindell检验店的前面。这是他应得的。", myStyle);
+                GUI.Label(new Rect(0, (Screen.height) / 2.35f, Screen.width, Screen.height), text70 + "\n" +"这是Fleetari。想赚10瓶酒吗？把一些(抽出来的）屎排放到Lindell检验店的前面。这是他应得的。", myStyle);
             }
 
             text71 = "\"" + "Oh boy, I heard what you did! Here is a ten bottles of booze, you really deserve this!" + "\"";
