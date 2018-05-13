@@ -5055,8 +5055,8 @@ namespace Subtitle
             myStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
             myStyle.normal.textColor = Color.yellow;
 
-            GUI.Label(new Rect(0, 0, 1024, 1024), "中文字幕正确的设置方法" + "\n" + "按下(F1 - GRAPHICS - ENGLISH SUBTITLES)." + "\n" + "" + "\n" +
-                "按L键关闭当前界面" + "\n" + "" + "\n" + "作者：oneness629" + "\n" + "https://steamcommunity.com/id/oneness629/" + "\n" + "" + "\n" + "" + "\n" + "" + "\n" + "" + "翻译mod来源" + "\n" + "https://www.racedepartment.com/downloads/plugin-translated-subtitles.17118/" + "\n" + "" + "\n" + "本翻译全部百度翻译机翻", myStyle); //startup windows text: 1. For correct work standard subtitles should be enabled(F1 - GRAPHICS - ENGLISH SUBTITLES). 2. Press L button to close startup window. 3. Author of plugin and author of translate. 4. Links.
+            GUI.Label(new Rect(0, 0, 1024, 1024), "中文字幕正确的设置方法" + "\n" + "取消英文字幕(F1 - GRAPHICS - ENGLISH SUBTITLES)." + "\n" + "按L键关闭当前界面" + "\n" +
+                "" + "\n" + "" + "\n" + "作者：oneness629" + "\n" + "https://steamcommunity.com/id/oneness629/" + "\n" + "" + "\n" + "" + "\n" + "原字幕作者：Roman266" + "\n" + "" + "源MOD来源" + "\n" + "https://www.racedepartment.com/downloads/plugin-translated-subtitles.17118/" + "\n" + "" + "\n" + "本翻译全部百度翻译机翻", myStyle); //startup windows text: 1. For correct work standard subtitles should be enabled(F1 - GRAPHICS - ENGLISH SUBTITLES). 2. Press L button to close startup window. 3. Author of plugin and author of translate. 4. Links.
             GUI.DragWindow();
         }
 
