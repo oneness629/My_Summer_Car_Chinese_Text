@@ -135,6 +135,8 @@ namespace MSCTranslateChs
 
                                 // chineseFont.material.mainTexture.height = 2048;  
                                 // chineseFont.material.mainTexture.width  = 2048;  
+                                MeshRenderer meshRenderer = m_HUDDay.GetComponent<MeshRenderer>();
+                                meshRenderer.materials[0] = chineseFont.material;
 
                                 texture = chineseFont.material.mainTexture;
                                 Debug.Log(string.Format("Texture:{0},{1}", texture.width, texture.height));
