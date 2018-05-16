@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace MSCTranslateChs
@@ -60,6 +61,10 @@ namespace MSCTranslateChs
 
         public override bool UseAssetsFolder => true;
 
+        private Font chineseFont;
+
+        private TextAsset txt;
+
         public override void OnLoad()
         {
             m_isLoaded = false;
@@ -72,6 +77,17 @@ namespace MSCTranslateChs
             m_SubtitlesList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "subtitles.txt")).ToList();
             m_InteractionsList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "interactions.txt")).ToList();
             m_PartNameList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "partnames.txt")).ToList();
+            // chineseFont = Resources.Load<Font>("simhei.ttf");
+
+            // AssetBundle fontad = LoadAssets.LoadBundle(this, Path.Combine(ModLoader.GetModAssetsFolder(this), "font.unity3d"));
+            AssetBundle fontAssetBundle = LoadAssets.LoadBundle(this, "font.unity3d");
+            chineseFont = fontAssetBundle.LoadAsset("simhei.ttf") as Font;
+
+            // ab.Unload(false); //unload when you take all items you need.
+            
+
+           //  txt = Resources.Load<TextAsset>("text.txt");
+
         }
 
         public override void Update()
@@ -94,6 +110,37 @@ namespace MSCTranslateChs
                             m_PartNameShadow = GameObject.Find("GUI/Indicators/Partname/Shadow").GetComponent<TextMesh>();
                             m_HUDDay = GameObject.Find("GUI/HUD/Day/Data").GetComponent<TextMesh>();
                             m_player = GameObject.Find("PLAYER");
+
+
+                            // TextAsset txt = Resources.Load<TextAsset>("C:/Users/oneness629/AppData/LocalLow/Amistech/My Summer Car/Mods/Assets/MSCTranslateChs/text");
+                            /*
+                            if (txt == null)
+                            {
+                                ModConsole.Print("txt is null : ERRO: ");
+                            }
+                            */
+                            // string fontPath = Path.Combine(ModLoader.GetModAssetsFolder(this), "simhei.ttf");
+                            // ModConsole.Print("fontPath " + fontPath);
+                            // chineseFont = Resources.load<Font>(fontPath);
+                            // Resources.LoadAssetAtPath<Sprite>(assetPath);
+                            if (chineseFont == null)
+                            {
+                                ModConsole.Print("chineseFont is null : ERRO: ");
+                            }
+                            else
+                            {
+                                chineseFont.RequestCharactersInTexture("周一");
+                                Texture texture = chineseFont.material.mainTexture;
+                                Debug.Log(string.Format("Texture:{0},{1}", texture.width, texture.height));
+
+                                // chineseFont.material.mainTexture.height = 2048;  
+                                // chineseFont.material.mainTexture.width  = 2048;  
+
+                                texture = chineseFont.material.mainTexture;
+                                Debug.Log(string.Format("Texture:{0},{1}", texture.width, texture.height));
+                            }
+                            
+
                             m_isLoaded = true;
                         }
                     }
@@ -346,7 +393,7 @@ namespace MSCTranslateChs
                 {
                     return;
                 }
-                ModConsole.Print("|" + item.text.Trim() + "|");
+                // ModConsole.Print("|" + item.text.Trim() + "|");
                 item.text = TranslateString(item.text.Trim(), m_InteractionsList);
             }
             configTranslated = true;
@@ -357,7 +404,20 @@ namespace MSCTranslateChs
             if (m_HUDDay.text != "" && m_HUDDay.text != m_ActualDay)
             {
                 m_ActualDay = m_HUDDay.text;
-                m_HUDDay.text = TranslateString(m_ActualDay, m_InteractionsList);
+                
+
+                UTF8Encoding utf8 = new UTF8Encoding();
+                string chtext = utf8.GetString(utf8.GetBytes(TranslateString(m_ActualDay, m_InteractionsList)));
+                m_HUDDay.font = chineseFont;
+                m_HUDDay.fontSize = 70;
+                //m_HUDDay.text = (TranslateString(m_ActualDay, m_InteractionsList) + chtext);
+                m_HUDDay.text =  (chtext);
+                ModConsole.Print(chtext);
+                ModConsole.Print(m_HUDDay.font);
+                ModConsole.Print(m_HUDDay.fontSize);
+                // ModConsole.Print(m_HUDDay.fontStyle);
+                // ModConsole.Print(m_HUDDay.transform);
+                // ModConsole.Print(m_HUDDay.transform.localPosition);
             }
         }
 
