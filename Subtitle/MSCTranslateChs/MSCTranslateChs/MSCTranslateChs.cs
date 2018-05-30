@@ -54,65 +54,39 @@ namespace MSCTranslateChs
             {
                 if (IsLoadGameObject)
                 {
-
+                    ModConsole.Print(subtitlesTextMesh.text);
                 }
                 else
                 {
                     // load gameobject
-                    subtitlesTextMesh = GameObject.Find("GUI/Indicators/Subtitles").GetComponent<TextMesh>();
-
-                }
-            }
-        }
-
-
-        public void Test()
-        {
-            try
-            {
-                GameObject[] pAllObjects = (GameObject[])Resources.FindObjectsOfTypeAll(typeof(GameObject));
-
-                foreach (GameObject gameObject in pAllObjects)
-                {
-                    if (gameObject != null)
+                    try
                     {
-                        Transform parentTransform = gameObject.transform.parent;
-                        if (parentTransform == null)
-                        {
-                            ModConsole.Print("topObjectList.Add(parentObj.name); : " + gameObject.name);
-                        }
-                        else
-                        {
-                            GameObject parentObj = parentTransform.gameObject;
-                            if (parentObj == null)
-                            {
-                                ModConsole.Print("topObjectList game .Add(parentObj.name); : " + gameObject.name);
-                            }
-                        }
-                        
-                        ModConsole.Print("gameObject : " + gameObject.name + " activeSelf : " + gameObject.activeSelf);
-                        log += ("gameObject name : " + gameObject.name + " activeSelf : " + gameObject.activeSelf + "\n");
+                        subtitlesTextMesh = FindGameObjectTextMesh("GUI/Indicators/Subtitles");
+                        IsLoadGameObject = true;
+                    }
+                    catch(Exception e)
+                    {
+                        IsLoadGameObject = false;
+                        ModConsole.Print("加载GameObject过程出现异常: " + e.Message);
                     }
                 }
-                WriteToText();
             }
-            catch (Exception ex)
-            {
-                ModConsole.Print("error :" + ex);
-            }
-           
         }
 
-        public void WriteToText()
+        
+        public TextMesh FindGameObjectTextMesh(string path)
         {
-            
-            // File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "partnames.txt"), m_PartNameList.ToArray());
-
-            File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "topObjectList.txt"), topObjectList.ToArray());
-            File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(this), "log.txt"), log);
-            ModConsole.Print("writeToText");
-
-
+            GameObject gameObject = GameObject.Find(path);
+            if (gameObject != null)
+            {
+                TextMesh textMesh = gameObject.GetComponent<TextMesh>();
+                if (textMesh != null)
+                {
+                    return textMesh;
+                }
+            }
+            throw new Exception("无法找到GameObject对应的TextMesh 路径->" + path);
         }
+
     }
 }
