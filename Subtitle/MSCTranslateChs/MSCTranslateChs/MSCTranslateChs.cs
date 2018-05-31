@@ -29,13 +29,36 @@ namespace MSCTranslateChs
         public List<string> interactionsList;
         public List<string> partnamesList;
 
+        private string notTranslateString = "未翻译文本";
+
         private TextMesh subtitlesTextMesh;
+        private GUIStyle subtitlesGuiStyle;
+        private Rect subtitlesRect;
+
+        private TextMesh partnamesTextMesh;
+        private GUIStyle partnamesGuiStyle;
+        private Rect partnamesRect;
+
+
+
 
 
         public override void OnLoad()
         {
             IsLoadResources = false;
             IsLoadGameObject = false;
+
+            subtitlesGuiStyle = new GUIStyle();
+            subtitlesGuiStyle.alignment = TextAnchor.MiddleCenter;
+            subtitlesGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+            subtitlesGuiStyle.normal.textColor = new Color(255, 165, 0);
+
+            subtitlesRect = new Rect(0, (Screen.height) / 2.6f, Screen.width, Screen.height);
+
+            partnamesGuiStyle = subtitlesGuiStyle;
+
+            partnamesRect = new Rect(0, (Screen.height) / 2.7f, Screen.width, Screen.height);
+
             subtitlesList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "subtitles.txt")).ToList();
             interactionsList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "interactions.txt")).ToList();
             partnamesList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "partnames.txt")).ToList();
@@ -44,7 +67,20 @@ namespace MSCTranslateChs
 
         public override void OnGUI()
         {
-            
+
+            if (IsLoadResources && IsLoadGameObject && Application.loadedLevelName == "GAME")
+            {
+                string subtitlesText = subtitlesTextMesh.text.Trim();
+                if (subtitlesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(subtitlesText))
+                {
+                    GUI.Label(subtitlesRect, TranslateString(subtitlesText, subtitlesList), subtitlesGuiStyle);
+                }
+                string partnamesText = partnamesTextMesh.text.Trim();
+                if (partnamesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(partnamesText))
+                {
+                    GUI.Label(partnamesRect, TranslateString(partnamesText, partnamesList), partnamesGuiStyle);
+                }
+            }
         }
 
 
@@ -52,16 +88,13 @@ namespace MSCTranslateChs
         {
             if (IsLoadResources && Application.loadedLevelName == "GAME")
             {
-                if (IsLoadGameObject)
-                {
-                    ModConsole.Print(subtitlesTextMesh.text);
-                }
-                else
+                if (!IsLoadGameObject)
                 {
                     // load gameobject
                     try
                     {
                         subtitlesTextMesh = FindGameObjectTextMesh("GUI/Indicators/Subtitles");
+                        partnamesTextMesh = FindGameObjectTextMesh("GUI/Indicators/Partname");
                         IsLoadGameObject = true;
                     }
                     catch(Exception e)
@@ -73,8 +106,28 @@ namespace MSCTranslateChs
             }
         }
 
-        
-        public TextMesh FindGameObjectTextMesh(string path)
+        private string TranslateString(string text, List<string> textList)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+            string listText = textList.FirstOrDefault((string s) => s.ToUpper().Contains(text.Trim().ToUpper()));
+            if (string.IsNullOrEmpty(listText))
+            {
+                textList.Add(text + "=" + notTranslateString);
+                ModConsole.Print("文本在列表中未找到: " + text);
+                    
+            }
+            string resultString = listText.Split('=')[1];
+            resultString = resultString.Replace("\\n","\n");
+            return resultString;
+
+
+        }
+
+
+        private TextMesh FindGameObjectTextMesh(string path)
         {
             GameObject gameObject = GameObject.Find(path);
             if (gameObject != null)
