@@ -206,3 +206,5 @@ bucket lid=桶盖
 broken windshield=破挡风玻璃
 empty plastic can=空塑料罐
 mosquito spray=蚊虫喷雾剂
+front spoiler=前扰流板
+seat cover zebra=斑马纹座椅套
