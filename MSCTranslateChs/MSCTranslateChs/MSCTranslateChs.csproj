@@ -54,5 +54,11 @@
     <Compile Include="MSCTranslateChs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\MSCTranslateChs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetPath) "C:\Users\oneness629\AppData\LocalLow\Amistech\My Summer Car\Mods" /y</PostBuildEvent>
+  </PropertyGroup>
 </Project>
