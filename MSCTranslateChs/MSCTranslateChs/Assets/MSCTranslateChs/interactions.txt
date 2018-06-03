@@ -1,4 +1,4 @@
-﻿--------- DAYS ------------
+--------- DAYS ------------
 MONDAY=周一
 TUESDAY=周二
 WEDNESDAY=周三
