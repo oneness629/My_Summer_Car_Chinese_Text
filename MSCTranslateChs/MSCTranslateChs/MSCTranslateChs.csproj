@@ -40,11 +40,9 @@
   <ItemGroup>
     <Reference Include="MSCLoader">
       <HintPath>D:\Program Files (x86)\Steam\steamapps\common\My Summer Car\mysummercar_Data\Managed\MSCLoader.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="PlayMaker">
       <HintPath>D:\Program Files (x86)\Steam\steamapps\common\My Summer Car\mysummercar_Data\Managed\PlayMaker.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,11 +50,9 @@
     <Reference Include="System.Data" />
     <Reference Include="UnityEngine">
       <HintPath>D:\Program Files (x86)\Steam\steamapps\common\My Summer Car\mysummercar_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>D:\Program Files (x86)\Steam\steamapps\common\My Summer Car\mysummercar_Data\Managed\UnityEngine.UI.dll</HintPath>
-      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -64,9 +60,10 @@
     <Compile Include="TranslateApi.cs" />
     <Compile Include="Develop.cs" />
     <Compile Include="MSCTranslateChs.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\MSCTranslateChs\config.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
