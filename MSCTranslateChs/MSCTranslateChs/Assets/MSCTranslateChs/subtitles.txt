@@ -1,4 +1,4 @@
-﻿"WHAT THE HELL!?"="搞什么鬼!?"
+"WHAT THE HELL!?"="搞什么鬼!?"
 "GOD HELP ME."="神救救我."
 "YOU ARE TOO POOR FOR THESE PURCHASES."="你对这些购买太缺乏。"
 "NOT SURE WHAT HAPPENED, YOUR CAR PASSED."="不确定发生了什么，你的车通过了。"

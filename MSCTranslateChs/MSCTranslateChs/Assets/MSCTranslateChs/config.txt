@@ -1,0 +1,3 @@
+isEnableAutoTranslateApi=true
+autoTranslateApi_AppId=百度翻译API参数APP ID，请自行申请
+autoTranslateApi_Apikey=百度翻译API参数密钥，请自行申请
