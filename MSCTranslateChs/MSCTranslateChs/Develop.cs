@@ -5,13 +5,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 
 namespace MSCTranslateChs
 {
     public class Develop
     {
         Mod mod;
+
+        bool isDevelop = false;
        
         public Develop(Mod mod)
         {
@@ -20,27 +22,79 @@ namespace MSCTranslateChs
 
         public void Update()
         {
-            if ( Input.GetKey(KeyCode.LeftAlt) &&
-                 Input.GetKey(KeyCode.RightAlt) &&
-                 Input.GetKey(KeyCode.W)
+            if (Input.GetKey(KeyCode.LeftAlt) &&
+                 Input.GetKey(KeyCode.T)
                 )
             {
-                // writeAllFsmVariablesGlobalVariablesNames();
-
-                // writeAllGameObject();
-
-                // writeGameObject("GUI/Indicators/Subtitles");
-
-                // writeGameObject("GUI");
-
-                ModConsole.Print("写入测试文件完成");
+                isDevelop = true;
+                ModConsole.Print("启用开发模式");
             }
+            if (Input.GetKey(KeyCode.RightAlt) &&
+                 Input.GetKey(KeyCode.T)
+                )
+            {
+                isDevelop = false;
+                ModConsole.Print("禁用开发模式");
+            }
+
+            if (isDevelop)
+            {
+                if (Input.GetKey(KeyCode.LeftAlt) &&
+                 Input.GetKey(KeyCode.RightAlt) &&
+                 Input.GetKey(KeyCode.W)
+                 )
+                {
+                    // writeAllFsmVariablesGlobalVariablesNames();
+
+                    // writeAllGameObject();
+
+                    // writeGameObject("GUI/Indicators/Subtitles");
+
+                    // writeGameObject("GUI");
+
+                    ModConsole.Print("写入测试文件完成");
+                }
+
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 
+                RaycastHit[] raycastHits =Physics.RaycastAll(ray);
+                if (raycastHits != null && raycastHits.Length > 0)
+                {
+                    GUIStyle guiStyle = new GUIStyle();
+                    guiStyle.alignment = TextAnchor.LowerLeft;
+                    guiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+                    guiStyle.normal.textColor = new Color(255, 255, 255);
+
+                    string text = "GameObject检测->鼠标位置("+ Input.mousePosition + ")对应的Object : \n";
+                    foreach (RaycastHit hitInfo in raycastHits)
+                    {
+                        GameObject gameObject = hitInfo.collider.gameObject;
+                        text += "name : " + gameObject.name + " activeSelf : " + gameObject.activeSelf + "\n";
+                        text += "\t Components:" + GetComponentsNameText(gameObject);
+                        if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.F))
+                        {
+                            writeGameObject(gameObject);
+                        }
+                    }
+                    GUI.Label(new Rect(Input.mousePosition.x, (-Input.mousePosition.y), Screen.width, Screen.height), text, guiStyle);
+                }
+
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+
+                }
+            }
         }
 
         private void writeGameObject(string path)
         {
             GameObject gameObject = GameObject.Find(path);
+            string text = getGameObjectText(gameObject, 0);
+            File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(mod), "singleGameObject.txt"), text);
+        }
+
+        private void writeGameObject(GameObject gameObject)
+        {
             string text = getGameObjectText(gameObject, 0);
             File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(mod), "singleGameObject.txt"), text);
         }
@@ -98,6 +152,20 @@ namespace MSCTranslateChs
                     {
                         text += (getGameObjectText(gameObject.transform.GetChild(i).gameObject, level + 1));
                     }
+                }
+            }
+            return text;
+        }
+
+        private string GetComponentsNameText(GameObject gameObject)
+        {
+            string text = "\n";
+            if (gameObject != null)
+            {
+                Component[] Components = gameObject.GetComponents<Component>();
+                foreach (Component component in Components)
+                {
+                    text += ("\t" + "component.GetType().FullName : \t" + component.GetType().FullName + "\n");
                 }
             }
             return text;
