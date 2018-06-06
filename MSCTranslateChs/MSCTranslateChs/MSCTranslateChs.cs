@@ -21,7 +21,7 @@ namespace MSCTranslateChs
 
         public override string Author => "oneness629";
 
-        public override string Version => "2.1";
+        public override string Version => "2.2";
 
         public override bool UseAssetsFolder => true;
 
@@ -207,6 +207,7 @@ namespace MSCTranslateChs
             catch (Exception e)
             {
                 ModConsole.Print("GUI异常: " + e.Message);
+                ModConsole.Print(e);
             }
 
         }

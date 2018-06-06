@@ -11,19 +11,18 @@ namespace MSCTranslateChs.Script.Common
     {
         public static Dictionary<string, Color> highlightRendererColorBak = new Dictionary<string, Color>();
 
+        public static void addBoxCollider(GameObject gameObject)
+        {
+            if (gameObject != null && gameObject.GetComponent<BoxCollider>() == null)
+            {
+                gameObject.AddComponent<BoxCollider>();
+            }
+        }
 
         public static void HighligListConver(List<GameObject> targetList, List<GameObject> oldList)
         {
+            RemoveHighlightList(oldList);
             HighlightList(targetList);
-            List<GameObject> removeList = new List<GameObject>();
-            foreach (GameObject gameObject in oldList)
-            {
-                if (!targetList.Contains(gameObject))
-                {
-                    removeList.Add(gameObject);
-                }
-            }
-            RemoveHighlightList(removeList);
         }
 
 
@@ -67,15 +66,19 @@ namespace MSCTranslateChs.Script.Common
             if (gameObject != null)
             {
                 string fullName = getGameObjectPath(gameObject);
-                Renderer renderer = gameObject.GetComponent<Renderer>();
-                if (renderer != null)
+                if (fullName != null)
                 {
-                    if (highlightRendererColorBak.ContainsKey(fullName))
+                    Renderer renderer = gameObject.GetComponent<Renderer>();
+                    if (renderer != null)
                     {
-                        renderer.material.color = highlightRendererColorBak[fullName];
-                        highlightRendererColorBak.Remove(fullName);
+                        if (highlightRendererColorBak.ContainsKey(fullName))
+                        {
+                            renderer.material.color = highlightRendererColorBak[fullName];
+                            highlightRendererColorBak.Remove(fullName);
+                        }
                     }
                 }
+                
             }
         }
 
@@ -84,13 +87,20 @@ namespace MSCTranslateChs.Script.Common
             if (gameObject != null)
             {
                 string path = gameObject.name;
-                if (gameObject.transform.parent != null && gameObject.transform.parent.gameObject != null)
+                if (gameObject.transform != null && gameObject.transform.parent != null && gameObject.transform.parent.gameObject != null)
                 {
                     GameObject parentGameObject = gameObject.transform.parent.gameObject;
                     while (parentGameObject != null)
                     {
                         path = parentGameObject.name + "/" + path;
-                        parentGameObject = parentGameObject.transform.parent.gameObject;
+                        if (parentGameObject.transform != null && parentGameObject.transform.parent != null && parentGameObject.transform.parent.gameObject != null)
+                        {
+                            parentGameObject = parentGameObject.transform.parent.gameObject;
+                        }
+                        else
+                        {
+                            parentGameObject = null;
+                        }
                     }
                 }
                 return path;
@@ -109,7 +119,7 @@ namespace MSCTranslateChs.Script.Common
             GameObject gameObject = GameObject.Find(path);
             if (gameObject != null)
             {
-                return getGameObjectText(gameObject, 0);
+                return getGameObjectText(gameObject, 0, isGetOtherTypeMembers, isGetComponentsText, isGetComponentTypeFields, isGetComponentTypeMembers, isGetComponentTypeMethods);
             }
             return null;
         }
@@ -127,26 +137,30 @@ namespace MSCTranslateChs.Script.Common
             {
                 string text = "";
                 string tabText = getLevelText(level);
-                text += (tabText + "gameObject.name : " + gameObject.name + "\n");
-                text += (tabText + "gameObject.path : " + getGameObjectPath(gameObject) + "\n");
-                if (isGetOtherTypeMembers)
+                text += (tabText + "gameObject name : " + gameObject.name + "\n");
+                text += (tabText + "           path : " + getGameObjectPath(gameObject) + "\n");
+                if (isGetOtherTypeMembers == true)
                 {
-                    tabText += "\t gameObject.tag : " + gameObject.tag + "\n";
-                    tabText += "\t gameObject.hideFlags : " + gameObject.hideFlags + "\n";
-                    tabText += "\t gameObject.isStatic : " + gameObject.isStatic + "\n";
-                    tabText += "\t gameObject.layer : " + gameObject.layer + "\n";
+                    text += tabText +"\t            tag : " + gameObject.tag + "\n";
+                    text += tabText + "\t            hideFlags : " + gameObject.hideFlags + "\n";
+                    text += tabText + "\t            isStatic : " + gameObject.isStatic + "\n";
+                    text += tabText + "\t            layer : " + gameObject.layer + "\n";
                 }
-                if (isGetComponentsText)
+                if (isGetComponentsText == true)
                 {
-                    tabText += "\t GetComponentsText : " + GetComponentsText(gameObject, tabText + "\t") + "\n";
+                    text += tabText + ("\t            ComponentsText : " + 
+                        GetComponentsText(gameObject, tabText + "\t", 
+                        isGetComponentTypeFields, isGetComponentTypeMembers, isGetComponentTypeMethods) + "\n");
                 }
                 if (gameObject.transform != null && gameObject.transform.childCount > 0)
                 {
                     for (int i = 0; i < gameObject.transform.childCount; i++)
                     {
-                        text += (getGameObjectText(gameObject.transform.GetChild(i).gameObject, level + 1));
+                        text += (getGameObjectText(gameObject.transform.GetChild(i).gameObject, level + 1, 
+                            isGetOtherTypeMembers, isGetComponentsText, isGetComponentTypeFields, isGetComponentTypeMembers, isGetComponentTypeMethods));
                     }
                 }
+                return text;
             }
             return null;
         }
@@ -168,44 +182,31 @@ namespace MSCTranslateChs.Script.Common
 
         
 
-        private static string GetComponentsNameText(GameObject gameObject)
-        {
-            string text = "\n";
-            if (gameObject != null)
-            {
-                Component[] Components = gameObject.GetComponents<Component>();
-                foreach (Component component in Components)
-                {
-                    text += ("\t" + "component.GetType().FullName : \t" + component.GetType().FullName + "\n");
-                }
-            }
-            return text;
-        }
-
         private static string GetComponentsText(GameObject gameObject, string levelText,
             bool isGetComponentTypeFields = false,
             bool isGetComponentTypeMembers = false,
             bool isGetComponentTypeMethods = false
             )
         {
-            string text = "\n";
+            string text = "";
             if (gameObject != null)
             {
                 Component[] Components = gameObject.GetComponents<Component>();
+                text += levelText + "\t\t Component size -> " + Components.Count() + "\n";
                 foreach (Component component in Components)
                 {
-                    text += levelText + "\t" + "component.GetType().FullName : \t" + component.GetType().FullName + "\n";
-                    if (isGetComponentTypeFields)
+                    text += levelText + "\t\t" + "component.GetType().FullName : \t" + component.GetType().FullName + "\n";
+                    if (isGetComponentTypeFields == true)
                     {
-                        levelText += "\t" + "component.GetType().GetFields : \t" + getFieldsString(component.GetType().GetFields(), levelText, component) + "\n";
+                        text += levelText + "\t\t" + "component.GetType().GetFields : \t" + getFieldsString(component.GetType().GetFields(), levelText, component) + "\n";
                     }
-                    if (isGetComponentTypeMembers)
+                    if (isGetComponentTypeMembers == true)
                     {
-                        levelText += "\t" + "component.GetType().GetMembers : \t" + getGetMembersString(component.GetType().GetMembers(), levelText, component) + "\n";
+                        text += levelText + "\t\t" + "component.GetType().GetMembers : \t" + getGetMembersString(component.GetType().GetMembers(), levelText, component) + "\n";
                     }
-                    if (isGetComponentTypeMethods)
+                    if (isGetComponentTypeMethods == true)
                     {
-                        levelText += "\t" + "component.GetType().GetMethods : \t" + getGetMethodsString(component.GetType().GetMethods(), levelText, component) + "\n";
+                        text += levelText + "\t\t" + "component.GetType().GetMethods : \t" + getGetMethodsString(component.GetType().GetMethods(), levelText, component) + "\n";
                     }
                     text += "\n";
                 }
