@@ -11,12 +11,60 @@ namespace MSCTranslateChs.Script.Common
     {
         public static Dictionary<string, Color> highlightRendererColorBak = new Dictionary<string, Color>();
 
+        public static void addBoxColliderByChild(GameObject gameObject, string childText)
+        {
+            if (gameObject != null && gameObject.transform != null && gameObject.transform.childCount > 0)
+            {
+                for (int i = 0 ; i < gameObject.transform.childCount; i++ )
+                {
+                    GameObject childGameObject = gameObject.transform.GetChild(i).gameObject;
+                    if (childGameObject != null)
+                    {
+                        if (childText != null && childText != "")
+                        {
+                            if (childGameObject.name.ToUpper().Contains(childText.ToUpper()))
+                            {
+                                MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
+                                MSCLoader.ModConsole.Print(childGameObject.transform.position + " position");
+                                MSCLoader.ModConsole.Print(childGameObject.transform.rotation + " rotation");
+                                MSCLoader.ModConsole.Print(childGameObject.transform.localScale + " localScale");
+
+                                addBoxCollider(childGameObject);
+                                // Highlight(childGameObject);
+                            }
+                        }
+                        else
+                        {
+                            MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
+                            addBoxCollider(childGameObject);
+                            // Highlight(childGameObject);
+                        }
+                        
+                        addBoxColliderByChild(childGameObject, childText);
+                    }
+                }
+            }
+        }
+
         public static void addBoxCollider(GameObject gameObject)
         {
             if (gameObject != null && gameObject.GetComponent<BoxCollider>() == null)
             {
                 gameObject.AddComponent<BoxCollider>();
+                
+                
+                // BoxCollider boxCollider = gameObject.GetComponent<BoxCollider>();
+                // boxCollider.center = Vector3.zero;
+                // boxCollider.size = Vector3.one;
+                // MSCLoader.ModConsole.Print(boxCollider.center + " boxCollider.center");
+                // MSCLoader.ModConsole.Print(boxCollider.size + " boxCollider.size");
             }
+            if (gameObject != null && gameObject.GetComponent<MeshFilter>() == null)
+            { 
+                gameObject.AddComponent<MeshFilter>();
+            }
+
+                
         }
 
         public static void HighligListConver(List<GameObject> targetList, List<GameObject> oldList)
@@ -145,6 +193,9 @@ namespace MSCTranslateChs.Script.Common
                     text += tabText + "\t            hideFlags : " + gameObject.hideFlags + "\n";
                     text += tabText + "\t            isStatic : " + gameObject.isStatic + "\n";
                     text += tabText + "\t            layer : " + gameObject.layer + "\n";
+                    text += tabText + "\t            position : " + gameObject.transform.position + "\n";
+                    text += tabText + "\t            rotation : " + gameObject.transform.rotation + "\n";
+                    text += tabText + "\t            localScale : " + gameObject.transform.localScale + "\n";
                 }
                 if (isGetComponentsText == true)
                 {

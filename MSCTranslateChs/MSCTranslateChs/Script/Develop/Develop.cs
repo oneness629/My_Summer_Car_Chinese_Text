@@ -24,8 +24,6 @@ namespace MSCTranslateChs.Script.Develop
 
         public bool isRayGameObject = false;
 
-        public bool isRayUIGameObject = false;
-
         public Develop(MSCTranslateChs mscTranslateChs)
         {
             guiStyle = new GUIStyle();
@@ -53,25 +51,30 @@ namespace MSCTranslateChs.Script.Develop
             {
                 developConfigWindows.Update();
             }
-            if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.W))
-            {
-                WriteGameObject("Systems");
-                ModConsole.Print("write systems object ");
-            }
-
+            
             if (isDevelop)
             {
-                GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "MSCTranslateChs开发模式 ", guiStyle);
+                GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "MSCTranslateChs开发模式", guiStyle);
 
                 if (isRayGameObject)
                 {
                     RayGameObject();
                 }
-                if (isRayUIGameObject)
+
+                if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.W))
                 {
-                    // 没用，游戏应该没用到UGUI组件
-                    RayUIGameObject();
+                    WriteGameObject("Systems");
+                    ModConsole.Print("write systems object ");
                 }
+            }
+        }
+
+        public void initUIRay()
+        {
+            GameObject systemsGameObject = GameObject.Find("Systems");
+            if (systemsGameObject != null)
+            {
+                GameObjectUtil.addBoxColliderByChild(systemsGameObject, "");
             }
         }
 
@@ -92,49 +95,20 @@ namespace MSCTranslateChs.Script.Develop
                         WriteGameObject(gameObject);
                     }
                 }
-                
                 GUI.Label(new Rect(Input.mousePosition.x, (-Input.mousePosition.y), Screen.width, Screen.height), text, guiStyle);
             }
         }
-
-
-        private void RayUIGameObject()
-        {
-            if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
-            {
-                string text = "UI GameObject检测->鼠标位置(" + Input.mousePosition + ") 触摸到UI组件 : \n";
-
-                GUI.Label(new Rect(Input.mousePosition.x, (-Input.mousePosition.y), Screen.width, Screen.height), text, guiStyle);
-
-                text = "UI GameObject检测->鼠标位置(" + Input.mousePosition + ")对应的Object : \n";
-
-                PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-                eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-                List<RaycastResult> results = new List<RaycastResult>();
-                EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-
-                if (results != null && results.Count > 0)
-                {
-                    foreach (RaycastResult raycastResult in results)
-                    {
-                        text += "\t name : " + raycastResult.gameObject.name + "\n";
-                    }
-                }
-                GUI.Label(new Rect(Input.mousePosition.x, (-Input.mousePosition.y), Screen.width, Screen.height), text, guiStyle);
-            }
-        }
-
 
 
         private void WriteGameObject(string path)
         {
-            string text = GameObjectUtil.getGameObjectText(path, 0, false, true, false, false, false);
+            string text = GameObjectUtil.getGameObjectText(path, 0, true, true, false, false, false);
             File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(mscTranslateChs), "singleGameObject.txt"), text);
         }
 
         private void WriteGameObject(GameObject gameObject)
         {
-            string text = GameObjectUtil.getGameObjectText(gameObject,0,false,true);
+            string text = GameObjectUtil.getGameObjectText(gameObject,0, true, true);
             File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(mscTranslateChs), "singleGameObject.txt"), text);
         }
 

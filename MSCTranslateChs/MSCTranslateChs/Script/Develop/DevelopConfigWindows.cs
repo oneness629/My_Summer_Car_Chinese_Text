@@ -32,9 +32,11 @@ namespace MSCTranslateChs.Script.Develop
 
             //定义一个toggle控制窗体的显示和隐藏
             develop.isRayGameObject = GUILayout.Toggle(develop.isRayGameObject, "是否显示鼠标指向的GameObject信息");
-            develop.isRayGameObjectHighlig = GUILayout.Toggle(develop.isRayGameObjectHighlig, "指向的GameObject高亮[显示鼠标指向要勾选]");
-            develop.isRayUIGameObject = GUILayout.Toggle(develop.isRayUIGameObject, "是否显示鼠标指向的UI GameObject信息[游戏不用UGUI,无用处]");
-            
+
+            if (GUILayout.Button("初始化UI"))
+            {
+                develop.initUIRay();
+            }
 
             if (GUILayout.Button("关闭")){
                 develop.isShowDevelopConfigWindows = false;
