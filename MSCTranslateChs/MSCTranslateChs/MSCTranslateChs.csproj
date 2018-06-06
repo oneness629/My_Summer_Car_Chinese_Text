@@ -56,8 +56,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Script\Common\FsmVariablesTextUtil.cs" />
-    <Compile Include="Script\Common\GameObjectTextUtil.cs" />
+    <Compile Include="Script\Common\FsmVariablesUtil.cs" />
+    <Compile Include="Script\Common\GameObjectUtil.cs" />
     <Compile Include="Script\Common\JSON.cs" />
     <Compile Include="Script\Translate\TranslateApi.cs" />
     <Compile Include="Script\Develop\Develop.cs" />

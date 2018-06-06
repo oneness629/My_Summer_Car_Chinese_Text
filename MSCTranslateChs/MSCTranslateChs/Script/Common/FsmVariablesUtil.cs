@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MSCTranslateChs.Script.Common
 {
-    class FsmVariablesTextUtil
+    class FsmVariablesUtil
     {
         private static string getAllFsmVariablesGlobalVariablesNames()
         {

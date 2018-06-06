@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace MSCTranslateChs.Script.Common
 {
-    class GameObjectTextUtil
+    class GameObjectUtil
     {
         public static string getGameObjectText(string path,
             int level = 0,

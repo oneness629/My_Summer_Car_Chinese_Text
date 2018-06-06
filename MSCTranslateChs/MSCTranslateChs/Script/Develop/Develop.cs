@@ -74,7 +74,7 @@ namespace MSCTranslateChs.Script.Develop
                         foreach (RaycastHit hitInfo in raycastHits)
                         {
                             GameObject gameObject = hitInfo.collider.gameObject;
-                            text += GameObjectTextUtil.getGameObjectText(gameObject);
+                            text += GameObjectUtil.getGameObjectText(gameObject);
                             if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.F))
                             {
                                 writeGameObject(gameObject);
@@ -118,13 +118,13 @@ namespace MSCTranslateChs.Script.Develop
 
         private void writeGameObject(string path)
         {
-            string text = GameObjectTextUtil.getGameObjectText(path, 0, false, true);
+            string text = GameObjectUtil.getGameObjectText(path, 0, false, true);
             File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(mscTranslateChs), "singleGameObject.txt"), text);
         }
 
         private void writeGameObject(GameObject gameObject)
         {
-            string text = GameObjectTextUtil.getGameObjectText(gameObject,0,false,true);
+            string text = GameObjectUtil.getGameObjectText(gameObject,0,false,true);
             File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(mscTranslateChs), "singleGameObject.txt"), text);
         }
 
