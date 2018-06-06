@@ -9,6 +9,95 @@ namespace MSCTranslateChs.Script.Common
 {
     class GameObjectUtil
     {
+        public static Dictionary<string, Color> highlightRendererColorBak = new Dictionary<string, Color>();
+
+
+        public static void HighligListConver(List<GameObject> targetList, List<GameObject> oldList)
+        {
+            HighlightList(targetList);
+            List<GameObject> removeList = new List<GameObject>();
+            foreach (GameObject gameObject in oldList)
+            {
+                if (!targetList.Contains(gameObject))
+                {
+                    removeList.Add(gameObject);
+                }
+            }
+            RemoveHighlightList(removeList);
+        }
+
+
+        public static void RemoveHighlightList(List<GameObject> gameObjects)
+        {
+            foreach (GameObject gameObject in gameObjects)
+            {
+                RemoveHighlight(gameObject);
+            }
+        }
+
+        public static void HighlightList(List<GameObject> gameObjects)
+        {
+            foreach (GameObject gameObject in gameObjects)
+            {
+                Highlight(gameObject);
+            }
+        }
+
+        public static void Highlight(GameObject gameObject)
+        {
+            Highlight(gameObject, Color.red);
+        }
+
+        public static void Highlight(GameObject gameObject, Color highlightColor)
+        {
+            if (gameObject != null)
+            {
+                string fullName = getGameObjectPath(gameObject);
+                Renderer renderer = gameObject.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    highlightRendererColorBak.Add(fullName, renderer.material.color);
+                    renderer.material.color = highlightColor;
+                }
+            }
+        }
+
+        public static void RemoveHighlight(GameObject gameObject)
+        {
+            if (gameObject != null)
+            {
+                string fullName = getGameObjectPath(gameObject);
+                Renderer renderer = gameObject.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    if (highlightRendererColorBak.ContainsKey(fullName))
+                    {
+                        renderer.material.color = highlightRendererColorBak[fullName];
+                        highlightRendererColorBak.Remove(fullName);
+                    }
+                }
+            }
+        }
+
+        public static string getGameObjectPath(GameObject gameObject)
+        {
+            if (gameObject != null)
+            {
+                string path = gameObject.name;
+                if (gameObject.transform.parent != null && gameObject.transform.parent.gameObject != null)
+                {
+                    GameObject parentGameObject = gameObject.transform.parent.gameObject;
+                    while (parentGameObject != null)
+                    {
+                        path = parentGameObject.name + "/" + path;
+                        parentGameObject = parentGameObject.transform.parent.gameObject;
+                    }
+                }
+                return path;
+            }
+            return null;
+        }
+
         public static string getGameObjectText(string path,
             int level = 0,
             bool isGetOtherTypeMembers = false,
@@ -39,6 +128,7 @@ namespace MSCTranslateChs.Script.Common
                 string text = "";
                 string tabText = getLevelText(level);
                 text += (tabText + "gameObject.name : " + gameObject.name + "\n");
+                text += (tabText + "gameObject.path : " + getGameObjectPath(gameObject) + "\n");
                 if (isGetOtherTypeMembers)
                 {
                     tabText += "\t gameObject.tag : " + gameObject.tag + "\n";
