@@ -1,4 +1,5 @@
 ﻿using MSCLoader;
+using MSCTranslateChs.Script.Common.Procurios.Public;
 using System;
 using System.Collections;
 using System.Net;
@@ -6,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 
-namespace MSCTranslateChs
+namespace MSCTranslateChs.Script.Translate
 {
     public class TranslateApi
     {
@@ -74,7 +75,7 @@ namespace MSCTranslateChs
             Byte[] jsonResultEncodedBytes = utf8.GetBytes(jsonResult);
             jsonResult = utf8.GetString(jsonResultEncodedBytes);
 
-            Hashtable resultTable = Procurios.Public.JSON.JsonDecode(jsonResult) as Hashtable;
+            Hashtable resultTable = JSON.JsonDecode(jsonResult) as Hashtable;
             return resultTable;
         }
 

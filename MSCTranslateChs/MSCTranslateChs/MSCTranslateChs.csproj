@@ -56,10 +56,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JSON.cs" />
-    <Compile Include="TranslateApi.cs" />
-    <Compile Include="Develop.cs" />
+    <Compile Include="Script\Common\FsmVariablesTextUtil.cs" />
+    <Compile Include="Script\Common\GameObjectTextUtil.cs" />
+    <Compile Include="Script\Common\JSON.cs" />
+    <Compile Include="Script\Translate\TranslateApi.cs" />
+    <Compile Include="Script\Develop\Develop.cs" />
     <Compile Include="MSCTranslateChs.cs" />
+    <Compile Include="Script\Develop\DevelopConfigWindows.cs" />
+    <Compile Include="Script\WelcomeWindows.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

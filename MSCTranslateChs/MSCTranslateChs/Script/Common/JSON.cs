@@ -3,7 +3,7 @@ using System.Collections;
 using System.Globalization;
 using System.Text;
 
-namespace Procurios.Public
+namespace MSCTranslateChs.Script.Common.Procurios.Public
 {
 	/// <summary>
 	/// This class encodes and decodes JSON strings.

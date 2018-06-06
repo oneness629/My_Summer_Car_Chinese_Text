@@ -1,4 +1,7 @@
 using MSCLoader;
+using MSCTranslateChs.Script;
+using MSCTranslateChs.Script.Develop;
+using MSCTranslateChs.Script.Translate;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,6 +53,9 @@ namespace MSCTranslateChs
         private Rect interactionsRect;
 
         private Develop develop;
+        private WelcomeWindows welcomeWindows;
+
+        public bool isShowWelcomeWindows = true;
 
         private bool isEnableAutoTranslateApi = false;
         private string autoTranslateApiAppId;
@@ -64,6 +70,7 @@ namespace MSCTranslateChs
             IsLoadGameObject = false;
 
             develop = new Develop(this);
+            welcomeWindows = new WelcomeWindows(this);
 
             subtitlesGuiStyle = new GUIStyle();
             subtitlesGuiStyle.alignment = TextAnchor.MiddleCenter;
@@ -183,7 +190,13 @@ namespace MSCTranslateChs
 
 
                     CheckAndWriteTranslateText();
+
                     develop.Update();
+
+                    if (isShowWelcomeWindows)
+                    {
+                        welcomeWindows.Update();
+                    }
 
                     if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.R))
                     {
