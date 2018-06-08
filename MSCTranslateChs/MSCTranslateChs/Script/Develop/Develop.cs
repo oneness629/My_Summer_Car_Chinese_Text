@@ -80,9 +80,38 @@ namespace MSCTranslateChs.Script.Develop
 
         private void RayGameObject()
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            string textCamera = "";
+            foreach (Camera c in Camera.allCameras)
+            {
 
-            RaycastHit[] raycastHits = Physics.RaycastAll(ray);
+                textCamera += GameObjectUtil.getGameObjectPath(c.gameObject) + "\n";
+                textCamera += "\t farClipPlane :  " + c.farClipPlane + "\n";
+                textCamera += "\t nearClipPlane :  " + c.nearClipPlane + "\n";
+                textCamera += "\t orthographic :  " + c.orthographic + "\n";
+                textCamera += "\t pixelRect :  " + c.pixelRect + "\n";
+                /*
+                if (c.nearClipPlane < 100)
+                {
+                    c.nearClipPlane = 100;
+                }
+                */
+                
+            }
+            textCamera += "current : " + Camera.current.name + "\n";
+            textCamera += "main : " + Camera.main.name + "\n" + "\n";
+
+            GUI.Label(new Rect(0, 0, Screen.width, Screen.height),textCamera, guiStyle);
+            Camera camera = GameObject.Find("Systems/OptionsMenu/CAM").GetComponent<Camera>();
+            // Camera camera = GameObject.Find("PLAYER/Pivot/Camera/FPSCamera/FPSCamera").GetComponent<Camera>();
+            if (camera == null)
+            {
+                return;
+            }
+            // Ray ray = Camera.current.ScreenPointToRay(Input.mousePosition);
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            
+
+            RaycastHit[] raycastHits = Physics.RaycastAll(ray, Mathf.Infinity, 1 << 14);
             if (raycastHits != null && raycastHits.Length > 0)
             {
                 string text = "GameObject检测->鼠标位置(" + Input.mousePosition + ")对应的Object（"+ raycastHits.Length+ "） : \n";

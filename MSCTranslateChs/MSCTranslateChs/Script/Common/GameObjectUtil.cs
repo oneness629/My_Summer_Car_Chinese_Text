@@ -20,6 +20,7 @@ namespace MSCTranslateChs.Script.Common
                     GameObject childGameObject = gameObject.transform.GetChild(i).gameObject;
                     if (childGameObject != null)
                     {
+                        /*
                         if (childText != null && childText != "")
                         {
                             if (childGameObject.name.ToUpper().Contains(childText.ToUpper()))
@@ -33,13 +34,23 @@ namespace MSCTranslateChs.Script.Common
                                 // Highlight(childGameObject);
                             }
                         }
+                        else 
+                        */
+                        if (childGameObject.GetComponent<TextMesh>() != null)
+                        {
+                            
+                            MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
+                            addBoxCollider(childGameObject);
+                            // Highlight(childGameObject);
+                        }
+                        /*
                         else
                         {
                             MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
                             addBoxCollider(childGameObject);
                             // Highlight(childGameObject);
                         }
-                        
+                        */
                         addBoxColliderByChild(childGameObject, childText);
                     }
                 }
@@ -48,8 +59,13 @@ namespace MSCTranslateChs.Script.Common
 
         public static void addBoxCollider(GameObject gameObject)
         {
-            if (gameObject != null && gameObject.GetComponent<BoxCollider>() == null)
+            if (gameObject != null)
             {
+                
+                if (gameObject.GetComponent<BoxCollider>() != null)
+                {
+                    GameObject.Destroy(gameObject.GetComponent<BoxCollider>());
+                }
                 gameObject.AddComponent<BoxCollider>();
                 
                 
@@ -59,11 +75,12 @@ namespace MSCTranslateChs.Script.Common
                 // MSCLoader.ModConsole.Print(boxCollider.center + " boxCollider.center");
                 // MSCLoader.ModConsole.Print(boxCollider.size + " boxCollider.size");
             }
+            /*
             if (gameObject != null && gameObject.GetComponent<MeshFilter>() == null)
             { 
                 gameObject.AddComponent<MeshFilter>();
             }
-
+            */
                 
         }
 

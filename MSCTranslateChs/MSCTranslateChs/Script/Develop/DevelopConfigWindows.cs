@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using MSCTranslateChs.Script.Develop;
 
 namespace MSCTranslateChs.Script.Develop
 {
     class DevelopConfigWindows
     {
         bool isShowDevelopConfigWindows = true;
-        Rect developWindowsRect = new Rect(Screen.width * 0.1f, Screen.height * 0.1f, Screen.width * 0.8f, Screen.height * 0.8f);
+        Rect developWindowsRect;
         Develop develop;
+
+        public string targetGameObjectPath = "Systems";
+        public GameObject targetGameObject = null;
 
         public DevelopConfigWindows(Develop develop)
         {
+            developWindowsRect = new Rect(0, 0, 800, 600);
             this.develop = develop;
         }
 
@@ -42,7 +47,212 @@ namespace MSCTranslateChs.Script.Develop
                 develop.isShowDevelopConfigWindows = false;
             }
 
-            GUI.DragWindow(new Rect(0, 0, Screen.width, Screen.height));
+            GameObjectTransformUpdate();
+
+
+
+            GUI.DragWindow(new Rect(0, 0, 99999, 99999));
         }
+
+
+        private void GameObjectTransformUpdate()
+        {
+
+            GUILayout.BeginHorizontal("box");
+            GUILayout.Label("GameObject Path:");
+            targetGameObjectPath = GUILayout.TextField(targetGameObjectPath);
+            if (GUILayout.Button("获取目标"))
+            {
+                targetGameObject = GameObject.Find(targetGameObjectPath);
+            }
+            if (targetGameObject != null)
+            {
+                GUILayout.Label("目标GameObject:" + targetGameObject.name);
+            }
+            GUILayout.EndHorizontal();
+
+            if (targetGameObject != null)
+            {
+                GUILayout.BeginHorizontal("box");
+                GUILayout.Label("目标GameObject位置微调");
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal("box");
+                GUILayout.Label("position");
+                string positionXStr = Convert.ToString(targetGameObject.transform.position.x);
+                string positionYStr = Convert.ToString(targetGameObject.transform.position.y);
+                string positionZStr = Convert.ToString(targetGameObject.transform.position.z);
+                if (GUILayout.Button("<"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr) - 1f, float.Parse(positionYStr), float.Parse(positionZStr));
+                }
+                if (GUILayout.Button("<<"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr) - 0.1f, float.Parse(positionYStr), float.Parse(positionZStr));
+                }
+                positionXStr = GUILayout.TextField(Convert.ToString(targetGameObject.transform.position.x));
+                if (GUILayout.Button(">>"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr) + 0.1f, float.Parse(positionYStr), float.Parse(positionZStr));
+                }
+                if (GUILayout.Button(">"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr) + 1f, float.Parse(positionYStr), float.Parse(positionZStr));
+                }
+                if (GUILayout.Button("<"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr), float.Parse(positionYStr) - 1f, float.Parse(positionZStr));
+                }
+                if (GUILayout.Button("<<"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr), float.Parse(positionYStr) - 0.1f, float.Parse(positionZStr));
+                }
+                positionYStr = GUILayout.TextField(Convert.ToString(targetGameObject.transform.position.y));
+                if (GUILayout.Button(">>"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr), float.Parse(positionYStr) + 0.1f, float.Parse(positionZStr));
+                }
+                if (GUILayout.Button(">"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr), float.Parse(positionYStr) + 1f, float.Parse(positionZStr));
+                }
+                if (GUILayout.Button("<"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr), float.Parse(positionYStr), float.Parse(positionZStr) - 1f);
+                }
+                if (GUILayout.Button("<<"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr), float.Parse(positionYStr), float.Parse(positionZStr) - 0.1f);
+                }
+                positionZStr = GUILayout.TextField(Convert.ToString(targetGameObject.transform.position.z));
+                if (GUILayout.Button(">>"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr), float.Parse(positionYStr), float.Parse(positionZStr) + 0.1f);
+                }
+                if (GUILayout.Button(">"))
+                {
+                    targetGameObject.transform.position = new Vector3(float.Parse(positionXStr), float.Parse(positionYStr), float.Parse(positionZStr) + 1f);
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal("box");
+                GUILayout.Label("position");
+                string rotationXStr = Convert.ToString(targetGameObject.transform.rotation.x);
+                string rotationYStr = Convert.ToString(targetGameObject.transform.rotation.y);
+                string rotationZStr = Convert.ToString(targetGameObject.transform.rotation.z);
+                string rotationWStr = Convert.ToString(targetGameObject.transform.rotation.w);
+                if (GUILayout.Button("<"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr) - 1f, float.Parse(rotationYStr), float.Parse(rotationZStr), float.Parse(rotationWStr));
+                }
+                if (GUILayout.Button("<<"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr) - 0.1f, float.Parse(rotationYStr), float.Parse(rotationZStr), float.Parse(rotationWStr));
+                }
+                positionXStr = GUILayout.TextField(Convert.ToString(targetGameObject.transform.rotation.x));
+                if (GUILayout.Button(">>"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr) + 0.1f, float.Parse(rotationYStr), float.Parse(rotationZStr), float.Parse(rotationWStr));
+                }
+                if (GUILayout.Button(">"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr) + 1f, float.Parse(rotationYStr), float.Parse(rotationZStr), float.Parse(rotationWStr));
+                }
+                if (GUILayout.Button("<"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr), float.Parse(rotationYStr) - 1f, float.Parse(rotationZStr), float.Parse(rotationWStr));
+                }
+                if (GUILayout.Button("<<"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr), float.Parse(rotationYStr) - 0.1f, float.Parse(rotationZStr), float.Parse(rotationWStr));
+                }
+                positionYStr = GUILayout.TextField(Convert.ToString(targetGameObject.transform.rotation.y));
+                if (GUILayout.Button(">>"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr), float.Parse(rotationYStr) + 0.1f, float.Parse(rotationZStr), float.Parse(rotationWStr));
+                }
+                if (GUILayout.Button(">"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr), float.Parse(rotationYStr) + 1f, float.Parse(rotationZStr), float.Parse(rotationWStr));
+                }
+                if (GUILayout.Button("<"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr), float.Parse(rotationYStr), float.Parse(rotationZStr) - 1f, float.Parse(rotationWStr));
+                }
+                if (GUILayout.Button("<<"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr), float.Parse(rotationYStr), float.Parse(rotationZStr) - 0.1f, float.Parse(rotationWStr));
+                }
+                positionZStr = GUILayout.TextField(Convert.ToString(targetGameObject.transform.rotation.z));
+                if (GUILayout.Button(">>"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr), float.Parse(rotationYStr), float.Parse(rotationZStr) + 0.1f, float.Parse(rotationWStr));
+                }
+                if (GUILayout.Button(">"))
+                {
+                    targetGameObject.transform.rotation = new Quaternion(float.Parse(rotationXStr), float.Parse(rotationYStr), float.Parse(rotationZStr) + 1f, float.Parse(rotationWStr));
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal("box");
+                GUILayout.Label("position");
+                string localScaleXStr = Convert.ToString(targetGameObject.transform.localScale.x);
+                string localScaleYStr = Convert.ToString(targetGameObject.transform.localScale.y);
+                string localScaleZStr = Convert.ToString(targetGameObject.transform.localScale.z);
+                if (GUILayout.Button("<"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr) - 1f, float.Parse(localScaleYStr), float.Parse(localScaleZStr));
+                }
+                if (GUILayout.Button("<<"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr) - 0.1f, float.Parse(localScaleYStr), float.Parse(localScaleZStr));
+                }
+                positionXStr = GUILayout.TextField(Convert.ToString(targetGameObject.transform.localScale.x));
+                if (GUILayout.Button(">>"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr) + 0.1f, float.Parse(localScaleYStr), float.Parse(localScaleZStr));
+                }
+                if (GUILayout.Button(">"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr) + 1f, float.Parse(localScaleYStr), float.Parse(localScaleZStr));
+                }
+                if (GUILayout.Button("<"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr), float.Parse(localScaleYStr) - 1f, float.Parse(localScaleZStr));
+                }
+                if (GUILayout.Button("<<"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr), float.Parse(localScaleYStr) - 0.1f, float.Parse(localScaleZStr));
+                }
+                positionYStr = GUILayout.TextField(Convert.ToString(targetGameObject.transform.localScale.y));
+                if (GUILayout.Button(">>"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr), float.Parse(localScaleYStr) + 0.1f, float.Parse(localScaleZStr));
+                }
+                if (GUILayout.Button(">"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr), float.Parse(localScaleYStr) + 1f, float.Parse(localScaleZStr));
+                }
+                if (GUILayout.Button("<"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr), float.Parse(localScaleYStr), float.Parse(localScaleZStr) - 1f);
+                }
+                if (GUILayout.Button("<<"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr), float.Parse(localScaleYStr), float.Parse(localScaleZStr) - 0.1f);
+                }
+                positionZStr = GUILayout.TextField(Convert.ToString(targetGameObject.transform.localScale.z));
+                if (GUILayout.Button(">>"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr), float.Parse(localScaleYStr), float.Parse(localScaleZStr) + 0.1f);
+                }
+                if (GUILayout.Button(">"))
+                {
+                    targetGameObject.transform.localScale = new Vector3(float.Parse(localScaleXStr), float.Parse(localScaleYStr), float.Parse(localScaleZStr) + 1f);
+                }
+                GUILayout.EndHorizontal();
+            }
+        }
+        
     }
 }

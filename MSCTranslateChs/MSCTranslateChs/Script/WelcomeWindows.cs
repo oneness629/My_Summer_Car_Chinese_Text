@@ -9,11 +9,12 @@ namespace MSCTranslateChs.Script
     class WelcomeWindows
     {
         bool isShowWelcomeWindows = true;
-        Rect welcomeWindowsRect = new Rect(Screen.width * 0.1f, Screen.height * 0.1f, Screen.width * 0.8f, Screen.height * 0.8f);
+        Rect welcomeWindowsRect;
         MSCTranslateChs mscTranslateChs;
 
         public WelcomeWindows(MSCTranslateChs mscTranslateChs)
         {
+            welcomeWindowsRect = new Rect(0, 0, 800, 600);
             this.mscTranslateChs = mscTranslateChs;
         }
 
@@ -49,7 +50,7 @@ namespace MSCTranslateChs.Script
             {
                 Application.OpenURL("https://steamcommunity.com/sharedfiles/filedetails/?id=1384837781");
             }
-            GUI.DragWindow(new Rect(0, 0, Screen.width, Screen.height));
+            GUI.DragWindow(new Rect(0, 0, 99999, 99999));
         }
     }
 }
