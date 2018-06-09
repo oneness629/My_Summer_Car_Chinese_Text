@@ -42,6 +42,10 @@ namespace MSCTranslateChs.Script.Develop
             {
                 develop.initUIRay();
             }
+            if (GUILayout.Button("Systems菜单射线翻译"))
+            {
+                develop.isRaySystemsGameObject = true;
+            }
 
             if (GUILayout.Button("关闭")){
                 develop.isShowDevelopConfigWindows = false;

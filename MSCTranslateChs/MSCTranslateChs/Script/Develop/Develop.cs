@@ -24,6 +24,10 @@ namespace MSCTranslateChs.Script.Develop
 
         public bool isRayGameObject = false;
 
+        public bool isInitSystemsGameObject = false;
+
+        public bool isRaySystemsGameObject = false;
+
         public Develop(MSCTranslateChs mscTranslateChs)
         {
             guiStyle = new GUIStyle();
@@ -77,6 +81,8 @@ namespace MSCTranslateChs.Script.Develop
                 GameObjectUtil.addBoxColliderByChild(systemsGameObject, "");
             }
         }
+
+        
 
         private void RayGameObject()
         {

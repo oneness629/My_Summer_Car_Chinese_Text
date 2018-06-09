@@ -11,6 +11,27 @@ namespace MSCTranslateChs.Script.Common
     {
         public static Dictionary<string, Color> highlightRendererColorBak = new Dictionary<string, Color>();
 
+        public static void addBoxColliderByChildByTextMesh(GameObject gameObject)
+        {
+            if (gameObject != null && gameObject.transform != null && gameObject.transform.childCount > 0)
+            {
+                for (int i = 0; i < gameObject.transform.childCount; i++)
+                {
+                    GameObject childGameObject = gameObject.transform.GetChild(i).gameObject;
+                    if (childGameObject != null)
+                    {
+                        if (childGameObject.GetComponent<TextMesh>() != null)
+                        {
+                            // MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
+                            addBoxCollider(childGameObject);
+                        }
+                        addBoxColliderByChildByTextMesh(childGameObject);
+                    }
+                }
+            }
+        }
+
+
         public static void addBoxColliderByChild(GameObject gameObject, string childText)
         {
             if (gameObject != null && gameObject.transform != null && gameObject.transform.childCount > 0)
@@ -67,21 +88,7 @@ namespace MSCTranslateChs.Script.Common
                     GameObject.Destroy(gameObject.GetComponent<BoxCollider>());
                 }
                 gameObject.AddComponent<BoxCollider>();
-                
-                
-                // BoxCollider boxCollider = gameObject.GetComponent<BoxCollider>();
-                // boxCollider.center = Vector3.zero;
-                // boxCollider.size = Vector3.one;
-                // MSCLoader.ModConsole.Print(boxCollider.center + " boxCollider.center");
-                // MSCLoader.ModConsole.Print(boxCollider.size + " boxCollider.size");
             }
-            /*
-            if (gameObject != null && gameObject.GetComponent<MeshFilter>() == null)
-            { 
-                gameObject.AddComponent<MeshFilter>();
-            }
-            */
-                
         }
 
         public static void HighligListConver(List<GameObject> targetList, List<GameObject> oldList)
@@ -187,6 +194,15 @@ namespace MSCTranslateChs.Script.Common
                 return getGameObjectText(gameObject, 0, isGetOtherTypeMembers, isGetComponentsText, isGetComponentTypeFields, isGetComponentTypeMembers, isGetComponentTypeMethods);
             }
             return null;
+        }
+
+        public static string getGameObjectTextMeshString(GameObject gameObject)
+        {
+            if (gameObject != null && gameObject.GetComponent<TextMesh>() != null && gameObject.GetComponent<TextMesh>().text != null)
+            {
+                return gameObject.GetComponent<TextMesh>().text.Trim();
+            }
+            return "";
         }
 
         public static string getGameObjectText(GameObject gameObject,
