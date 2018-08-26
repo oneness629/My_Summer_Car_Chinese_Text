@@ -41,6 +41,7 @@ namespace MSCTranslateChs
         private string autoTranslateStringing = "[自动翻译中 ... ]";
         private string autoTranslateString = "[自动翻译]";
 
+        private TextMesh gameOverTextMesh;
         private TextMesh subtitlesTextMesh;
         private GUIStyle subtitlesGuiStyle;
         private Rect subtitlesRect;
@@ -129,6 +130,11 @@ namespace MSCTranslateChs
                     {
                         GUI.Label(interactionsRect, TranslateString(interactionsText, interactionsList), interactionsGuiStyle);
                     }
+                    // game over 提示
+                    GameOverMessage();
+                   
+
+
                     // 额外的菜单
                     RaySystemsGameObject();
 
@@ -156,6 +162,45 @@ namespace MSCTranslateChs
 
         }
 
+        private void GameOverMessage()
+        {
+            GameObject gameObject = GameObject.Find("Systems/Death/GameOverScreen/Paper");
+            if (gameObject == null)
+            {
+                return;
+            }
+            List<string> gameOverTextGameObjectPath = new List<string>();
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Crash/TextEN");
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Fatigue/TextEN");
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/HitAndRun/TextEN");
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Hitchhiker/TextEN");
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Hunger/TextEN");
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Moped/TextEN");
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Rally/TextEN");
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Shit/TextEN");
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Thirst/TextEN");
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Train/TextEN");
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Urine/TextEN");
+            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/ElecShock/TextEN");
+
+            foreach (string path in gameOverTextGameObjectPath)
+            {
+                if (GameObject.Find(path) != null)
+                {
+                    gameOverTextMesh = FindGameObjectTextMesh(path);
+                    string gameOverText = gameOverTextMesh.text.Trim();
+                    if (gameOverTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(gameOverText))
+                    {
+                        MeshRenderer meshRenderer = gameOverTextMesh.gameObject.GetComponent<MeshRenderer>();
+                        if (meshRenderer != null && meshRenderer.enabled)
+                        {
+                            GUI.Label(subtitlesRect, TranslateString(gameOverText, interactionsList), subtitlesGuiStyle);
+                        }
+                    }
+                }
+            }
+            
+        }
 
         public override void Update()
         {
@@ -169,6 +214,7 @@ namespace MSCTranslateChs
                         subtitlesTextMesh = FindGameObjectTextMesh("GUI/Indicators/Subtitles");
                         partnamesTextMesh = FindGameObjectTextMesh("GUI/Indicators/Partname");
                         interactionsTextMesh = FindGameObjectTextMesh("GUI/Indicators/Interaction");
+                        
                         IsLoadGameObject = true;
                     }
                     catch (Exception e)
@@ -230,6 +276,7 @@ namespace MSCTranslateChs
             ModConsole.Print("partnamesListSize :" + partnamesListSize);
         }
 
+        
         private void CheckAndWriteTranslateText()
         {
             if (subtitlesListSize > 0 && subtitlesListSize < subtitlesList.Count)
@@ -307,6 +354,7 @@ namespace MSCTranslateChs
             {
                 return "\"\"";
             }
+            text = text.Replace("\n","\\n");
             string listText = textList.FirstOrDefault((string s) => s.ToUpper().Contains(text.Trim().ToUpper()));
             if (string.IsNullOrEmpty(listText))
             {
@@ -333,10 +381,12 @@ namespace MSCTranslateChs
 
             }
             string resultString = listText.Split('=')[1];
+            
             if (!string.IsNullOrEmpty(resultString))
             {
                 resultString = resultString.Replace("\\n", "\n");
             }
+            
             return resultString;
         }
 
