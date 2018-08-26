@@ -28,6 +28,13 @@ namespace MSCTranslateChs
 
         public bool IsLoadResources = false;
         public bool IsLoadGameObject = false;
+        public bool IsEnable = true;
+        public bool IsTranslateSubtitles = true;
+        public bool IsTranslatePartnames = true;
+        public bool IsTranslateInteractions = true;
+        public bool IsTranslateGameOverMessage = true;
+        public bool IsCheckTranslateText = true;
+        public bool IsDevelop = true;
 
         public List<string> subtitlesList = new List<string>();
         public List<string> interactionsList = new List<string>();
@@ -112,46 +119,63 @@ namespace MSCTranslateChs
             {
                 if (IsLoadResources && IsLoadGameObject && Application.loadedLevelName == "GAME")
                 {
-                    // 字幕
-                    string subtitlesText = subtitlesTextMesh.text.Trim();
-                    if (subtitlesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(subtitlesText))
+                    if (IsEnable)
                     {
-                        GUI.Label(subtitlesRect, TranslateString(subtitlesText, subtitlesList), subtitlesGuiStyle);
+                        if (IsTranslateSubtitles)
+                        {
+                            // 字幕
+                            string subtitlesText = subtitlesTextMesh.text.Trim();
+                            if (subtitlesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(subtitlesText))
+                            {
+                                GUI.Label(subtitlesRect, TranslateString(subtitlesText, subtitlesList), subtitlesGuiStyle);
+                            }
+                        }
+                        if (IsTranslatePartnames)
+                        {
+                            // 部件/物品名称
+                            string partnamesText = partnamesTextMesh.text.Trim();
+                            if (partnamesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(partnamesText))
+                            {
+                                GUI.Label(partnamesRect, TranslateString(partnamesText, partnamesList), partnamesGuiStyle);
+                            }
+                        }
+                        if (IsTranslateInteractions)
+                        {
+                            // 操作动作
+                            string interactionsText = interactionsTextMesh.text.Trim();
+                            if (interactionsTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(interactionsText))
+                            {
+                                GUI.Label(interactionsRect, TranslateString(interactionsText, interactionsList), interactionsGuiStyle);
+                            }
+                        }
+                        if (IsTranslateGameOverMessage)
+                        {
+                            // game over 提示
+                            GameOverMessage();
+                        }
+
+                        // 额外的菜单
+                        RaySystemsGameObject();
+                        if (IsDevelop)
+                        {
+                            develop.Update();
+                            if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.R))
+                            {
+                                ReadTranslateText();
+                            }
+                        }
+                        if (IsCheckTranslateText)
+                        {
+                            CheckAndWriteTranslateText();
+                        }
+                        
+
                     }
-                    // 部件/物品名称
-                    string partnamesText = partnamesTextMesh.text.Trim();
-                    if (partnamesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(partnamesText))
-                    {
-                        GUI.Label(partnamesRect, TranslateString(partnamesText, partnamesList), partnamesGuiStyle);
-                    }
-                    // 操作动作
-                    string interactionsText = interactionsTextMesh.text.Trim();
-                    if (interactionsTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(interactionsText))
-                    {
-                        GUI.Label(interactionsRect, TranslateString(interactionsText, interactionsList), interactionsGuiStyle);
-                    }
-                    // game over 提示
-                    GameOverMessage();
-                   
-
-
-                    // 额外的菜单
-                    RaySystemsGameObject();
-
-
-                    CheckAndWriteTranslateText();
-
-                    develop.Update();
-
                     if (isShowWelcomeWindows)
                     {
                         welcomeWindows.Update();
                     }
 
-                    if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.R))
-                    {
-                        ReadTranslateText();
-                    }
                 }
             }
             catch (Exception e)

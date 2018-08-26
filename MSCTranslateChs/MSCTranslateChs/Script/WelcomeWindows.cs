@@ -42,8 +42,15 @@ namespace MSCTranslateChs.Script
             GUILayout.Label("    partnames.txt 配件对照文本文件");
             GUILayout.Label("    subtitles.txt 字幕对照文本文件");
 
+            mscTranslateChs.IsEnable = GUILayout.Toggle(mscTranslateChs.IsEnable, "是否启用翻译Mod（取消，会加载文本到内存，但不会进行任何OnGUI交互）");
+            mscTranslateChs.IsTranslateGameOverMessage = GUILayout.Toggle(mscTranslateChs.IsTranslateGameOverMessage, "是否启用GameOver提示文本（报刊上的GameOver原因）");
+            mscTranslateChs.IsTranslateInteractions = GUILayout.Toggle(mscTranslateChs.IsTranslateInteractions, "是否启用操作动作和界面元素翻译（动作~有~但是，界面元素？那个没用的）");
+            mscTranslateChs.IsTranslatePartnames = GUILayout.Toggle(mscTranslateChs.IsTranslatePartnames, "是否启用部件名称翻译");
+            mscTranslateChs.IsTranslateSubtitles = GUILayout.Toggle(mscTranslateChs.IsTranslateSubtitles, "是否启用字幕翻译");
+            mscTranslateChs.IsDevelop = GUILayout.Toggle(mscTranslateChs.IsDevelop, "是否启用开发模式（左边Alt+T和右边Alt+T）");
+
             isShowWelcomeWindows = GUILayout.Toggle(isShowWelcomeWindows, "下次启动是否再次显示窗口（没用的···我还没写完···）");
-            if(GUILayout.Button("关闭 或 按XXX按键关闭")){
+            if (GUILayout.Button("关闭 或 按XXX按键关闭")){
                 mscTranslateChs.isShowWelcomeWindows = false;
             }
             if (GUILayout.Button("访问MOD指南页面(按ESC能够使用鼠标)"))
