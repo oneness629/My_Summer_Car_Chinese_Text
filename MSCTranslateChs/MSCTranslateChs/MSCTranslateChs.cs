@@ -33,6 +33,8 @@ namespace MSCTranslateChs
         public bool IsTranslatePartnames = true;
         public bool IsTranslateInteractions = true;
         public bool IsTranslateGameOverMessage = true;
+        public bool IsTranslateUI = true;
+        public bool IsTranslateEscInitUI = true;
         public bool IsCheckTranslateText = true;
         public bool IsDevelop = true;
 
@@ -153,9 +155,19 @@ namespace MSCTranslateChs
                             // game over 提示
                             GameOverMessage();
                         }
+                        if (IsTranslateUI)
+                        {
+                            // 额外的菜单
+                            RaySystemsGameObject();
+                        }
+                        if (IsTranslateEscInitUI)
+                        {
+                            if (Input.GetKey(KeyCode.Escape))
+                            {
+                                initUIRay();
+                            }
+                        }
 
-                        // 额外的菜单
-                        RaySystemsGameObject();
                         if (IsDevelop)
                         {
                             develop.Update();
@@ -170,6 +182,14 @@ namespace MSCTranslateChs
                         }
                         
 
+                    }
+                    if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.W))
+                    {
+                        isShowWelcomeWindows = true;
+                    }
+                    if (Input.GetKey(KeyCode.RightAlt) && Input.GetKey(KeyCode.W))
+                    {
+                        isShowWelcomeWindows = false;
                     }
                     if (isShowWelcomeWindows)
                     {
@@ -186,6 +206,15 @@ namespace MSCTranslateChs
 
         }
 
+        public void initUIRay()
+        {
+            GameObject systemsGameObject = GameObject.Find("Systems");
+            if (systemsGameObject != null)
+            {
+                GameObjectUtil.addBoxColliderByChild(systemsGameObject, "");
+            }
+        }
+
         private void GameOverMessage()
         {
             GameObject gameObject = GameObject.Find("Systems/Death/GameOverScreen/Paper");
@@ -193,32 +222,26 @@ namespace MSCTranslateChs
             {
                 return;
             }
-            List<string> gameOverTextGameObjectPath = new List<string>();
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Crash/TextEN");
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Fatigue/TextEN");
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/HitAndRun/TextEN");
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Hitchhiker/TextEN");
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Hunger/TextEN");
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Moped/TextEN");
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Rally/TextEN");
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Shit/TextEN");
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Thirst/TextEN");
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Train/TextEN");
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/Urine/TextEN");
-            gameOverTextGameObjectPath.Add("Systems/Death/GameOverScreen/Paper/ElecShock/TextEN");
-
-            foreach (string path in gameOverTextGameObjectPath)
+            for (int i = 0; i < gameObject.transform.childCount; i++)
             {
-                if (GameObject.Find(path) != null)
+                GameObject childGameObject = gameObject.transform.GetChild(i).gameObject;
+                if (childGameObject != null && childGameObject.activeSelf)
                 {
-                    gameOverTextMesh = FindGameObjectTextMesh(path);
-                    string gameOverText = gameOverTextMesh.text.Trim();
-                    if (gameOverTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(gameOverText))
+                    string path = GameObjectUtil.getGameObjectPath(childGameObject);
+                    string pathTextEn = path + "/TextEN";
+                    GameObject textEnGameObject = GameObject.Find(pathTextEn);
+                    if (textEnGameObject != null)
                     {
-                        MeshRenderer meshRenderer = gameOverTextMesh.gameObject.GetComponent<MeshRenderer>();
-                        if (meshRenderer != null && meshRenderer.enabled)
+                        gameOverTextMesh = FindGameObjectTextMesh(pathTextEn);
+                        if (gameOverTextMesh != null)
                         {
-                            GUI.Label(subtitlesRect, TranslateString(gameOverText, interactionsList), subtitlesGuiStyle);
+                            string gameOverText = gameOverTextMesh.text.Trim();
+                            string translateString = TranslateString(gameOverText, interactionsList);
+                            
+                            // ModConsole.Print("GameOver文本GameObject读取：");
+                            // ModConsole.Print("EN:" + gameOverText);
+                            // ModConsole.Print("TranslateString:" + translateString);
+                            GUI.Label(subtitlesRect, translateString, subtitlesGuiStyle);
                         }
                     }
                 }
@@ -238,7 +261,7 @@ namespace MSCTranslateChs
                         subtitlesTextMesh = FindGameObjectTextMesh("GUI/Indicators/Subtitles");
                         partnamesTextMesh = FindGameObjectTextMesh("GUI/Indicators/Partname");
                         interactionsTextMesh = FindGameObjectTextMesh("GUI/Indicators/Interaction");
-                        
+
                         IsLoadGameObject = true;
                     }
                     catch (Exception e)
@@ -354,7 +377,7 @@ namespace MSCTranslateChs
                         string textMeshString = GameObjectUtil.getGameObjectTextMeshString(gameObject);
                         if (textMeshString != null && textMeshString.Trim().Length > 0)
                         {
-                            text += TranslateString(textMeshString, interactionsList);
+                            text = TranslateString(textMeshString, interactionsList);
                             // text += textMeshString;
                         }
                     }

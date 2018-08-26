@@ -222,7 +222,8 @@ namespace MSCTranslateChs.Script.Common
                 text += (tabText + "           path : " + getGameObjectPath(gameObject) + "\n");
                 if (isGetOtherTypeMembers == true)
                 {
-                    text += tabText +"\t            tag : " + gameObject.tag + "\n";
+                    text += tabText + "\t            tag : " + gameObject.tag + "\n";
+                    text += tabText + "\t            activeSelf : " + gameObject.activeSelf + "\n";
                     text += tabText + "\t            hideFlags : " + gameObject.hideFlags + "\n";
                     text += tabText + "\t            isStatic : " + gameObject.isStatic + "\n";
                     text += tabText + "\t            layer : " + gameObject.layer + "\n";

@@ -12,11 +12,11 @@ namespace MSCTranslateChs.Script.Develop
 {
     public class Develop
     {
-        MSCTranslateChs mscTranslateChs;
+        public MSCTranslateChs mscTranslateChs;
 
         DevelopConfigWindows developConfigWindows;
 
-        GUIStyle guiStyle;
+        public GUIStyle guiStyle;
 
         bool isDevelop = false;
 
