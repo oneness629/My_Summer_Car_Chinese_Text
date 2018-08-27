@@ -16,6 +16,8 @@ namespace MSCTranslateChs.Script.Develop
 
         DevelopConfigWindows developConfigWindows;
 
+        public Teleport.Teleport teleport;
+
         public GUIStyle guiStyle;
 
         bool isDevelop = false;
@@ -37,6 +39,7 @@ namespace MSCTranslateChs.Script.Develop
 
             this.mscTranslateChs = mscTranslateChs;
             developConfigWindows = new DevelopConfigWindows(this);
+            teleport = new Teleport.Teleport();
         }
 
         public void Update()
@@ -68,21 +71,12 @@ namespace MSCTranslateChs.Script.Develop
                 if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.W))
                 {
                     WriteGameObject("Systems");
-                    ModConsole.Print("write systems object ");
+                    ModConsole.Print("write systems(UI) gameobject ");
                 }
+
+                teleport.Update();
             }
         }
-
-        public void initUIRay()
-        {
-            GameObject systemsGameObject = GameObject.Find("Systems");
-            if (systemsGameObject != null)
-            {
-                GameObjectUtil.addBoxColliderByChild(systemsGameObject, "");
-            }
-        }
-
-        
 
         private void RayGameObject()
         {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using MSCTranslateChs.Script.Develop;
+using MSCTranslateChs.Script.Teleport;
 
 namespace MSCTranslateChs.Script.Develop
 {
@@ -12,6 +13,7 @@ namespace MSCTranslateChs.Script.Develop
         bool isShowDevelopConfigWindows = true;
         Rect developWindowsRect;
         Develop develop;
+        
 
         public string targetGameObjectPath = "Systems";
         public GameObject targetGameObject = null;
@@ -38,13 +40,13 @@ namespace MSCTranslateChs.Script.Develop
             //定义一个toggle控制窗体的显示和隐藏
             develop.isRayGameObject = GUILayout.Toggle(develop.isRayGameObject, "是否显示鼠标指向的GameObject信息");
 
-            if (GUILayout.Button("初始化UI"))
+            if (GUILayout.Button("远程传送窗口"))
             {
-                develop.initUIRay();
+                develop.teleport.isShowWindow = true;
             }
-            if (GUILayout.Button("Systems菜单射线翻译"))
+            if (GUILayout.Button("Ray射线"))
             {
-                develop.isRaySystemsGameObject = true;
+                develop.isRayGameObject = true;
             }
 
             if (GUILayout.Button("关闭")){

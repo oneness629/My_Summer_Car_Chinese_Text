@@ -9,25 +9,25 @@ using MSCLoader;
 namespace MSCTranslateChs.Script.Teleport
 {
     
-    class Teleport
+    public class Teleport
     {
         public bool isShowWindow = false;
-        Rect windowsRect;
+        Rect windowsRect = new Rect(0, 0, 800, 600);
 
-        public const String PLAYER = "PLAYER||玩家";
-        public const String SATSUMA = "SATSUMA(557kg, 248)||拼装车";
-        public const String FERNDALE = "FERNDALE(1630kg)||肌肉车";
-        public const String GIFU = "GIFU(750/450psi)||污水车";
-        public const String KEKMET = "KEKMET(350-400psi)||拖拉机";
-        public const String HAYOSIKO = "HAYOSIKO(1500kg, 250)||面包车";
-        public const String JONNEZ_ES = "JONNEZ ES(Clone)||摩托车";
-        public const String RCO_RUSCKO12 = "RCO_RUSCKO12(270)||猪人车";
-        public const String GRAVE_YARD_SPAWN = "GraveYardSpawn||玩家家";
-        public const String SPAWN_TO_STORE = "SpawnToStore||商店";
-        public const String SPAWN_TO_REPAIR = "SpawnToRepair||修车店";
-        public const String SPAWN_TO_DRAG = "SpawnToDrag||直线加速赛场";
-        public const String SPAWN_TO_COTTAGE = "SpawnToCottage||湖心小屋";
-        public const String SPAWN_TO_VENTTI_PIG = "SpawnToVenttiPig||猪人家";
+        public const String PLAYER = "PLAYER|玩家";
+        public const String SATSUMA = "SATSUMA(557kg, 248)|拼装车";
+        public const String FERNDALE = "FERNDALE(1630kg)|肌肉车";
+        public const String GIFU = "GIFU(750/450psi)|污水车";
+        public const String KEKMET = "KEKMET(350-400psi)|拖拉机";
+        public const String HAYOSIKO = "HAYOSIKO(1500kg, 250)|面包车";
+        public const String JONNEZ_ES = "JONNEZ ES(Clone)|摩托车";
+        public const String RCO_RUSCKO12 = "RCO_RUSCKO12(270)|猪人车";
+        public const String GRAVE_YARD_SPAWN = "GraveYardSpawn|玩家家";
+        public const String SPAWN_TO_STORE = "SpawnToStore|商店";
+        public const String SPAWN_TO_REPAIR = "SpawnToRepair|修车店";
+        public const String SPAWN_TO_DRAG = "SpawnToDrag|直线加速赛场";
+        public const String SPAWN_TO_COTTAGE = "SpawnToCottage|湖心小屋";
+        public const String SPAWN_TO_VENTTI_PIG = "SpawnToVenttiPig|猪人家";
 
         Dictionary<string, string> targetPosition = new Dictionary<string, string>();
 
@@ -51,10 +51,9 @@ namespace MSCTranslateChs.Script.Teleport
 
         public void Update()
         {
-            
             if (isShowWindow)
             {
-                windowsRect = GUI.Window(1, windowsRect, TeleportWindowFunction, "远程传送");
+                windowsRect = GUI.Window(2, windowsRect, TeleportWindowFunction, "远程传送");
             }
         }
 
@@ -65,28 +64,37 @@ namespace MSCTranslateChs.Script.Teleport
             GUILayout.Label("注意：如果传送玩家到特定位置，请不要坐在车内，否则···");
             GUILayout.Label(" ");
             GUILayout.Label("传送到玩家");
+            GUILayout.BeginHorizontal("box");
+            string playerTargetName = PLAYER.Split('|')[0];
             foreach (string key in targetPosition.Keys)
             {
-                string view = targetPosition[key].Split(new char[2] { '|', '|' })[1];
-                string targetName = targetPosition[key].Split(new char[2] { '|', '|' })[0];
+                string view = targetPosition[key].Split('|')[1];
+                string targetName = targetPosition[key].Split('|')[0];
                 if (GUILayout.Button(view))
                 {
-                    TeleportTo(targetName, PLAYER);
+                    TeleportTo(targetName, playerTargetName);
                 }
             }
+            GUILayout.EndHorizontal();
             GUILayout.Label(" ");
             GUILayout.Label("传送到目标");
+            GUILayout.BeginHorizontal("box");
             foreach (string key in targetPosition.Keys)
             {
-                string view = targetPosition[key].Split(new char[2] { '|', '|' })[1];
-                string targetName = targetPosition[key].Split(new char[2] { '|', '|' })[0];
+                string view = targetPosition[key].Split('|')[1];
+                string targetName = targetPosition[key].Split('|')[0];
                 if (GUILayout.Button(view))
                 {
-                    TeleportTo(PLAYER ,targetName);
+                    TeleportTo(playerTargetName, targetName);
                 }
             }
+            GUILayout.EndHorizontal();
+            if (GUILayout.Button("关闭"))
+            {
+                isShowWindow = false;
+            }
 
-            GUI.DragWindow(new Rect(0, 0, Screen.width, Screen.height));
+            GUI.DragWindow(new Rect(0, 0, 9999 ,9999));
         }
 
         public void TeleportTo(string teleportObjectName, string targetObjectName)
