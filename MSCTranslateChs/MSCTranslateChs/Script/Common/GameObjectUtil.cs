@@ -60,7 +60,7 @@ namespace MSCTranslateChs.Script.Common
                         if (childGameObject.GetComponent<TextMesh>() != null)
                         {
                             
-                            MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
+                            // MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
                             addBoxCollider(childGameObject);
                             // Highlight(childGameObject);
                         }
