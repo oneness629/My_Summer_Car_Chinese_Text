@@ -29,24 +29,29 @@ namespace MSCTranslateChs.Script.Teleport
         public const String SPAWN_TO_COTTAGE = "SpawnToCottage|湖心小屋";
         public const String SPAWN_TO_VENTTI_PIG = "SpawnToVenttiPig|猪人家";
 
+        Dictionary<string, string> targetDynamicPosition = new Dictionary<string, string>();
+        Dictionary<string, string> targetStaticPosition = new Dictionary<string, string>();
         Dictionary<string, string> targetPosition = new Dictionary<string, string>();
 
 
         public Teleport()
         {
-            targetPosition.Add("SATSUMA", SATSUMA);
-            targetPosition.Add("FERNDALE", FERNDALE);
-            targetPosition.Add("GIFU", GIFU);
-            targetPosition.Add("KEKMET", KEKMET);
-            targetPosition.Add("HAYOSIKO", HAYOSIKO);
-            targetPosition.Add("JONNEZ_ES", JONNEZ_ES);
-            targetPosition.Add("RCO_RUSCKO12", RCO_RUSCKO12);
-            targetPosition.Add("GRAVE_YARD_SPAWN", GRAVE_YARD_SPAWN);
-            targetPosition.Add("SPAWN_TO_STORE", SPAWN_TO_STORE);
-            targetPosition.Add("SPAWN_TO_REPAIR", SPAWN_TO_REPAIR);
-            targetPosition.Add("SPAWN_TO_DRAG", SPAWN_TO_DRAG);
-            targetPosition.Add("SPAWN_TO_COTTAGE", SPAWN_TO_COTTAGE);
-            targetPosition.Add("SPAWN_TO_VENTTI_PIG", SPAWN_TO_VENTTI_PIG);
+            targetDynamicPosition.Add("SATSUMA", SATSUMA);
+            targetDynamicPosition.Add("FERNDALE", FERNDALE);
+            targetDynamicPosition.Add("GIFU", GIFU);
+            targetDynamicPosition.Add("KEKMET", KEKMET);
+            targetDynamicPosition.Add("HAYOSIKO", HAYOSIKO);
+            targetDynamicPosition.Add("JONNEZ_ES", JONNEZ_ES);
+            targetDynamicPosition.Add("RCO_RUSCKO12", RCO_RUSCKO12);
+
+            targetStaticPosition.Add("GRAVE_YARD_SPAWN", GRAVE_YARD_SPAWN);
+            targetStaticPosition.Add("SPAWN_TO_STORE", SPAWN_TO_STORE);
+            targetStaticPosition.Add("SPAWN_TO_REPAIR", SPAWN_TO_REPAIR);
+            targetStaticPosition.Add("SPAWN_TO_DRAG", SPAWN_TO_DRAG);
+            targetStaticPosition.Add("SPAWN_TO_COTTAGE", SPAWN_TO_COTTAGE);
+            targetStaticPosition.Add("SPAWN_TO_VENTTI_PIG", SPAWN_TO_VENTTI_PIG);
+
+            targetPosition = (Dictionary<string, string>) targetDynamicPosition.Union(targetStaticPosition);
         }
 
         public void Update()
@@ -66,10 +71,10 @@ namespace MSCTranslateChs.Script.Teleport
             GUILayout.Label("传送到玩家");
             GUILayout.BeginHorizontal("box");
             string playerTargetName = PLAYER.Split('|')[0];
-            foreach (string key in targetPosition.Keys)
+            foreach (string key in targetDynamicPosition.Keys)
             {
-                string view = targetPosition[key].Split('|')[1];
-                string targetName = targetPosition[key].Split('|')[0];
+                string view = targetDynamicPosition[key].Split('|')[1];
+                string targetName = targetDynamicPosition[key].Split('|')[0];
                 if (GUILayout.Button(view))
                 {
                     TeleportTo(targetName, playerTargetName);
@@ -79,6 +84,7 @@ namespace MSCTranslateChs.Script.Teleport
             GUILayout.Label(" ");
             GUILayout.Label("传送到目标");
             GUILayout.BeginHorizontal("box");
+
             foreach (string key in targetPosition.Keys)
             {
                 string view = targetPosition[key].Split('|')[1];
