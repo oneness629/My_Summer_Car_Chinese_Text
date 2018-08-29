@@ -232,7 +232,7 @@ namespace MSCTranslateChs
                     GameObject textEnGameObject = GameObject.Find(pathTextEn);
                     if (textEnGameObject != null)
                     {
-                        gameOverTextMesh = FindGameObjectTextMesh(pathTextEn);
+                        gameOverTextMesh = GameObjectUtil.FindGameObjectTextMesh(pathTextEn);
                         if (gameOverTextMesh != null)
                         {
                             string gameOverText = gameOverTextMesh.text.Trim();
@@ -258,9 +258,9 @@ namespace MSCTranslateChs
                     // load gameobject
                     try
                     {
-                        subtitlesTextMesh = FindGameObjectTextMesh("GUI/Indicators/Subtitles");
-                        partnamesTextMesh = FindGameObjectTextMesh("GUI/Indicators/Partname");
-                        interactionsTextMesh = FindGameObjectTextMesh("GUI/Indicators/Interaction");
+                        subtitlesTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Subtitles");
+                        partnamesTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Partname");
+                        interactionsTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Interaction");
 
                         IsLoadGameObject = true;
                     }
@@ -466,19 +466,7 @@ namespace MSCTranslateChs
 
         }
 
-        private TextMesh FindGameObjectTextMesh(string path)
-        {
-            GameObject gameObject = GameObject.Find(path);
-            if (gameObject != null)
-            {
-                TextMesh textMesh = gameObject.GetComponent<TextMesh>();
-                if (textMesh != null)
-                {
-                    return textMesh;
-                }
-            }
-            throw new Exception("无法找到GameObject对应的TextMesh 路径->" + path);
-        }
+        
 
     }
 }

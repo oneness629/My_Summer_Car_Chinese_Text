@@ -11,6 +11,20 @@ namespace MSCTranslateChs.Script.Common
     {
         public static Dictionary<string, Color> highlightRendererColorBak = new Dictionary<string, Color>();
 
+        public static TextMesh FindGameObjectTextMesh(string path)
+        {
+            GameObject gameObject = GameObject.Find(path);
+            if (gameObject != null)
+            {
+                TextMesh textMesh = gameObject.GetComponent<TextMesh>();
+                if (textMesh != null)
+                {
+                    return textMesh;
+                }
+            }
+            throw new Exception("无法找到GameObject对应的TextMesh 路径->" + path);
+        }
+
         public static void addBoxColliderByChildByTextMesh(GameObject gameObject)
         {
             if (gameObject != null && gameObject.transform != null && gameObject.transform.childCount > 0)
