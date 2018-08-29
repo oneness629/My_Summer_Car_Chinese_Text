@@ -37,6 +37,7 @@
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="MSCLoader">
       <HintPath>D:\Program Files (x86)\Steam\steamapps\common\My Summer Car\mysummercar_Data\Managed\MSCLoader.dll</HintPath>
@@ -56,10 +57,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Script\Common\LOGGER.cs" />
     <Compile Include="Script\Common\FsmVariablesUtil.cs" />
+    <Compile Include="Script\Common\ConverUtil.cs" />
     <Compile Include="Script\Common\GameObjectUtil.cs" />
     <Compile Include="Script\Common\JSON.cs" />
     <Compile Include="Script\Teleport\Teleport.cs" />
+    <Compile Include="Script\Translate\TranslateText.cs" />
     <Compile Include="Script\Translate\TranslateApi.cs" />
     <Compile Include="Script\Develop\Develop.cs" />
     <Compile Include="MSCTranslateChs.cs" />
