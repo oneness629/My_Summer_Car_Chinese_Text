@@ -77,15 +77,11 @@
     <Content Include="Assets\MSCTranslateChs\config.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\MSCTranslateChs\interactions.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\MSCTranslateChs\partnames.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\MSCTranslateChs\subtitles.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Assets\MSCTranslateChs\gameover.txt" />
+    <Content Include="Assets\MSCTranslateChs\interaction.txt" />
+    <Content Include="Assets\MSCTranslateChs\partname.txt" />
+    <Content Include="Assets\MSCTranslateChs\subtitle.txt" />
+    <Content Include="Assets\MSCTranslateChs\ui.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

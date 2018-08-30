@@ -36,6 +36,7 @@ namespace MSCTranslateChs.Script
             GUILayout.Label("      商品动作、配件、字幕(需要打开英文字幕),中英文对照显示，不会覆盖原有英文内容。");
             GUILayout.Label("      详细使用教程请参考steam中文模组指南");
             GUILayout.Label("      显示/隐藏本窗口（左边ALT+W）/（右边ALT+W）");
+            GUILayout.Label("      玩家Over后报纸内容显示出Over原因时按下左边ALT+G，一次性读取全部原因到gameover.txt");
 
             mscTranslateChs.IsEnable = GUILayout.Toggle(mscTranslateChs.IsEnable, "是否启用翻译Mod（取消，会加载文本到内存，但不会进行任何OnGUI交互）");
             mscTranslateChs.IsTranslateGameOverMessage = GUILayout.Toggle(mscTranslateChs.IsTranslateGameOverMessage, "是否启用GameOver提示文本（报刊上的GameOver原因）");

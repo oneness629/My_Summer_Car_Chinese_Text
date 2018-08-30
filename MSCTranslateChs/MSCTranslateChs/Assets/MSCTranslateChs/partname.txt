@@ -1,19 +1,20 @@
-﻿SHOPPING BAG=购物袋
-
+SHOPPING BAG=购物袋
+注释2018-08-30 20:00:19=2--------------------------------------------------------------------
 PIZZA=披萨
 SAUSAGES=香肠
 MACARON BOX=盒装通心粉
 POTATO CHIPS=薯片
 SAUSAGE WITH FRIES=香肠配薯条
-
+注释2018-08-30 20:00:20=2--------------------------------------------------------------------
 MILK=牛奶
 JUICE=果汁
 GROUND COFFEE=研磨咖啡粉
 BEER CASE=啤酒箱
-
+注释2018-08-30 20:00:21=2--------------------------------------------------------------------
 SUGAR=糖
 YEAST=酵母
 CIGARETTES=香烟
+CIGARETTES=高级香烟
 GRILL CHARCOAL=烧烤用炭
 MOSQUITO SPRAY=驱虫喷雾
 FIRE EXTINGUISHER=灭火器
@@ -22,7 +23,7 @@ SPARK PLUG BOX=盒装火花塞（4个）
 SPRAY CAN=喷漆罐
 BRAKE FLUID=刹车/离合器油
 OIL FILTER=机油滤清器
-
+注释2018-08-30 20:00:22=2--------------------------------------------------------------------
 MOTOR OIL=机油
 COOLANT=冷却液
 FAN BELT=风扇皮带
@@ -30,12 +31,12 @@ BATTERY=车用电池
 WHEEL COVER SUOMI=SUOMI方向盘套
 SEAT COVER SUOMI=SUOMI座椅套
 DASH COVER SUOMI=SUOMI仪表台套
-
+注释2018-08-30 20:00:23=2--------------------------------------------------------------------
 GASOLINE=汽油
 DIESEL=柴油
 TWO STROKE FUEL=二冲程燃料（船/摩托）
 JONNEZ ES=JONNEZ ES（摩托）
-
+注释2018-08-30 20:00:24=2--------------------------------------------------------------------
 XMAS LIGHTS=圣诞灯
 WARNING TRIANGLE=警告标志
 CAR JACK=千斤顶
@@ -59,7 +60,7 @@ SPANNER(12)=扳手 (12)
 SPANNER(13)=扳手 (13)
 SPANNER(14)=扳手 (14)
 SPANNER(15)=扳手 (15)
-
+注释2018-08-30 20:00:25=2--------------------------------------------------------------------
 CAR BODY=车身
 WHEEL=车轮
 FENDER FLARE FL=挡泥板（左前）
@@ -74,8 +75,8 @@ BOOTLID=行李箱盖
 HEADLIGHT=头灯
 DOOR LEFT=左门
 DOOR RIGHT=右门
-FENDER LEFT=左挡泥板
-FENDER RIGHT=右挡泥板
+FENDER LEFT=左叶子板
+FENDER RIGHT=右叶子板
 REARLIGHT=尾灯
 CLOCK GAUGE=时钟
 DASHBOARD METERS=仪表
@@ -98,7 +99,7 @@ FUEL TANK=燃料箱
 FUEL TANK PIPE=油箱补油管
 EXHAUST PIPE=排气管
 EXHAUST MUFFLER=排气消声器
-
+注释2018-08-30 20:00:26=2--------------------------------------------------------------------
 SUB FRAME=前横梁
 HALFSHAFT=驱动半轴
 WISHBONE FL=下摆臂（左前）
@@ -107,19 +108,23 @@ STRUT FL=支柱(左前)
 STRUT FR=支柱(右前)
 SPINDLE FL=轮轴（左前）
 SPINDLE FR=轮轴（右前）
+MUDFLAP FL=挡泥板（左前）
+MUDFLAP FR=挡泥板（右前）
+MUDFLAP RL=挡泥板（左后）
+MUDFLAP RR=挡泥板（右后）
 STEERING RACK=转向齿条
 STEERING ROD FL=转向拉杆(左前)
 STEERING ROD FR=转向拉杆(右前)
 STEERING COLUMN=方向盘连杆
 STOCK STEERING WHEEL=原装方向盘
 DISCBRAKE=碟式刹车
-
+注释2018-08-30 20:00:27=2--------------------------------------------------------------------
 TRAIL ARM RL=控制臂（左后）
 TRAIL ARM RR=控制臂（右后）
 SHOCK ABSORBER=减震器
 COIL SPRING=避震弹簧
 DRUM BRAKE=鼓式刹车
-
+注释2018-08-30 20:00:28=2--------------------------------------------------------------------
 BLOCK=引擎主体
 CRANKSHAFT=曲轴
 MAIN BEARING1=曲轴轴承 1
@@ -159,22 +164,20 @@ CARBURATOR=渗碳器
 DRIVE GEAR=传动齿轮
 AIRFILTER=空气滤清器
 FUEL STRAINER=燃油滤清器
-
-ELECTRICS=电
-HEADERS=报头
+注释2018-08-30 20:00:29=2--------------------------------------------------------------------
 BRAKE MASTER CYLINDER=刹车油控制缸
 BRAKE LINING=刹车油管路
 CLUTCH MASTER CYLINDER=离合器油控制缸
 CLUTCH LINING=离合器油管路
 HANDBRAKE=手刹
-
+注释2018-08-30 20:00:30=2--------------------------------------------------------------------
 WINDOW GRILLE=格栅后窗
 REAR SPOILER2=后扰流板 2
 REAR SPOILER1=后扰流板 1
 FRONT SPOILER=前扰流板
 FIBERGLASS HOOD=玻璃纤维引擎罩
 FENDER FLARE SPOILER=加宽叶子板
-
+注释2018-08-30 20:00:31=2--------------------------------------------------------------------
 DASH COVER ZEBRA=斑马纹仪表板套
 DASH COVER LEOPARD=豹纹仪表板套
 WHEEL COVER ZEBRA=斑马纹方向盘套
@@ -182,32 +185,30 @@ WHEEL COVER LEOPARD=豹纹方向盘套
 SEAT COVER ZEBRA=斑马纹座椅套
 SEAT COVER LEOPARD=豹纹座椅套
 WINDOW BLACK WRAP=黑包车窗贴纸
-
+注释2018-08-30 20:00:32=2--------------------------------------------------------------------
 FUEL MIXTURE GAUGE=空气/燃油比表
 EXTRA GAUGES=附加仪表
 RPM GAUGE=转速表
 SUBWOOFER LEFT=低音炮左
 SUBWOOFER RIGHT=低音炮右
 AMPLIFIER=功率放大器
-
-=
-=
+注释2018-08-30 20:00:33=2--------------------------------------------------------------------
 RACING FLYWHEEL=赛车飞轮
 RACING MUFFLER=赛车消声器
 RACING EXHAUST=赛车排气
-
+注释2018-08-30 20:00:34=2--------------------------------------------------------------------
 N2O BOTTLE=N2O瓶
 N2O BUTTON PANEL=N2O按钮面板
-
+注释2018-08-30 20:00:35=2--------------------------------------------------------------------
 RALLY STEERING WHEEL=拉力方向盘
-斗式驾驶员座
-斗式成员座椅
+斗式驾驶员座=??等等下次
+斗式成员座椅=??等等下次
 RACING HARNESS=赛车用安全带
-
+注释2018-08-30 20:00:36=2--------------------------------------------------------------------
 ROLL CAGE=防滚架
 LONG COIL SPRING=长螺旋弹簧
 COIL SPRING RALLY=拉力用螺旋弹簧
-
+注释2018-08-30 20:00:37=2--------------------------------------------------------------------
 ENVELOPE=信封
 LANTERN=灯笼
 SOFA=沙发
@@ -215,7 +216,7 @@ FISH TRAP=渔网
 MAP=地图
 ROCKET=烟花
 FIREWORKS BAG=烟花袋
-BOOZE=酒
+BOOZE=烈酒
 VODKA SHOT=伏特加
 COFFEE=咖啡
 COFFEE CUP=咖啡杯
@@ -227,9 +228,9 @@ FIREWOOD=柴火
 WOOD CARRIER=柴火提架
 DIPPER=勺子
 WATER BUCKET=水桶
-=酿酒桶
+酿酒桶=酿酒桶???等下次
 BUCKET LID=酒桶盖
-EMPTY=空罐
+EMPTY=空的
 EMPTY PACK=空包
 EMPTY BOTTLE=空瓶
 EMPTY PLASTIC CAN=空塑料罐
@@ -237,8 +238,10 @@ HOSE=软管
 WELL COVER=化粪池盖
 BASKETBALL=篮球
 GRILL=烧烤架
-
+GARBAGE BARREL=垃圾桶
+注释2018-08-30 20:00:38=2--------------------------------------------------------------------
 ARM=手臂
 THIGH=大腿
 LEG=腿
 SHOULDERS=肩膀
+注释2018-08-30 20:00:39=2018-08-30汉化文本到此为止--------------------------------------------------------------------

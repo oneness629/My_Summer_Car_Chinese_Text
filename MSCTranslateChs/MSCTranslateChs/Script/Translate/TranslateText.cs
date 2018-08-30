@@ -22,6 +22,7 @@ namespace MSCTranslateChs.Script.Translate
         Dictionary<string, int> translateTextSizeDict = new Dictionary<string, int>();
 
         public const string DICT_SUBTITLE = "subtitle";
+        public const string DICT_UI = "ui";
         public const string DICT_INTERACTION = "interaction";
         public const string DICT_PARTNAME = "partname";
         public const string DICT_GAMEOVER = "gameover";
@@ -69,6 +70,7 @@ namespace MSCTranslateChs.Script.Translate
         public void ReadTranslateTextDict()
         {
             ReadTranslateTextDict(DICT_SUBTITLE);
+            ReadTranslateTextDict(DICT_UI);
             ReadTranslateTextDict(DICT_INTERACTION);
             ReadTranslateTextDict(DICT_PARTNAME);
             ReadTranslateTextDict(DICT_GAMEOVER);
@@ -89,6 +91,7 @@ namespace MSCTranslateChs.Script.Translate
         public void WriteTranslateTextDict()
         {
             WriteTranslateTextDict(DICT_SUBTITLE);
+            WriteTranslateTextDict(DICT_UI);
             WriteTranslateTextDict(DICT_INTERACTION);
             WriteTranslateTextDict(DICT_PARTNAME);
             WriteTranslateTextDict(DICT_GAMEOVER);

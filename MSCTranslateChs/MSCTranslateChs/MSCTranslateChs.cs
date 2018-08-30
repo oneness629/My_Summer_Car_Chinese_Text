@@ -213,7 +213,7 @@ namespace MSCTranslateChs
             for (int i = 0; i < gameObject.transform.childCount; i++)
             {
                 GameObject childGameObject = gameObject.transform.GetChild(i).gameObject;
-                if (childGameObject != null && childGameObject.activeSelf)
+                if (childGameObject != null && (childGameObject.activeSelf || Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.G)))
                 {
                     string path = GameObjectUtil.getGameObjectPath(childGameObject);
                     string pathTextEn = path + "/TextEN";
@@ -292,7 +292,7 @@ namespace MSCTranslateChs
                         string textMeshString = GameObjectUtil.getGameObjectTextMeshString(gameObject);
                         if (textMeshString != null && textMeshString.Trim().Length > 0)
                         {
-                            text = translateText.TranslateString(textMeshString, TranslateText.DICT_INTERACTION);
+                            text = translateText.TranslateString(textMeshString, TranslateText.DICT_UI);
                             // text += textMeshString;
                         }
                     }
