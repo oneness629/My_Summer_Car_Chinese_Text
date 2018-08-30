@@ -22,7 +22,7 @@ namespace MSCTranslateChs
 
         public override string Author => "oneness629";
 
-        public override string Version => "2.2";
+        public override string Version => "2.3";
 
         public override bool UseAssetsFolder => true;
 
@@ -35,20 +35,9 @@ namespace MSCTranslateChs
         public bool IsTranslateGameOverMessage = true;
         public bool IsTranslateUI = true;
         public bool IsTranslateEscInitUI = true;
-        public bool IsCheckTranslateText = true;
         public bool IsDevelop = true;
 
-        public List<string> subtitlesList = new List<string>();
-        public List<string> interactionsList = new List<string>();
-        public List<string> partnamesList = new List<string>();
-
-        private int subtitlesListSize = 0;
-        private int interactionsListSize = 0;
-        private int partnamesListSize = 0;
-
-        private string notTranslateString = "[未翻译文本]";
-        private string autoTranslateStringing = "[自动翻译中 ... ]";
-        private string autoTranslateString = "[自动翻译]";
+        public TranslateText translateText;
 
         private TextMesh gameOverTextMesh;
         private TextMesh subtitlesTextMesh;
@@ -69,12 +58,6 @@ namespace MSCTranslateChs
         private WelcomeWindows welcomeWindows;
 
         public bool isShowWelcomeWindows = true;
-
-        private bool isEnableAutoTranslateApi = false;
-        private string autoTranslateApiAppId;
-        private string autoTranslateApiApikey;
-
-        private TranslateApi translateApi;
 
         bool isInitSystemsGameObject = false;
 
@@ -110,7 +93,7 @@ namespace MSCTranslateChs
             mouseTipGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
             mouseTipGuiStyle.normal.textColor = new Color(255, 255, 255);
 
-            ReadTranslateText();
+            translateText = new TranslateText(this);
 
             IsLoadResources = true;
         }
@@ -129,7 +112,7 @@ namespace MSCTranslateChs
                             string subtitlesText = subtitlesTextMesh.text.Trim();
                             if (subtitlesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(subtitlesText))
                             {
-                                GUI.Label(subtitlesRect, TranslateString(subtitlesText, subtitlesList), subtitlesGuiStyle);
+                                GUI.Label(subtitlesRect, translateText.TranslateString(subtitlesText, TranslateText.DICT_SUBTITLE), subtitlesGuiStyle);
                             }
                         }
                         if (IsTranslatePartnames)
@@ -138,7 +121,7 @@ namespace MSCTranslateChs
                             string partnamesText = partnamesTextMesh.text.Trim();
                             if (partnamesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(partnamesText))
                             {
-                                GUI.Label(partnamesRect, TranslateString(partnamesText, partnamesList), partnamesGuiStyle);
+                                GUI.Label(partnamesRect, translateText.TranslateString(partnamesText, TranslateText.DICT_PARTNAME), partnamesGuiStyle);
                             }
                         }
                         if (IsTranslateInteractions)
@@ -147,7 +130,7 @@ namespace MSCTranslateChs
                             string interactionsText = interactionsTextMesh.text.Trim();
                             if (interactionsTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(interactionsText))
                             {
-                                GUI.Label(interactionsRect, TranslateString(interactionsText, interactionsList), interactionsGuiStyle);
+                                GUI.Label(interactionsRect, translateText.TranslateString(interactionsText, TranslateText.DICT_INTERACTION), interactionsGuiStyle);
                             }
                         }
                         if (IsTranslateGameOverMessage)
@@ -173,14 +156,9 @@ namespace MSCTranslateChs
                             develop.Update();
                             if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.R))
                             {
-                                ReadTranslateText();
+                                translateText.ReadTranslateTextDict();
                             }
                         }
-                        if (IsCheckTranslateText)
-                        {
-                            CheckAndWriteTranslateText();
-                        }
-                        
 
                     }
                     if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.W))
@@ -236,7 +214,7 @@ namespace MSCTranslateChs
                         if (gameOverTextMesh != null)
                         {
                             string gameOverText = gameOverTextMesh.text.Trim();
-                            string translateString = TranslateString(gameOverText, interactionsList);
+                            string translateString = translateText.TranslateString(gameOverText, TranslateText.DICT_GAMEOVER);
                             
                             // ModConsole.Print("GameOver文本GameObject读取：");
                             // ModConsole.Print("EN:" + gameOverText);
@@ -273,79 +251,6 @@ namespace MSCTranslateChs
             }
         }
 
-
-        private void NoCheckAndWriteTranslateText()
-        {
-            File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "subtitles.txt"), subtitlesList.ToArray());
-            subtitlesListSize = subtitlesList.Count;
-            ModConsole.Print("新的未翻译文本已写入到subtitles.txt");
-            File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "interactions.txt"), interactionsList.ToArray());
-            interactionsListSize = interactionsList.Count;
-            ModConsole.Print("新的未翻译文本已写入到interactions.txt");
-            File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "partnames.txt"), partnamesList.ToArray());
-            partnamesListSize = partnamesList.Count;
-            ModConsole.Print("新的未翻译文本已写入到partnames.txt");
-        }
-
-        private void ReadTranslateText()
-        {
-            List<string> configList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "config.txt")).ToList();
-            isEnableAutoTranslateApi = false;
-            autoTranslateApiAppId = TranslateString("autoTranslateApi_AppId", configList);
-            autoTranslateApiApikey = TranslateString("autoTranslateApi_Apikey", configList);
-            isEnableAutoTranslateApi = TranslateString("isEnableAutoTranslateApi", configList).ToLower() == "true";
-
-            ModConsole.Print("自动翻译API启用状态 :" + isEnableAutoTranslateApi);
-            ModConsole.Print("自动翻译API appid :" + autoTranslateApiAppId);
-            ModConsole.Print("自动翻译API apikey :" + autoTranslateApiApikey);
-            if (isEnableAutoTranslateApi)
-            {
-                ModConsole.Print("初始化自动翻译API");
-                translateApi = new TranslateApi(autoTranslateApiAppId, autoTranslateApiApikey);
-            }
-            else
-            {
-                ModConsole.Print("不使用自动翻译API");
-                translateApi = null;
-            }
-
-            subtitlesList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "subtitles.txt")).ToList();
-            interactionsList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "interactions.txt")).ToList();
-            partnamesList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "partnames.txt")).ToList();
-
-            subtitlesListSize = subtitlesList.Count;
-            interactionsListSize = interactionsList.Count;
-            partnamesListSize = partnamesList.Count;
-
-            ModConsole.Print("翻译文本列表数量");
-            ModConsole.Print("subtitlesListSize :" + subtitlesListSize);
-            ModConsole.Print("interactionsListSize :" + interactionsListSize);
-            ModConsole.Print("partnamesListSize :" + partnamesListSize);
-        }
-
-        
-        private void CheckAndWriteTranslateText()
-        {
-            if (subtitlesListSize > 0 && subtitlesListSize < subtitlesList.Count)
-            {
-                File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "subtitles.txt"), subtitlesList.ToArray());
-                subtitlesListSize = subtitlesList.Count;
-                ModConsole.Print("新的未翻译文本已写入到subtitles.txt");
-            }
-            if (interactionsListSize > 0 && interactionsListSize < interactionsList.Count)
-            {
-                File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "interactions.txt"), interactionsList.ToArray());
-                interactionsListSize = interactionsList.Count;
-                ModConsole.Print("新的未翻译文本已写入到interactions.txt");
-            }
-            if (partnamesListSize > 0 && partnamesListSize < partnamesList.Count)
-            {
-                File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "partnames.txt"), partnamesList.ToArray());
-                partnamesListSize = partnamesList.Count;
-                ModConsole.Print("新的未翻译文本已写入到partnames.txt");
-            }
-        }
-
         private void RaySystemsGameObject()
         {
             if (!isInitSystemsGameObject)
@@ -377,7 +282,7 @@ namespace MSCTranslateChs
                         string textMeshString = GameObjectUtil.getGameObjectTextMeshString(gameObject);
                         if (textMeshString != null && textMeshString.Trim().Length > 0)
                         {
-                            text = TranslateString(textMeshString, interactionsList);
+                            text = translateText.TranslateString(textMeshString, TranslateText.DICT_INTERACTION);
                             // text += textMeshString;
                         }
                     }
@@ -394,78 +299,6 @@ namespace MSCTranslateChs
                 GameObjectUtil.addBoxColliderByChildByTextMesh(systemsGameObject);
             }
         }
-
-        private string TranslateString(string text, List<string> textList)
-        {
-            if (string.IsNullOrEmpty(text))
-            {
-                return "\"\"";
-            }
-            text = text.Replace("\n","\\n");
-            string listText = textList.FirstOrDefault((string s) => s.ToUpper().Contains(text.Trim().ToUpper()));
-            if (string.IsNullOrEmpty(listText))
-            {
-                ModConsole.Print("文本在列表中未找到: " + text);
-                if (isEnableAutoTranslateApi)
-                {
-                    ModConsole.Print("自动翻译文本:" + text);
-                    Dictionary<string, object> data = new Dictionary<string, object>();
-                    data.Add("text", text);
-                    data.Add("textList", textList);
-                    data.Add("textListIndex", textList.Count);
-
-                    Thread thread = new Thread(new ParameterizedThreadStart(this.AutoTranslateString));
-                    thread.IsBackground = true;
-                    thread.Start(data);
-                    textList.Add(text + "=" + autoTranslateStringing);
-                    return autoTranslateStringing;
-                }
-                else
-                {
-                    textList.Add(text + "=" + notTranslateString);
-                    return notTranslateString;
-                }
-
-            }
-            string resultString = listText.Split('=')[1];
-            
-            if (!string.IsNullOrEmpty(resultString))
-            {
-                resultString = resultString.Replace("\\n", "\n");
-            }
-            
-            return resultString;
-        }
-
-        private void AutoTranslateString(object data)
-        {
-            try
-            {
-                Dictionary<string, object> dict = data as Dictionary<string, object>;
-                if (dict.ContainsKey("text") && dict.ContainsKey("textList") && dict.ContainsKey("textListIndex"))
-                {
-                    string text = dict["text"] as string;
-                    List<string> textList = dict["textList"] as List<string>;
-                    Int32 textIndex = (int)dict["textListIndex"];
-
-                    if (translateApi != null)
-                    {
-                        string result = translateApi.TranslationEnglishToChineseFromBaiduFanyi(text);
-                        ModConsole.Print("自动翻译文本完成，替换目标文本" + textList[textIndex] + "index : " + textIndex);
-                        ModConsole.Print("自动翻译文本:" + result + "index : " + textIndex);
-                        textList[textIndex] = text + "=" + autoTranslateString + result;
-                        NoCheckAndWriteTranslateText();
-                        ReadTranslateText();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                ModConsole.Print("AutoTranslateString Error : " + e.Message);
-            }
-
-        }
-
         
 
     }

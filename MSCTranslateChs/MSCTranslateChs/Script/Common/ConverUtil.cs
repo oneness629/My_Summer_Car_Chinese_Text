@@ -12,7 +12,7 @@ namespace MSCTranslateChs.Script.Common
     {
         private static LOGGER logger = new LOGGER(typeof(ConverUtil));
 
-        public static Dictionary<string, string> ConverListToDictionary(List<string> list, string splitText)
+        public static Dictionary<string, string> ConverListToDictionary(List<string> list, string splitText = "=")
         {
             if (list != null)
             {
@@ -41,7 +41,7 @@ namespace MSCTranslateChs.Script.Common
             return null;
         }
 
-        public static List<string> ConverDictionaryToList(Dictionary<string, string> dictionary, string splitText)
+        public static List<string> ConverDictionaryToList(Dictionary<string, string> dictionary, string splitText = "=")
         {
             if (dictionary != null)
             {

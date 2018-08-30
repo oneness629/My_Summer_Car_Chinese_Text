@@ -9,14 +9,17 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
-
+using System.Threading;
 
 namespace MSCTranslateChs.Script.Translate
 {
     public class TranslateText
     {
+        private static LOGGER logger = new LOGGER(typeof(TranslateText));
+
         Mod mod;
         Dictionary<string, Dictionary<string, string>> translateTextDict = new Dictionary<string, Dictionary<string, string>>();
+        Dictionary<string, int> translateTextSizeDict = new Dictionary<string, int>();
 
         public const string DICT_SUBTITLE = "subtitle";
         public const string DICT_INTERACTION = "interaction";
@@ -25,32 +28,143 @@ namespace MSCTranslateChs.Script.Translate
         public const string DICT_CONFIG = "config";
 
         public bool isReadAllText = false;
+        public bool isEnableAutoTranslateApi = false;
+
+        private TranslateApi translateApi;
+
+        private string autoTranslateApiAppId;
+        private string autoTranslateApiApikey;
+        
+        private string notTranslateString = "[未翻译文本]";
+        private string autoTranslateStringing = "[自动翻译中 ... ]";
+        private string autoTranslateString = "[自动翻译]";
 
         public TranslateText(Mod mod)
         {
             this.mod = mod;
-            readTranslateTextDict();
+            ReadTranslateTextDict();
+            InitTranslateApi();
         }
 
-        public void readTranslateTextDict()
+        public void InitTranslateApi()
         {
-            readTranslateTextDict(DICT_SUBTITLE);
-            readTranslateTextDict(DICT_INTERACTION);
-            readTranslateTextDict(DICT_PARTNAME);
-            readTranslateTextDict(DICT_GAMEOVER);
-            readTranslateTextDict(DICT_CONFIG);
+            autoTranslateApiAppId = translateTextDict[DICT_CONFIG]["autoTranslateApi_AppId"];
+            autoTranslateApiApikey = translateTextDict[DICT_CONFIG]["autoTranslateApi_Apikey"];
+            isEnableAutoTranslateApi = translateTextDict[DICT_CONFIG]["isEnableAutoTranslateApi"].ToLower() == "true";
+
+            logger.LOG("自动翻译API启用状态 :" + isEnableAutoTranslateApi);
+            logger.LOG("自动翻译API appid :" + autoTranslateApiAppId);
+            logger.LOG("自动翻译API apikey :" + autoTranslateApiApikey);
+            if (isEnableAutoTranslateApi)
+            {
+                translateApi = new TranslateApi(autoTranslateApiAppId, autoTranslateApiApikey);
+                logger.LOG("初始化自动翻译API完成");
+            }
+            else
+            {
+                logger.LOG("不使用自动翻译API");
+                translateApi = null;
+            }
+        }
+
+        public void ReadTranslateTextDict()
+        {
+            ReadTranslateTextDict(DICT_SUBTITLE);
+            ReadTranslateTextDict(DICT_INTERACTION);
+            ReadTranslateTextDict(DICT_PARTNAME);
+            ReadTranslateTextDict(DICT_GAMEOVER);
+            ReadTranslateTextDict(DICT_CONFIG);
             isReadAllText = true;
+            logger.LOG("读取所有txt文件完成");
         }
 
-        public void readTranslateTextDict(string dictKey)
+        public void ReadTranslateTextDict(string dictKey)
         {
-            List<string> list = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(mod), DICT_CONFIG + "txt")).ToList();
-            Dictionary<string, string> dict = ConverUtil.ConverListToDictionary(list, "=");
+            List<string> list = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(mod), dictKey + ".txt")).ToList();
+            Dictionary<string, string> dict = ConverUtil.ConverListToDictionary(list);
             translateTextDict[dictKey] = dict;
+            translateTextSizeDict[dictKey] = dict.Count;
+            logger.LOG("读取"+ dictKey + ".txt文件完成");
         }
 
-        public void writeTranslateTextDict(string dictKey)
+        public void WriteTranslateTextDict()
         {
+            WriteTranslateTextDict(DICT_SUBTITLE);
+            WriteTranslateTextDict(DICT_INTERACTION);
+            WriteTranslateTextDict(DICT_PARTNAME);
+            WriteTranslateTextDict(DICT_GAMEOVER);
+            WriteTranslateTextDict(DICT_CONFIG);
+            logger.LOG("写入所有txt文件完成");
+        }
+
+        public void WriteTranslateTextDict(string dictKey)
+        {
+            List<string> list = ConverUtil.ConverDictionaryToList(translateTextDict[dictKey]);
+            File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(mod), dictKey + ".txt"), list.ToArray());
+            logger.LOG("写入"+ dictKey + ".txt文件完成");
+        }
+
+
+        public string TranslateString(string text, string dictKey)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return "\"\"";
+            }
+            string translateText = translateTextDict[dictKey][text];
+            if (translateText == null)
+            {
+                logger.LOG("文本在列表"+ dictKey + "中未找到: " + text);
+                if (isEnableAutoTranslateApi)
+                {
+                    logger.LOG("自动翻译文本:" + text);
+                    translateTextDict[dictKey][text] = autoTranslateStringing;
+
+
+                    Thread thread = new Thread(new ParameterizedThreadStart(this.AutoTranslateString));
+                    Dictionary<string, string> param = new Dictionary<string, string>();
+                    param.Add("text", text);
+                    param.Add("dictKey", dictKey);
+                    thread.IsBackground = true;
+                    thread.Start(param);
+                    return autoTranslateStringing;
+                }
+                else
+                {
+                    translateTextDict[dictKey][text] = notTranslateString;
+                    return notTranslateString;
+                }
+            }
+            return translateText;
+        }
+
+        private void AutoTranslateString(object dict)
+        {
+            try
+            {
+                Dictionary<string, string> paramDict = dict as Dictionary<string, string>;
+                if (paramDict != null && paramDict["text"] != null && paramDict["dictKey"] != null)
+                {
+                    if (translateApi != null)
+                    {
+                        string waitTranslateString = paramDict["text"];
+                        string dictKey = paramDict["dictKey"];
+                        string result = translateApi.TranslationEnglishToChineseFromBaiduFanyi(waitTranslateString);
+                        logger.LOG("自动翻译"+ dictKey + "文本完成，替换目标文本 -> \n" + translateTextDict[dictKey][waitTranslateString]);
+                        logger.LOG("自动翻译" + dictKey + "文本结果:" + result);
+                        WriteTranslateTextDict();
+                        ReadTranslateTextDict();
+                    }
+                    else
+                    {
+                        logger.LOG("自动翻译API为空，不翻译");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.LOG("自动翻译出错:" + e.Message);
+            }
         }
 
     }
