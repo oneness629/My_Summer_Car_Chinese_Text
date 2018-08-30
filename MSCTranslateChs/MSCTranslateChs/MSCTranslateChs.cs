@@ -16,6 +16,8 @@ namespace MSCTranslateChs
 {
     public class MSCTranslateChs : Mod
     {
+        private static LOGGER logger = new LOGGER(typeof(MSCTranslateChs));
+
         public override string ID => "MSCTranslateChs";
 
         public override string Name => "MSCTranslateChs";
@@ -64,38 +66,46 @@ namespace MSCTranslateChs
 
         public override void OnLoad()
         {
-            IsLoadResources = false;
-            IsLoadGameObject = false;
+            try
+            {
+                IsLoadResources = false;
+                IsLoadGameObject = false;
 
-            develop = new Develop(this);
-            welcomeWindows = new WelcomeWindows(this);
+                develop = new Develop(this);
+                welcomeWindows = new WelcomeWindows(this);
 
-            subtitlesGuiStyle = new GUIStyle();
-            subtitlesGuiStyle.alignment = TextAnchor.MiddleCenter;
-            subtitlesGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
-            subtitlesGuiStyle.normal.textColor = new Color(255, 165, 0);
+                subtitlesGuiStyle = new GUIStyle();
+                subtitlesGuiStyle.alignment = TextAnchor.MiddleCenter;
+                subtitlesGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+                subtitlesGuiStyle.normal.textColor = new Color(255, 165, 0);
 
-            subtitlesRect = new Rect(0, (Screen.height) / 2.15f, Screen.width, Screen.height);
+                subtitlesRect = new Rect(0, (Screen.height) / 2.15f, Screen.width, Screen.height);
 
-            partnamesGuiStyle = subtitlesGuiStyle;
+                partnamesGuiStyle = subtitlesGuiStyle;
 
-            partnamesRect = new Rect(0, (Screen.height) / 2.4f, Screen.width, Screen.height);
+                partnamesRect = new Rect(0, (Screen.height) / 2.4f, Screen.width, Screen.height);
 
-            interactionsGuiStyle = new GUIStyle();
-            interactionsGuiStyle.alignment = TextAnchor.MiddleCenter;
-            interactionsGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
-            interactionsGuiStyle.normal.textColor = new Color(255, 255, 255);
+                interactionsGuiStyle = new GUIStyle();
+                interactionsGuiStyle.alignment = TextAnchor.MiddleCenter;
+                interactionsGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+                interactionsGuiStyle.normal.textColor = new Color(255, 255, 255);
 
-            interactionsRect = new Rect(0, (Screen.height) / 12f, Screen.width, Screen.height);
+                interactionsRect = new Rect(0, (Screen.height) / 12f, Screen.width, Screen.height);
 
-            mouseTipGuiStyle = new GUIStyle();
-            mouseTipGuiStyle.alignment = TextAnchor.LowerLeft;
-            mouseTipGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
-            mouseTipGuiStyle.normal.textColor = new Color(255, 255, 255);
+                mouseTipGuiStyle = new GUIStyle();
+                mouseTipGuiStyle.alignment = TextAnchor.LowerLeft;
+                mouseTipGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+                mouseTipGuiStyle.normal.textColor = new Color(255, 255, 255);
 
-            translateText = new TranslateText(this);
+                translateText = new TranslateText(this);
 
-            IsLoadResources = true;
+                IsLoadResources = true;
+            }
+            catch (Exception e)
+            {
+                logger.LOG("OnLoad Exception : " + e.Message);
+                logger.LOG(e);
+            }
         }
 
         public override void OnGUI()
@@ -178,8 +188,8 @@ namespace MSCTranslateChs
             }
             catch (Exception e)
             {
-                ModConsole.Print("GUI异常: " + e.Message);
-                ModConsole.Print(e);
+                logger.LOG("OnGUI Exception : " + e.Message);
+                logger.LOG(e);
             }
 
         }
@@ -245,7 +255,7 @@ namespace MSCTranslateChs
                     catch (Exception e)
                     {
                         IsLoadGameObject = false;
-                        ModConsole.Print("加载GameObject过程出现异常: " + e.Message);
+                        logger.LOG("加载GameObject过程出现异常: " + e.Message);
                     }
                 }
             }

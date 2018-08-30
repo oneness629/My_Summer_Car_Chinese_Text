@@ -37,7 +37,6 @@ namespace MSCTranslateChs.Script.Translate
         
         private string notTranslateString = "[未翻译文本]";
         private string autoTranslateStringing = "[自动翻译中 ... ]";
-        private string autoTranslateString = "[自动翻译]";
 
         public TranslateText(Mod mod)
         {
@@ -48,9 +47,9 @@ namespace MSCTranslateChs.Script.Translate
 
         public void InitTranslateApi()
         {
-            autoTranslateApiAppId = translateTextDict[DICT_CONFIG]["autoTranslateApi_AppId"];
-            autoTranslateApiApikey = translateTextDict[DICT_CONFIG]["autoTranslateApi_Apikey"];
-            isEnableAutoTranslateApi = translateTextDict[DICT_CONFIG]["isEnableAutoTranslateApi"].ToLower() == "true";
+            autoTranslateApiAppId = translateTextDict[DICT_CONFIG]["AUTO_TRANSLATE_API_APP_ID"];
+            autoTranslateApiApikey = translateTextDict[DICT_CONFIG]["AUTO_TRANSLATE_API_API_KEY"];
+            isEnableAutoTranslateApi = translateTextDict[DICT_CONFIG]["IS_ENABLE_AUTO_TRANSLATE_API"].ToLower() == "true";
 
             logger.LOG("自动翻译API启用状态 :" + isEnableAutoTranslateApi);
             logger.LOG("自动翻译API appid :" + autoTranslateApiAppId);
@@ -111,8 +110,9 @@ namespace MSCTranslateChs.Script.Translate
             {
                 return "\"\"";
             }
-            string translateText = translateTextDict[dictKey][text];
-            if (translateText == null)
+            // 统一大写
+            text = text.ToUpper();
+            if (!translateTextDict[dictKey].ContainsKey(text))
             {
                 logger.LOG("文本在列表"+ dictKey + "中未找到: " + text);
                 if (isEnableAutoTranslateApi)
@@ -135,7 +135,7 @@ namespace MSCTranslateChs.Script.Translate
                     return notTranslateString;
                 }
             }
-            return translateText;
+            return translateTextDict[dictKey][text];
         }
 
         private void AutoTranslateString(object dict)
@@ -151,6 +151,7 @@ namespace MSCTranslateChs.Script.Translate
                         string dictKey = paramDict["dictKey"];
                         string result = translateApi.TranslationEnglishToChineseFromBaiduFanyi(waitTranslateString);
                         logger.LOG("自动翻译"+ dictKey + "文本完成，替换目标文本 -> \n" + translateTextDict[dictKey][waitTranslateString]);
+                        translateTextDict[dictKey][waitTranslateString] = result;
                         logger.LOG("自动翻译" + dictKey + "文本结果:" + result);
                         WriteTranslateTextDict();
                         ReadTranslateTextDict();

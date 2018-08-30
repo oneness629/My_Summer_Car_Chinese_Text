@@ -28,7 +28,10 @@ namespace MSCTranslateChs.Script.Common
                         string value = result[1];
                         key = key.Replace("\\n", "\n");
                         value = value.Replace("\\n", "\n");
-                        dictionary.Add(key, value);
+                        if(!dictionary.ContainsKey(key))
+                        {
+                            dictionary.Add(key, value);
+                        }
                     }
                     else
                     {
@@ -48,7 +51,7 @@ namespace MSCTranslateChs.Script.Common
                 List<string> list = new List<string>();
                 foreach (string key in dictionary.Keys)
                 {
-                    if (key != null && dictionary[key] != null)
+                    if (key != null && dictionary.ContainsKey(key))
                     {
                         string text = key.Replace("\n", "\\n") + splitText + dictionary[key].Replace("\n", "\\n");
                         list.Add(text);

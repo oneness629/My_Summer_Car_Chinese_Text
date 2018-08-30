@@ -5,12 +5,15 @@ using System.Text;
 using UnityEngine;
 using MSCTranslateChs.Script.Develop;
 using MSCLoader;
+using MSCTranslateChs.Script.Common;
 
 namespace MSCTranslateChs.Script.Teleport
 {
     
     public class Teleport
     {
+        private static LOGGER logger = new LOGGER(typeof(MSCTranslateChs));
+
         public bool isShowWindow = false;
         Rect windowsRect = new Rect(0, 0, 800, 600);
 
@@ -51,7 +54,13 @@ namespace MSCTranslateChs.Script.Teleport
             targetStaticPosition.Add("SPAWN_TO_COTTAGE", SPAWN_TO_COTTAGE);
             targetStaticPosition.Add("SPAWN_TO_VENTTI_PIG", SPAWN_TO_VENTTI_PIG);
 
-            targetPosition = (Dictionary<string, string>) targetDynamicPosition.Union(targetStaticPosition);
+            targetPosition = targetDynamicPosition;
+            targetPosition.Add("GRAVE_YARD_SPAWN", GRAVE_YARD_SPAWN);
+            targetPosition.Add("SPAWN_TO_STORE", SPAWN_TO_STORE);
+            targetPosition.Add("SPAWN_TO_REPAIR", SPAWN_TO_REPAIR);
+            targetPosition.Add("SPAWN_TO_DRAG", SPAWN_TO_DRAG);
+            targetPosition.Add("SPAWN_TO_COTTAGE", SPAWN_TO_COTTAGE);
+            targetPosition.Add("SPAWN_TO_VENTTI_PIG", SPAWN_TO_VENTTI_PIG);
         }
 
         public void Update()
@@ -105,11 +114,11 @@ namespace MSCTranslateChs.Script.Teleport
 
         public void TeleportTo(string teleportObjectName, string targetObjectName)
         {
-            ModConsole.Print("远程传送 " + teleportObjectName + " 到 " + targetObjectName);
+            logger.LOG("远程传送 " + teleportObjectName + " 到 " + targetObjectName);
             GameObject targetGameObject = GameObject.Find(targetObjectName);
             if (targetGameObject == null)
             {
-                ModConsole.Print("无法找到目标:" + targetObjectName);
+                logger.LOG("无法找到目标:" + targetObjectName);
                 return;
             }
 
@@ -117,7 +126,7 @@ namespace MSCTranslateChs.Script.Teleport
             GameObject teleportObject = GameObject.Find(teleportObjectName);
             if (teleportObjectName == null)
             {
-                ModConsole.Print("无法找到要传送的目标:" + teleportObjectName);
+                logger.LOG("无法找到要传送的目标:" + teleportObjectName);
                 return;
             }
             teleportObject.transform.position = position;

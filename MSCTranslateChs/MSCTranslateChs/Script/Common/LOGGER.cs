@@ -29,8 +29,15 @@ namespace MSCTranslateChs.Script.Common
         public void LOG(string text)
         {
             string log = this.logFrontText + text;
-            // ModConsole.Print(log);
+            ModConsole.Print(log);
             Console.WriteLine(log);
+        }
+
+        public void LOG(object obj)
+        {
+            ModConsole.Print(this.logFrontText);
+            ModConsole.Print(obj);
+            Console.WriteLine(obj);
         }
 
     }
