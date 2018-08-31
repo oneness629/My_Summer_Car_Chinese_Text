@@ -38,6 +38,7 @@ namespace MSCTranslateChs.Script.Translate
         
         private string notTranslateString = "[未翻译文本]";
         private string autoTranslateStringing = "[自动翻译中 ... ]";
+        private string autoTranslateString = "[自动翻译]";
 
         public TranslateText(Mod mod)
         {
@@ -154,7 +155,7 @@ namespace MSCTranslateChs.Script.Translate
                         string dictKey = paramDict["dictKey"];
                         string result = translateApi.TranslationEnglishToChineseFromBaiduFanyi(waitTranslateString);
                         logger.LOG("自动翻译"+ dictKey + "文本完成，替换目标文本 -> \n" + translateTextDict[dictKey][waitTranslateString]);
-                        translateTextDict[dictKey][waitTranslateString] = result;
+                        translateTextDict[dictKey][waitTranslateString] = autoTranslateString + result;
                         logger.LOG("自动翻译" + dictKey + "文本结果:" + result);
                         WriteTranslateTextDict();
                         ReadTranslateTextDict();
