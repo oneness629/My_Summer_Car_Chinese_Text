@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine;
 using MSCTranslateChs.Script.Develop;
 using MSCTranslateChs.Script.Teleport;
+using MSCTranslateChs.Script.Common;
 
 namespace MSCTranslateChs.Script.Develop
 {
@@ -55,11 +56,30 @@ namespace MSCTranslateChs.Script.Develop
 
             GameObjectTransformUpdate();
 
-
+            ShowAllExecutionTime();
 
             GUI.DragWindow(new Rect(0, 0, 99999, 99999));
         }
 
+        private void ShowAllExecutionTime()
+        {
+
+            foreach (string key in develop.mscTranslateChs.allExecutionTime.Keys)
+            {
+                ExecutionTime executionTime = develop.mscTranslateChs.allExecutionTime[key];
+                GUILayout.BeginHorizontal("box");
+                GUILayout.Label(key + ":");
+                GUILayout.EndHorizontal();
+                
+                foreach (string timeKey in executionTime.executionTimeDict.Keys)
+                {
+                    GUILayout.BeginHorizontal("box");
+                    GUILayout.Label(timeKey + ":" + executionTime.executionTimeDict[timeKey]);
+                    GUILayout.EndHorizontal();
+                }
+            }
+            
+        }
 
         private void GameObjectTransformUpdate()
         {

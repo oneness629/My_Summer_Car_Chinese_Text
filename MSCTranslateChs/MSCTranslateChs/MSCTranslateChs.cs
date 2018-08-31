@@ -28,6 +28,9 @@ namespace MSCTranslateChs
 
         public override bool UseAssetsFolder => true;
 
+        public Dictionary<string, ExecutionTime> allExecutionTime = new Dictionary<string, ExecutionTime>();
+        public ExecutionTime executionTime = new ExecutionTime();
+
         public bool IsLoadResources = false;
         public bool IsLoadGameObject = false;
         public bool IsEnable = true;
@@ -39,6 +42,7 @@ namespace MSCTranslateChs
         public bool IsTranslateEscInitUI = true;
         public bool IsDevelop = true;
 
+        
         public TranslateText translateText;
 
         private TextMesh gameOverTextMesh;
@@ -68,6 +72,8 @@ namespace MSCTranslateChs
         {
             try
             {
+                allExecutionTime.Add(typeof(MSCTranslateChs).Name ,executionTime);
+
                 IsLoadResources = false;
                 IsLoadGameObject = false;
 
@@ -110,14 +116,17 @@ namespace MSCTranslateChs
 
         public override void OnGUI()
         {
+            executionTime.Start("OnGUI");
             try
             {
                 if (IsLoadResources && IsLoadGameObject && Application.loadedLevelName == "GAME")
                 {
                     if (IsEnable)
                     {
+                        executionTime.Start("字幕");
                         if (IsTranslateSubtitles)
                         {
+                            
                             // 字幕
                             string subtitlesText = subtitlesTextMesh.text.Trim();
                             if (subtitlesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(subtitlesText))
@@ -125,6 +134,8 @@ namespace MSCTranslateChs
                                 GUI.Label(subtitlesRect, translateText.TranslateString(subtitlesText, TranslateText.DICT_SUBTITLE), subtitlesGuiStyle);
                             }
                         }
+                        executionTime.End("字幕");
+                        executionTime.Start("物品名称");
                         if (IsTranslatePartnames)
                         {
                             // 部件/物品名称
@@ -134,6 +145,8 @@ namespace MSCTranslateChs
                                 GUI.Label(partnamesRect, translateText.TranslateString(partnamesText, TranslateText.DICT_PARTNAME), partnamesGuiStyle);
                             }
                         }
+                        executionTime.End("物品名称");
+                        executionTime.Start("操作动作");
                         if (IsTranslateInteractions)
                         {
                             // 操作动作
@@ -143,16 +156,22 @@ namespace MSCTranslateChs
                                 GUI.Label(interactionsRect, translateText.TranslateString(interactionsText, TranslateText.DICT_INTERACTION), interactionsGuiStyle);
                             }
                         }
+                        executionTime.End("操作动作");
+                        executionTime.Start("GameOver");
                         if (IsTranslateGameOverMessage)
                         {
                             // game over 提示
                             GameOverMessage();
                         }
+                        executionTime.End("GameOver");
+                        executionTime.Start("UI");
                         if (IsTranslateUI)
                         {
                             // 额外的菜单
                             RaySystemsGameObject();
                         }
+                        executionTime.End("UI");
+                        executionTime.Start("Esc initUI");
                         if (IsTranslateEscInitUI)
                         {
                             if (Input.GetKey(KeyCode.Escape))
@@ -160,7 +179,8 @@ namespace MSCTranslateChs
                                 initUIRay();
                             }
                         }
-
+                        executionTime.End("Esc initUI");
+                        executionTime.Start("Develop");
                         if (IsDevelop)
                         {
                             develop.Update();
@@ -169,7 +189,7 @@ namespace MSCTranslateChs
                                 translateText.ReadTranslateTextDict();
                             }
                         }
-
+                        executionTime.End("Develop");
                     }
                     if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.W))
                     {
@@ -179,10 +199,12 @@ namespace MSCTranslateChs
                     {
                         isShowWelcomeWindows = false;
                     }
+                    executionTime.Start("WelcomeWindows");
                     if (isShowWelcomeWindows)
                     {
                         welcomeWindows.Update();
                     }
+                    executionTime.End("WelcomeWindows");
 
                 }
             }
@@ -191,7 +213,7 @@ namespace MSCTranslateChs
                 logger.LOG("OnGUI Exception : " + e.Message);
                 logger.LOG(e);
             }
-
+            executionTime.End("OnGUI");
         }
 
         public void initUIRay()
