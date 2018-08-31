@@ -11,6 +11,7 @@ namespace MSCTranslateChs.Script
         bool isShowWelcomeWindows = true;
         Rect welcomeWindowsRect;
         MSCTranslateChs mscTranslateChs;
+        int windowsId = 629;
 
         public WelcomeWindows(MSCTranslateChs mscTranslateChs)
         {
@@ -24,7 +25,7 @@ namespace MSCTranslateChs.Script
             isShowWelcomeWindows = mscTranslateChs.isShowWelcomeWindows;
             if (mscTranslateChs != null && isShowWelcomeWindows)
             {
-                welcomeWindowsRect = GUI.Window(1, welcomeWindowsRect, WelcomeWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod");
+                welcomeWindowsRect = GUI.Window(windowsId, welcomeWindowsRect, WelcomeWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod");
             }
         }
 

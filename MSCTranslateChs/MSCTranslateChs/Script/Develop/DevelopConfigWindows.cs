@@ -14,6 +14,7 @@ namespace MSCTranslateChs.Script.Develop
         bool isShowDevelopConfigWindows = true;
         Rect developWindowsRect;
         Develop develop;
+        int windowsId = 6291;
         
 
         public string targetGameObjectPath = "Systems";
@@ -30,7 +31,7 @@ namespace MSCTranslateChs.Script.Develop
             isShowDevelopConfigWindows = develop.isShowDevelopConfigWindows;
             if (develop != null && isShowDevelopConfigWindows)
             {
-                developWindowsRect = GUI.Window(1, developWindowsRect, DevelopConfigWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod 开发模式");
+                developWindowsRect = GUI.Window(windowsId, developWindowsRect, DevelopConfigWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod 开发模式");
             }
         }
 
