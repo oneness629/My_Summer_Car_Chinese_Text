@@ -16,6 +16,7 @@ namespace MSCTranslateChs.Script.Teleport
 
         public bool isShowWindow = false;
         Rect windowsRect = new Rect(0, 0, 800, 600);
+        int windowsId = 6292;
 
         public const String PLAYER = "PLAYER|玩家";
         public const String SATSUMA = "SATSUMA(557kg, 248)|拼装车";
@@ -54,7 +55,13 @@ namespace MSCTranslateChs.Script.Teleport
             targetStaticPosition.Add("SPAWN_TO_COTTAGE", SPAWN_TO_COTTAGE);
             targetStaticPosition.Add("SPAWN_TO_VENTTI_PIG", SPAWN_TO_VENTTI_PIG);
 
-            targetPosition = targetDynamicPosition;
+            targetPosition.Add("SATSUMA", SATSUMA);
+            targetPosition.Add("FERNDALE", FERNDALE);
+            targetPosition.Add("GIFU", GIFU);
+            targetPosition.Add("KEKMET", KEKMET);
+            targetPosition.Add("HAYOSIKO", HAYOSIKO);
+            targetPosition.Add("JONNEZ_ES", JONNEZ_ES);
+            targetPosition.Add("RCO_RUSCKO12", RCO_RUSCKO12);
             targetPosition.Add("GRAVE_YARD_SPAWN", GRAVE_YARD_SPAWN);
             targetPosition.Add("SPAWN_TO_STORE", SPAWN_TO_STORE);
             targetPosition.Add("SPAWN_TO_REPAIR", SPAWN_TO_REPAIR);
@@ -67,7 +74,7 @@ namespace MSCTranslateChs.Script.Teleport
         {
             if (isShowWindow)
             {
-                windowsRect = GUI.Window(2, windowsRect, TeleportWindowFunction, "远程传送");
+                windowsRect = GUI.Window(windowsId, windowsRect, TeleportWindowFunction, "远程传送");
             }
         }
 
