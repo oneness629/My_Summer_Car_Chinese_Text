@@ -37,6 +37,7 @@
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="MSCLoader">
       <HintPath>D:\Program Files (x86)\Steam\steamapps\common\My Summer Car\mysummercar_Data\Managed\MSCLoader.dll</HintPath>
@@ -56,9 +57,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Script\Common\ExecutionTime.cs" />
+    <Compile Include="Script\Develop\GuiGameObjectExplorer.cs" />
+    <Compile Include="Script\Common\LOGGER.cs" />
     <Compile Include="Script\Common\FsmVariablesUtil.cs" />
+    <Compile Include="Script\Common\ConverUtil.cs" />
     <Compile Include="Script\Common\GameObjectUtil.cs" />
     <Compile Include="Script\Common\JSON.cs" />
+    <Compile Include="Script\Teleport\Teleport.cs" />
+    <Compile Include="Script\Translate\TranslateText.cs" />
     <Compile Include="Script\Translate\TranslateApi.cs" />
     <Compile Include="Script\Develop\Develop.cs" />
     <Compile Include="MSCTranslateChs.cs" />
@@ -72,15 +79,11 @@
     <Content Include="Assets\MSCTranslateChs\config.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\MSCTranslateChs\interactions.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\MSCTranslateChs\partnames.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\MSCTranslateChs\subtitles.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Assets\MSCTranslateChs\gameover.txt" />
+    <Content Include="Assets\MSCTranslateChs\interaction.txt" />
+    <Content Include="Assets\MSCTranslateChs\partname.txt" />
+    <Content Include="Assets\MSCTranslateChs\subtitle.txt" />
+    <Content Include="Assets\MSCTranslateChs\ui.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using MSCTranslateChs.Script.Develop;
+using MSCTranslateChs.Script.Teleport;
+using MSCTranslateChs.Script.Common;
 
 namespace MSCTranslateChs.Script.Develop
 {
@@ -11,14 +13,19 @@ namespace MSCTranslateChs.Script.Develop
     {
         bool isShowDevelopConfigWindows = true;
         Rect developWindowsRect;
+        Vector2 scrollPosition;
         Develop develop;
+        float windowsWidth = 800;
+        float windowsHeight = 600;
+        int windowsId = 6291;
+        
 
         public string targetGameObjectPath = "Systems";
         public GameObject targetGameObject = null;
 
         public DevelopConfigWindows(Develop develop)
         {
-            developWindowsRect = new Rect(0, 0, 800, 600);
+            developWindowsRect = new Rect(Screen.width - windowsWidth , 0 , windowsWidth, windowsHeight);
             this.develop = develop;
         }
 
@@ -27,37 +34,64 @@ namespace MSCTranslateChs.Script.Develop
             isShowDevelopConfigWindows = develop.isShowDevelopConfigWindows;
             if (develop != null && isShowDevelopConfigWindows)
             {
-                developWindowsRect = GUI.Window(1, developWindowsRect, DevelopConfigWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod 开发模式");
+                developWindowsRect = GUI.Window(windowsId, developWindowsRect, DevelopConfigWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod 开发模式");
             }
         }
 
 
         private void DevelopConfigWindowsFunction(int windowsId)
         {
-
-            //定义一个toggle控制窗体的显示和隐藏
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+            GUILayout.Label("左Ctrl+R,重新读取所有txt文本");
+            GUILayout.Label("左Ctrl+W,写入Systems下的GameObject到txt");
+            GUILayout.Label("左Ctrl+F,写入所有FsmVariables变量到FsmVariables.txt");
             develop.isRayGameObject = GUILayout.Toggle(develop.isRayGameObject, "是否显示鼠标指向的GameObject信息");
 
-            if (GUILayout.Button("初始化UI"))
+            
+            if (GUILayout.Button("GUI GameObject 查看"))
             {
-                develop.initUIRay();
-            }
-            if (GUILayout.Button("Systems菜单射线翻译"))
-            {
-                develop.isRaySystemsGameObject = true;
+                develop.guiGameObjectExplorer.isShow = true;
             }
 
             if (GUILayout.Button("关闭")){
                 develop.isShowDevelopConfigWindows = false;
             }
 
+            ShowAllExecutionTime();
+
+            ShowCameraData();
+
             GameObjectTransformUpdate();
 
 
-
-            GUI.DragWindow(new Rect(0, 0, 99999, 99999));
+            GUILayout.EndScrollView();
+            GUI.DragWindow();
         }
 
+        private void ShowCameraData()
+        {
+            GUILayout.Label(develop.textCameraLog);
+        }
+
+        private void ShowAllExecutionTime()
+        {
+            GUILayout.Label("Mod执行效率检查:单位（毫秒）,基本为0即可，偶尔跳动对fps有细微影响，应应应该该该影响不大···");
+            foreach (string key in develop.mscTranslateChs.allExecutionTime.Keys)
+            {
+                ExecutionTime executionTime = develop.mscTranslateChs.allExecutionTime[key];
+                GUILayout.BeginHorizontal("box");
+                GUILayout.Label(key + ":");
+                GUILayout.EndHorizontal();
+                
+                foreach (string timeKey in executionTime.executionTimeDict.Keys)
+                {
+                    GUILayout.BeginHorizontal("box");
+                    GUILayout.Label(timeKey + ":" + executionTime.executionTimeDict[timeKey]);
+                    GUILayout.EndHorizontal();
+                }
+            }
+            
+        }
 
         private void GameObjectTransformUpdate()
         {
@@ -71,7 +105,7 @@ namespace MSCTranslateChs.Script.Develop
             }
             if (targetGameObject != null)
             {
-                GUILayout.Label("目标GameObject:" + targetGameObject.name);
+                GUILayout.Label("目标GameObject:" + GameObjectUtil.getGameObjectPath(targetGameObject));
             }
             GUILayout.EndHorizontal();
 

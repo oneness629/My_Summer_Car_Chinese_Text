@@ -1,7 +1,9 @@
+using HutongGames.PlayMaker;
 using MSCLoader;
 using MSCTranslateChs.Script;
 using MSCTranslateChs.Script.Common;
 using MSCTranslateChs.Script.Develop;
+using MSCTranslateChs.Script.Teleport;
 using MSCTranslateChs.Script.Translate;
 using System;
 using System.Collections.Generic;
@@ -16,15 +18,20 @@ namespace MSCTranslateChs
 {
     public class MSCTranslateChs : Mod
     {
+        private static LOGGER logger = new LOGGER(typeof(MSCTranslateChs));
+
         public override string ID => "MSCTranslateChs";
 
         public override string Name => "MSCTranslateChs";
 
         public override string Author => "oneness629";
 
-        public override string Version => "2.2";
+        public override string Version => "2.3";
 
         public override bool UseAssetsFolder => true;
+
+        public Dictionary<string, ExecutionTime> allExecutionTime = new Dictionary<string, ExecutionTime>();
+        public ExecutionTime executionTime = new ExecutionTime();
 
         public bool IsLoadResources = false;
         public bool IsLoadGameObject = false;
@@ -35,20 +42,10 @@ namespace MSCTranslateChs
         public bool IsTranslateGameOverMessage = true;
         public bool IsTranslateUI = true;
         public bool IsTranslateEscInitUI = true;
-        public bool IsCheckTranslateText = true;
         public bool IsDevelop = true;
+        public bool isEnableTeleport = true;
 
-        public List<string> subtitlesList = new List<string>();
-        public List<string> interactionsList = new List<string>();
-        public List<string> partnamesList = new List<string>();
-
-        private int subtitlesListSize = 0;
-        private int interactionsListSize = 0;
-        private int partnamesListSize = 0;
-
-        private string notTranslateString = "[未翻译文本]";
-        private string autoTranslateStringing = "[自动翻译中 ... ]";
-        private string autoTranslateString = "[自动翻译]";
+        public TranslateText translateText;
 
         private TextMesh gameOverTextMesh;
         private TextMesh subtitlesTextMesh;
@@ -70,96 +67,116 @@ namespace MSCTranslateChs
 
         public bool isShowWelcomeWindows = true;
 
-        private bool isEnableAutoTranslateApi = false;
-        private string autoTranslateApiAppId;
-        private string autoTranslateApiApikey;
-
-        private TranslateApi translateApi;
-
         bool isInitSystemsGameObject = false;
+
+        public Teleport teleport = new Teleport();
 
 
         public override void OnLoad()
         {
-            IsLoadResources = false;
-            IsLoadGameObject = false;
+            try
+            {
+                allExecutionTime.Add(typeof(MSCTranslateChs).Name ,executionTime);
 
-            develop = new Develop(this);
-            welcomeWindows = new WelcomeWindows(this);
+                IsLoadResources = false;
+                IsLoadGameObject = false;
 
-            subtitlesGuiStyle = new GUIStyle();
-            subtitlesGuiStyle.alignment = TextAnchor.MiddleCenter;
-            subtitlesGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
-            subtitlesGuiStyle.normal.textColor = new Color(255, 165, 0);
+                develop = new Develop(this);
+                welcomeWindows = new WelcomeWindows(this);
 
-            subtitlesRect = new Rect(0, (Screen.height) / 2.15f, Screen.width, Screen.height);
+                subtitlesGuiStyle = new GUIStyle();
+                subtitlesGuiStyle.alignment = TextAnchor.MiddleCenter;
+                subtitlesGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+                subtitlesGuiStyle.normal.textColor = new Color(255, 165, 0);
 
-            partnamesGuiStyle = subtitlesGuiStyle;
+                subtitlesRect = new Rect(0, (Screen.height) / 2.15f, Screen.width, Screen.height);
 
-            partnamesRect = new Rect(0, (Screen.height) / 2.4f, Screen.width, Screen.height);
+                partnamesGuiStyle = subtitlesGuiStyle;
 
-            interactionsGuiStyle = new GUIStyle();
-            interactionsGuiStyle.alignment = TextAnchor.MiddleCenter;
-            interactionsGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
-            interactionsGuiStyle.normal.textColor = new Color(255, 255, 255);
+                partnamesRect = new Rect(0, (Screen.height) / 2.4f, Screen.width, Screen.height);
 
-            interactionsRect = new Rect(0, (Screen.height) / 12f, Screen.width, Screen.height);
+                interactionsGuiStyle = new GUIStyle();
+                interactionsGuiStyle.alignment = TextAnchor.MiddleCenter;
+                interactionsGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+                interactionsGuiStyle.normal.textColor = new Color(255, 255, 255);
 
-            mouseTipGuiStyle = new GUIStyle();
-            mouseTipGuiStyle.alignment = TextAnchor.LowerLeft;
-            mouseTipGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
-            mouseTipGuiStyle.normal.textColor = new Color(255, 255, 255);
+                interactionsRect = new Rect(0, (Screen.height) / 12f, Screen.width, Screen.height);
 
-            ReadTranslateText();
+                mouseTipGuiStyle = new GUIStyle();
+                mouseTipGuiStyle.alignment = TextAnchor.LowerLeft;
+                mouseTipGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+                mouseTipGuiStyle.normal.textColor = new Color(255, 255, 255);
 
-            IsLoadResources = true;
+                translateText = new TranslateText(this);
+
+                IsLoadResources = true;
+            }
+            catch (Exception e)
+            {
+                logger.LOG("OnLoad Exception : " + e.Message);
+                logger.LOG(e);
+            }
         }
 
         public override void OnGUI()
         {
+            executionTime.Start("OnGUI");
             try
             {
                 if (IsLoadResources && IsLoadGameObject && Application.loadedLevelName == "GAME")
                 {
                     if (IsEnable)
                     {
+                        executionTime.Start("字幕");
                         if (IsTranslateSubtitles)
                         {
+                            
                             // 字幕
                             string subtitlesText = subtitlesTextMesh.text.Trim();
                             if (subtitlesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(subtitlesText))
                             {
-                                GUI.Label(subtitlesRect, TranslateString(subtitlesText, subtitlesList), subtitlesGuiStyle);
+                                GUI.Label(subtitlesRect, translateText.TranslateString(subtitlesText, TranslateText.DICT_SUBTITLE), subtitlesGuiStyle);
                             }
                         }
+                        executionTime.End("字幕");
+                        executionTime.Start("物品名称");
                         if (IsTranslatePartnames)
                         {
                             // 部件/物品名称
                             string partnamesText = partnamesTextMesh.text.Trim();
                             if (partnamesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(partnamesText))
                             {
-                                GUI.Label(partnamesRect, TranslateString(partnamesText, partnamesList), partnamesGuiStyle);
+                                GUI.Label(partnamesRect, translateText.TranslateString(partnamesText, TranslateText.DICT_PARTNAME), partnamesGuiStyle);
                             }
                         }
+                        executionTime.End("物品名称");
+                        executionTime.Start("操作动作");
                         if (IsTranslateInteractions)
                         {
                             // 操作动作
                             string interactionsText = interactionsTextMesh.text.Trim();
                             if (interactionsTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(interactionsText))
                             {
-                                GUI.Label(interactionsRect, TranslateString(interactionsText, interactionsList), interactionsGuiStyle);
+                                GUI.Label(interactionsRect, translateText.TranslateString(interactionsText, TranslateText.DICT_INTERACTION), interactionsGuiStyle);
                             }
                         }
+                        executionTime.End("操作动作");
+                        executionTime.Start("GameOver");
                         if (IsTranslateGameOverMessage)
                         {
                             // game over 提示
                             GameOverMessage();
                         }
+                        executionTime.End("GameOver");
+                        executionTime.Start("UI");
                         if (IsTranslateUI)
                         {
                             // 额外的菜单
                             RaySystemsGameObject();
+                            RayGuiGameObject();
                         }
+                        executionTime.End("UI");
+                        executionTime.Start("Esc initUI");
                         if (IsTranslateEscInitUI)
                         {
                             if (Input.GetKey(KeyCode.Escape))
@@ -167,21 +184,14 @@ namespace MSCTranslateChs
                                 initUIRay();
                             }
                         }
-
+                        executionTime.End("Esc initUI");
+                        executionTime.Start("Develop");
                         if (IsDevelop)
                         {
                             develop.Update();
-                            if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.R))
-                            {
-                                ReadTranslateText();
-                            }
+                            
                         }
-                        if (IsCheckTranslateText)
-                        {
-                            CheckAndWriteTranslateText();
-                        }
-                        
-
+                        executionTime.End("Develop");
                     }
                     if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.W))
                     {
@@ -191,56 +201,83 @@ namespace MSCTranslateChs
                     {
                         isShowWelcomeWindows = false;
                     }
+                    executionTime.Start("WelcomeWindows");
                     if (isShowWelcomeWindows)
                     {
                         welcomeWindows.Update();
                     }
+                    executionTime.End("WelcomeWindows");
+                    executionTime.Start("Teleport");
+                    if (isEnableTeleport)
+                    {
+                        teleport.Update();
+                    }
+                    executionTime.End("Teleport");
+
 
                 }
             }
             catch (Exception e)
             {
-                ModConsole.Print("GUI异常: " + e.Message);
-                ModConsole.Print(e);
+                logger.LOG("OnGUI Exception : " + e.Message);
+                logger.LOG(e);
             }
-
+            executionTime.End("OnGUI");
         }
 
         public void initUIRay()
         {
-            GameObject systemsGameObject = GameObject.Find("Systems");
-            if (systemsGameObject != null)
-            {
-                GameObjectUtil.addBoxColliderByChild(systemsGameObject, "");
-            }
+            InitSystemRayGameObject();
+            InitGuiRayGameObject();
         }
+
+        GameObject gameObjectSystems;
+        GameObject gameObjectSystemsDeath;
+        GameObject gameObjectSystemsDeathGameOverScreen;
+        GameObject gameObjectSystemsDeathGameOverScreenPaper;
 
         private void GameOverMessage()
         {
-            GameObject gameObject = GameObject.Find("Systems/Death/GameOverScreen/Paper");
-            if (gameObject == null)
+            // gameObjectGameOverScreenPaper = GameObject.Find("Systems/Death/GameOverScreen/Paper");
+            if (gameObjectSystems == null)
+            {
+                gameObjectSystems = GameObject.Find("Systems");
+            }
+            if (gameObjectSystems == null)
             {
                 return;
             }
-            for (int i = 0; i < gameObject.transform.childCount; i++)
+            gameObjectSystemsDeath = GameObjectUtil.GetChildGameObject(gameObjectSystems, "Death");
+            if (gameObjectSystemsDeath == null)
             {
-                GameObject childGameObject = gameObject.transform.GetChild(i).gameObject;
-                if (childGameObject != null && childGameObject.activeSelf)
+                return;
+            }
+            gameObjectSystemsDeathGameOverScreen = GameObjectUtil.GetChildGameObject(gameObjectSystems, "GameOverScreen");
+            if (gameObjectSystemsDeathGameOverScreen == null)
+            {
+                return;
+            }
+            gameObjectSystemsDeathGameOverScreenPaper = GameObjectUtil.GetChildGameObject(gameObjectSystems, "Paper");
+            if (gameObjectSystemsDeathGameOverScreenPaper == null)
+            {
+                return;
+            }
+            for (int i = 0; i < gameObjectSystemsDeathGameOverScreenPaper.transform.childCount; i++)
+            {
+                GameObject childGameObject = gameObjectSystemsDeathGameOverScreenPaper.transform.GetChild(i).gameObject;
+                if (childGameObject != null && (childGameObject.activeSelf || Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.G)))
                 {
                     string path = GameObjectUtil.getGameObjectPath(childGameObject);
                     string pathTextEn = path + "/TextEN";
                     GameObject textEnGameObject = GameObject.Find(pathTextEn);
                     if (textEnGameObject != null)
                     {
-                        gameOverTextMesh = FindGameObjectTextMesh(pathTextEn);
+                        gameOverTextMesh = GameObjectUtil.FindGameObjectTextMesh(pathTextEn);
                         if (gameOverTextMesh != null)
                         {
                             string gameOverText = gameOverTextMesh.text.Trim();
-                            string translateString = TranslateString(gameOverText, interactionsList);
-                            
-                            // ModConsole.Print("GameOver文本GameObject读取：");
-                            // ModConsole.Print("EN:" + gameOverText);
-                            // ModConsole.Print("TranslateString:" + translateString);
+                            string translateString = translateText.TranslateString(gameOverText, TranslateText.DICT_GAMEOVER);
+
                             GUI.Label(subtitlesRect, translateString, subtitlesGuiStyle);
                         }
                     }
@@ -258,93 +295,22 @@ namespace MSCTranslateChs
                     // load gameobject
                     try
                     {
-                        subtitlesTextMesh = FindGameObjectTextMesh("GUI/Indicators/Subtitles");
-                        partnamesTextMesh = FindGameObjectTextMesh("GUI/Indicators/Partname");
-                        interactionsTextMesh = FindGameObjectTextMesh("GUI/Indicators/Interaction");
+                        subtitlesTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Subtitles");
+                        partnamesTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Partname");
+                        interactionsTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Interaction");
 
                         IsLoadGameObject = true;
                     }
                     catch (Exception e)
                     {
                         IsLoadGameObject = false;
-                        ModConsole.Print("加载GameObject过程出现异常: " + e.Message);
+                        logger.LOG("加载GameObject过程出现异常: " + e.Message);
                     }
                 }
             }
         }
 
-
-        private void NoCheckAndWriteTranslateText()
-        {
-            File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "subtitles.txt"), subtitlesList.ToArray());
-            subtitlesListSize = subtitlesList.Count;
-            ModConsole.Print("新的未翻译文本已写入到subtitles.txt");
-            File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "interactions.txt"), interactionsList.ToArray());
-            interactionsListSize = interactionsList.Count;
-            ModConsole.Print("新的未翻译文本已写入到interactions.txt");
-            File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "partnames.txt"), partnamesList.ToArray());
-            partnamesListSize = partnamesList.Count;
-            ModConsole.Print("新的未翻译文本已写入到partnames.txt");
-        }
-
-        private void ReadTranslateText()
-        {
-            List<string> configList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "config.txt")).ToList();
-            isEnableAutoTranslateApi = false;
-            autoTranslateApiAppId = TranslateString("autoTranslateApi_AppId", configList);
-            autoTranslateApiApikey = TranslateString("autoTranslateApi_Apikey", configList);
-            isEnableAutoTranslateApi = TranslateString("isEnableAutoTranslateApi", configList).ToLower() == "true";
-
-            ModConsole.Print("自动翻译API启用状态 :" + isEnableAutoTranslateApi);
-            ModConsole.Print("自动翻译API appid :" + autoTranslateApiAppId);
-            ModConsole.Print("自动翻译API apikey :" + autoTranslateApiApikey);
-            if (isEnableAutoTranslateApi)
-            {
-                ModConsole.Print("初始化自动翻译API");
-                translateApi = new TranslateApi(autoTranslateApiAppId, autoTranslateApiApikey);
-            }
-            else
-            {
-                ModConsole.Print("不使用自动翻译API");
-                translateApi = null;
-            }
-
-            subtitlesList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "subtitles.txt")).ToList();
-            interactionsList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "interactions.txt")).ToList();
-            partnamesList = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "partnames.txt")).ToList();
-
-            subtitlesListSize = subtitlesList.Count;
-            interactionsListSize = interactionsList.Count;
-            partnamesListSize = partnamesList.Count;
-
-            ModConsole.Print("翻译文本列表数量");
-            ModConsole.Print("subtitlesListSize :" + subtitlesListSize);
-            ModConsole.Print("interactionsListSize :" + interactionsListSize);
-            ModConsole.Print("partnamesListSize :" + partnamesListSize);
-        }
-
-        
-        private void CheckAndWriteTranslateText()
-        {
-            if (subtitlesListSize > 0 && subtitlesListSize < subtitlesList.Count)
-            {
-                File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "subtitles.txt"), subtitlesList.ToArray());
-                subtitlesListSize = subtitlesList.Count;
-                ModConsole.Print("新的未翻译文本已写入到subtitles.txt");
-            }
-            if (interactionsListSize > 0 && interactionsListSize < interactionsList.Count)
-            {
-                File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "interactions.txt"), interactionsList.ToArray());
-                interactionsListSize = interactionsList.Count;
-                ModConsole.Print("新的未翻译文本已写入到interactions.txt");
-            }
-            if (partnamesListSize > 0 && partnamesListSize < partnamesList.Count)
-            {
-                File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(this), "partnames.txt"), partnamesList.ToArray());
-                partnamesListSize = partnamesList.Count;
-                ModConsole.Print("新的未翻译文本已写入到partnames.txt");
-            }
-        }
+        // Camera cameraMenu;
 
         private void RaySystemsGameObject()
         {
@@ -355,36 +321,36 @@ namespace MSCTranslateChs
             }
             else
             {
-                GameObject cam = GameObject.Find("Systems/OptionsMenu/CAM");
-                if (cam == null)
+                if (Camera.main == null)
                 {
                     return;
                 }
-                Camera camera = cam.GetComponent<Camera>();
-                if (camera == null)
-                {
-                    return;
-                }
-                Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit[] raycastHits = Physics.RaycastAll(ray, Mathf.Infinity, 1 << 14);
                 if (raycastHits != null && raycastHits.Length > 0)
                 {
                     string text = "";
                     foreach (RaycastHit hitInfo in raycastHits)
                     {
-                        GameObject gameObject = hitInfo.collider.gameObject;
-                        string textMeshString = GameObjectUtil.getGameObjectTextMeshString(gameObject);
-                        if (textMeshString != null && textMeshString.Trim().Length > 0)
+                        if (hitInfo.collider != null)
                         {
-                            text = TranslateString(textMeshString, interactionsList);
-                            // text += textMeshString;
+                            GameObject gameObject = hitInfo.collider.gameObject;
+                            if (gameObject != null)
+                            {
+                                string textMeshString = GameObjectUtil.getGameObjectTextMeshString(gameObject);
+                                if (textMeshString != null && textMeshString.Trim().Length > 0)
+                                {
+                                    text = translateText.TranslateString(textMeshString, TranslateText.DICT_UI);
+                                }
+                            }
                         }
                     }
                     GUI.Label(new Rect(Input.mousePosition.x, (-Input.mousePosition.y), Screen.width, Screen.height), text, mouseTipGuiStyle);
                 }
             }
         }
+
+        
 
         private void InitSystemRayGameObject()
         {
@@ -395,90 +361,66 @@ namespace MSCTranslateChs
             }
         }
 
-        private string TranslateString(string text, List<string> textList)
+        Camera guiCamera;
+        bool isInitGuiGameObject = false;
+
+        private void InitGuiRayGameObject()
         {
-            if (string.IsNullOrEmpty(text))
+            GameObject hudGameObject = GameObject.Find("GUI/HUD");
+            if (hudGameObject != null)
             {
-                return "\"\"";
+                GameObjectUtil.addBoxColliderByChildByTextMesh(hudGameObject);
             }
-            text = text.Replace("\n","\\n");
-            string listText = textList.FirstOrDefault((string s) => s.ToUpper().Contains(text.Trim().ToUpper()));
-            if (string.IsNullOrEmpty(listText))
+            if (guiCamera == null)
             {
-                ModConsole.Print("文本在列表中未找到: " + text);
-                if (isEnableAutoTranslateApi)
+                GameObject GuiGameObjectExplorer = GameObject.Find("GUI/CAM");
+                if (GuiGameObjectExplorer != null)
                 {
-                    ModConsole.Print("自动翻译文本:" + text);
-                    Dictionary<string, object> data = new Dictionary<string, object>();
-                    data.Add("text", text);
-                    data.Add("textList", textList);
-                    data.Add("textListIndex", textList.Count);
-
-                    Thread thread = new Thread(new ParameterizedThreadStart(this.AutoTranslateString));
-                    thread.IsBackground = true;
-                    thread.Start(data);
-                    textList.Add(text + "=" + autoTranslateStringing);
-                    return autoTranslateStringing;
-                }
-                else
-                {
-                    textList.Add(text + "=" + notTranslateString);
-                    return notTranslateString;
+                    guiCamera = GuiGameObjectExplorer.GetComponent<Camera>();
                 }
 
             }
-            string resultString = listText.Split('=')[1];
-            
-            if (!string.IsNullOrEmpty(resultString))
-            {
-                resultString = resultString.Replace("\\n", "\n");
-            }
-            
-            return resultString;
         }
 
-        private void AutoTranslateString(object data)
+        private void RayGuiGameObject()
         {
-            try
+            if (!isInitGuiGameObject)
             {
-                Dictionary<string, object> dict = data as Dictionary<string, object>;
-                if (dict.ContainsKey("text") && dict.ContainsKey("textList") && dict.ContainsKey("textListIndex"))
+                InitGuiRayGameObject();
+                isInitGuiGameObject = true;
+            }
+            else
+            {
+              
+                if (guiCamera == null)
                 {
-                    string text = dict["text"] as string;
-                    List<string> textList = dict["textList"] as List<string>;
-                    Int32 textIndex = (int)dict["textListIndex"];
-
-                    if (translateApi != null)
+                    return;
+                }
+                Ray ray = guiCamera.ScreenPointToRay(Input.mousePosition);
+                RaycastHit[] raycastHits = Physics.RaycastAll(ray, Mathf.Infinity, 1 << 14);
+                if (raycastHits != null && raycastHits.Length > 0)
+                {
+                    string text = "";
+                    foreach (RaycastHit hitInfo in raycastHits)
                     {
-                        string result = translateApi.TranslationEnglishToChineseFromBaiduFanyi(text);
-                        ModConsole.Print("自动翻译文本完成，替换目标文本" + textList[textIndex] + "index : " + textIndex);
-                        ModConsole.Print("自动翻译文本:" + result + "index : " + textIndex);
-                        textList[textIndex] = text + "=" + autoTranslateString + result;
-                        NoCheckAndWriteTranslateText();
-                        ReadTranslateText();
+                        if (hitInfo.collider != null)
+                        {
+                            GameObject gameObject = hitInfo.collider.gameObject;
+                            if (gameObject != null)
+                            {
+                                string textMeshString = GameObjectUtil.getGameObjectTextMeshString(gameObject);
+                                if (textMeshString != null && textMeshString.Trim().Length > 0)
+                                {
+                                    text = translateText.TranslateString(textMeshString, TranslateText.DICT_UI);
+                                }
+                            }
+                        }
                     }
+                    GUI.Label(new Rect(Input.mousePosition.x, (-Input.mousePosition.y), Screen.width, Screen.height), text, mouseTipGuiStyle);
                 }
             }
-            catch (Exception e)
-            {
-                ModConsole.Print("AutoTranslateString Error : " + e.Message);
-            }
-
         }
 
-        private TextMesh FindGameObjectTextMesh(string path)
-        {
-            GameObject gameObject = GameObject.Find(path);
-            if (gameObject != null)
-            {
-                TextMesh textMesh = gameObject.GetComponent<TextMesh>();
-                if (textMesh != null)
-                {
-                    return textMesh;
-                }
-            }
-            throw new Exception("无法找到GameObject对应的TextMesh 路径->" + path);
-        }
 
     }
 }

@@ -11,6 +11,50 @@ namespace MSCTranslateChs.Script.Common
     {
         public static Dictionary<string, Color> highlightRendererColorBak = new Dictionary<string, Color>();
 
+        public static List<GameObject> GetChildGameObjectList(GameObject gameObject)
+        {
+            List<GameObject> gameObjectList = new List<GameObject>();
+            if (gameObject == null)
+            {
+                return gameObjectList;
+            }
+            for (int i = 0; i < gameObject.transform.childCount; i++)
+            {
+                gameObjectList.Add(gameObject.transform.GetChild(i).gameObject);
+            }
+            return gameObjectList;
+        }
+
+        public static GameObject GetChildGameObject(GameObject gameObject, string childName)
+        {
+            if (gameObject == null || childName == null || "".Equals(childName))
+            {
+                return null;
+            }
+            for (int i = 0; i < gameObject.transform.childCount; i++)
+            {
+                if (childName.Equals(gameObject.transform.GetChild(i).name))
+                {
+                    return gameObject.transform.GetChild(i).gameObject;
+                }
+            }
+            return null;
+        }
+
+        public static TextMesh FindGameObjectTextMesh(string path)
+        {
+            GameObject gameObject = GameObject.Find(path);
+            if (gameObject != null)
+            {
+                TextMesh textMesh = gameObject.GetComponent<TextMesh>();
+                if (textMesh != null)
+                {
+                    return textMesh;
+                }
+            }
+            throw new Exception("无法找到GameObject对应的TextMesh 路径->" + path);
+        }
+
         public static void addBoxColliderByChildByTextMesh(GameObject gameObject)
         {
             if (gameObject != null && gameObject.transform != null && gameObject.transform.childCount > 0)
@@ -36,7 +80,7 @@ namespace MSCTranslateChs.Script.Common
         {
             if (gameObject != null && gameObject.transform != null && gameObject.transform.childCount > 0)
             {
-                for (int i = 0 ; i < gameObject.transform.childCount; i++ )
+                for (int i = 0; i < gameObject.transform.childCount; i++)
                 {
                     GameObject childGameObject = gameObject.transform.GetChild(i).gameObject;
                     if (childGameObject != null)
@@ -59,8 +103,8 @@ namespace MSCTranslateChs.Script.Common
                         */
                         if (childGameObject.GetComponent<TextMesh>() != null)
                         {
-                            
-                            MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
+
+                            // MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
                             addBoxCollider(childGameObject);
                             // Highlight(childGameObject);
                         }
@@ -82,7 +126,7 @@ namespace MSCTranslateChs.Script.Common
         {
             if (gameObject != null)
             {
-                
+
                 if (gameObject.GetComponent<BoxCollider>() != null)
                 {
                     GameObject.Destroy(gameObject.GetComponent<BoxCollider>());
@@ -150,7 +194,7 @@ namespace MSCTranslateChs.Script.Common
                         }
                     }
                 }
-                
+
             }
         }
 
@@ -183,9 +227,9 @@ namespace MSCTranslateChs.Script.Common
         public static string getGameObjectText(string path,
             int level = 0,
             bool isGetOtherTypeMembers = false,
-            bool isGetComponentsText = false, 
-            bool isGetComponentTypeFields = false, 
-            bool isGetComponentTypeMembers = false, 
+            bool isGetComponentsText = false,
+            bool isGetComponentTypeFields = false,
+            bool isGetComponentTypeMembers = false,
             bool isGetComponentTypeMethods = false)
         {
             GameObject gameObject = GameObject.Find(path);
@@ -213,7 +257,7 @@ namespace MSCTranslateChs.Script.Common
             bool isGetComponentTypeMembers = false,
             bool isGetComponentTypeMethods = false)
         {
-            
+
             if (gameObject != null)
             {
                 string text = "";
@@ -233,15 +277,15 @@ namespace MSCTranslateChs.Script.Common
                 }
                 if (isGetComponentsText == true)
                 {
-                    text += tabText + ("\t            ComponentsText : " + 
-                        GetComponentsText(gameObject, tabText + "\t", 
+                    text += tabText + ("\t            ComponentsText : " +
+                        GetComponentsText(gameObject, tabText + "\t",
                         isGetComponentTypeFields, isGetComponentTypeMembers, isGetComponentTypeMethods) + "\n");
                 }
                 if (gameObject.transform != null && gameObject.transform.childCount > 0)
                 {
                     for (int i = 0; i < gameObject.transform.childCount; i++)
                     {
-                        text += (getGameObjectText(gameObject.transform.GetChild(i).gameObject, level + 1, 
+                        text += (getGameObjectText(gameObject.transform.GetChild(i).gameObject, level + 1,
                             isGetOtherTypeMembers, isGetComponentsText, isGetComponentTypeFields, isGetComponentTypeMembers, isGetComponentTypeMethods));
                     }
                 }
@@ -251,7 +295,7 @@ namespace MSCTranslateChs.Script.Common
         }
 
 
-        public static List<GameObject> getTopGameObject()
+        public static List<GameObject> getRootGameObject()
         {
             GameObject[] allGameObjects = Resources.FindObjectsOfTypeAll<GameObject>();
             List<GameObject> topGameObjectList = new List<GameObject>();
@@ -265,7 +309,13 @@ namespace MSCTranslateChs.Script.Common
             return topGameObjectList;
         }
 
-        
+        public static List<GameObject> getAllGameObject()
+        {
+            GameObject[] allGameObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+            return new List<GameObject>(allGameObjects); ;
+        }
+
+
 
         private static string GetComponentsText(GameObject gameObject, string levelText,
             bool isGetComponentTypeFields = false,
