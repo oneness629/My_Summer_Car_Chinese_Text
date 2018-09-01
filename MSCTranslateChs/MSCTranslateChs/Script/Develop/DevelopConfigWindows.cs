@@ -61,11 +61,29 @@ namespace MSCTranslateChs.Script.Develop
 
             ShowCameraData();
 
+            GameOverGameObjectCheck();
+
             GameObjectTransformUpdate();
 
 
             GUILayout.EndScrollView();
             GUI.DragWindow();
+        }
+
+        private void GameOverGameObjectCheck()
+        {
+            GUILayout.Label("GameOver GameObject 检查:");
+            GUILayout.Label("gameObjectSystems:" + develop.mscTranslateChs.gameObjectSystems);
+            GUILayout.Label("gameObjectSystemsDeath:" + develop.mscTranslateChs.gameObjectSystemsDeath);
+            GUILayout.Label("gameObjectSystemsDeathGameOverScreen:" + develop.mscTranslateChs.gameObjectSystemsDeathGameOverScreen);
+            GUILayout.Label("gameObjectSystemsDeathGameOverScreenPaper:" + develop.mscTranslateChs.gameObjectSystemsDeathGameOverScreenPaper);
+            if (GUILayout.Button("重置GameOver Object"))
+            {
+                develop.mscTranslateChs.gameObjectSystems = null;
+                develop.mscTranslateChs.gameObjectSystemsDeath = null;
+                develop.mscTranslateChs.gameObjectSystemsDeathGameOverScreen = null;
+                develop.mscTranslateChs.gameObjectSystemsDeathGameOverScreenPaper = null;
+            }
         }
 
         private void ShowCameraData()

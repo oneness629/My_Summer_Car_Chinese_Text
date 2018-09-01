@@ -71,7 +71,7 @@ namespace MSCTranslateChs
         bool isInitSystemsGameObject = false;
 
         public Teleport teleport = new Teleport();
-
+        public BoltTip boltTip = new BoltTip();
 
         public override void OnLoad()
         {
@@ -219,6 +219,10 @@ namespace MSCTranslateChs
                     {
                         money.OnGUI();
                     }
+                    if (boltTip.isShowWindow)
+                    {
+                        boltTip.OnGUI();
+                    }
 
                 }
             }
@@ -236,10 +240,20 @@ namespace MSCTranslateChs
             InitGuiRayGameObject();
         }
 
-        GameObject gameObjectSystems;
-        GameObject gameObjectSystemsDeath;
-        GameObject gameObjectSystemsDeathGameOverScreen;
-        GameObject gameObjectSystemsDeathGameOverScreenPaper;
+        public GameObject gameObjectSystems;
+        public GameObject gameObjectSystemsDeath;
+        public GameObject gameObjectSystemsDeathGameOverScreen;
+        public GameObject gameObjectSystemsDeathGameOverScreenPaper;
+        public string gameOverMessage;
+        public bool isGameOverScreen = false;
+
+        private void GameOverMessageGUI()
+        {
+            if (gameOverMessage != null && isGameOverScreen)
+            {
+                GUI.Label(subtitlesRect, gameOverMessage, subtitlesGuiStyle);
+            }
+        }
 
         private void GameOverMessage()
         {
@@ -257,33 +271,37 @@ namespace MSCTranslateChs
             {
                 return;
             }
-            gameObjectSystemsDeathGameOverScreen = GameObjectUtil.GetChildGameObject(gameObjectSystems, "GameOverScreen");
+            gameObjectSystemsDeathGameOverScreen = GameObjectUtil.GetChildGameObject(gameObjectSystemsDeath, "GameOverScreen");
             if (gameObjectSystemsDeathGameOverScreen == null)
             {
                 return;
             }
-            gameObjectSystemsDeathGameOverScreenPaper = GameObjectUtil.GetChildGameObject(gameObjectSystems, "Paper");
+            gameObjectSystemsDeathGameOverScreenPaper = GameObjectUtil.GetChildGameObject(gameObjectSystemsDeathGameOverScreen, "Paper");
             if (gameObjectSystemsDeathGameOverScreenPaper == null)
             {
                 return;
             }
             for (int i = 0; i < gameObjectSystemsDeathGameOverScreenPaper.transform.childCount; i++)
             {
+                isGameOverScreen = false;
                 GameObject childGameObject = gameObjectSystemsDeathGameOverScreenPaper.transform.GetChild(i).gameObject;
                 if (childGameObject != null && (childGameObject.activeSelf || Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.G)))
                 {
-                    string path = GameObjectUtil.getGameObjectPath(childGameObject);
-                    string pathTextEn = path + "/TextEN";
-                    GameObject textEnGameObject = GameObject.Find(pathTextEn);
+                    isGameOverScreen = true;
+                    // string path = GameObjectUtil.getGameObjectPath(childGameObject);
+                    // string pathTextEn = path + "/TextEN";
+                    // GameObject textEnGameObject = GameObject.Find(pathTextEn);
+                    GameObject textEnGameObject = GameObjectUtil.GetChildGameObject(childGameObject, "TextEN");
                     if (textEnGameObject != null)
                     {
-                        gameOverTextMesh = GameObjectUtil.FindGameObjectTextMesh(pathTextEn);
+                        gameOverTextMesh = GameObjectUtil.FindGameObjectTextMesh(textEnGameObject);
                         if (gameOverTextMesh != null)
                         {
                             string gameOverText = gameOverTextMesh.text.Trim();
                             string translateString = translateText.TranslateString(gameOverText, TranslateText.DICT_GAMEOVER);
 
                             GUI.Label(subtitlesRect, translateString, subtitlesGuiStyle);
+
                         }
                     }
                 }
@@ -312,6 +330,7 @@ namespace MSCTranslateChs
                         logger.LOG("加载GameObject过程出现异常: " + e.Message);
                     }
                 }
+
             }
         }
 

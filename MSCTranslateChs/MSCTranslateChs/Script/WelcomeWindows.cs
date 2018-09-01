@@ -71,6 +71,10 @@ namespace MSCTranslateChs.Script
             {
                 mscTranslateChs.money.isShowWindow = true;
             }
+            if (GUILayout.Button("螺栓提示"))
+            {
+                mscTranslateChs.boltTip.isShowWindow = true;
+            }
             GUILayout.EndHorizontal();
             GUILayout.EndScrollView();
             GUI.DragWindow();

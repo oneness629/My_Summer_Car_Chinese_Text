@@ -41,6 +41,19 @@ namespace MSCTranslateChs.Script.Common
             return null;
         }
 
+        public static TextMesh FindGameObjectTextMesh(GameObject gameObject)
+        {
+            if (gameObject != null)
+            {
+                TextMesh textMesh = gameObject.GetComponent<TextMesh>();
+                if (textMesh != null)
+                {
+                    return textMesh;
+                }
+            }
+            throw new Exception("无法找到GameObject对应的TextMesh gameObject ->" + gameObject);
+        }
+
         public static TextMesh FindGameObjectTextMesh(string path)
         {
             GameObject gameObject = GameObject.Find(path);

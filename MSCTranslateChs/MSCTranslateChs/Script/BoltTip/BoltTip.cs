@@ -16,6 +16,7 @@ namespace MSCTranslateChs.Script.Teleport
 
         public bool isShowWindow = false;
         public bool isEnable = true;
+        public bool isInIt = false;
         Rect windowsRect;
         Vector2 scrollPoint;
         float windowsWidth = 800;
@@ -46,15 +47,20 @@ namespace MSCTranslateChs.Script.Teleport
             {
                 windowsRect = GUI.Window(windowsId, windowsRect, WindowFunction, "螺栓提示");
             }
+            RaySystemsGameObject();
         }
 
-        /*
+        
         private void RaySystemsGameObject()
         {
-            if (!isInitSystemsGameObject)
+            if (!isInIt)
             {
-                InitSystemRayGameObject();
-                isInitSystemsGameObject = true;
+                satsumaGameObject = GameObject.Find(SATSUMA);
+                if (satsumaGameObject == null)
+                {
+                    return;
+                }
+                isInIt = true;
             }
             else
             {
@@ -63,31 +69,28 @@ namespace MSCTranslateChs.Script.Teleport
                     return;
                 }
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit[] raycastHits = Physics.RaycastAll(ray, Mathf.Infinity, 1 << 14);
-                if (raycastHits != null && raycastHits.Length > 0)
+                RaycastHit raycastHits;
+
+                if (Physics.Raycast(ray, out raycastHits, 5f))
                 {
-                    string text = "";
-                    foreach (RaycastHit hitInfo in raycastHits)
+                    if (raycastHits.collider != null && raycastHits.collider.gameObject != null)
                     {
-                        if (hitInfo.collider != null)
+                        string text = "";
+                        GameObject targetGameObject = raycastHits.collider.gameObject;
+                        if (SATSUMA.Equals(targetGameObject.transform.root.gameObject.name))
                         {
-                            GameObject gameObject = hitInfo.collider.gameObject;
-                            if (gameObject != null)
+                            text += GameObjectUtil.getGameObjectPath(targetGameObject);
+                            if (targetGameObject.name.ToLower().IndexOf("bolt") > -1)
                             {
-                                string textMeshString = GameObjectUtil.getGameObjectTextMeshString(gameObject);
-                                if (textMeshString != null && textMeshString.Trim().Length > 0)
-                                {
-                                    text = translateText.TranslateString(textMeshString, TranslateText.DICT_UI);
-                                }
+                                GameObjectUtil.Highlight(targetGameObject);
                             }
                         }
+                        GUI.Label(new Rect(Input.mousePosition.x, (-Input.mousePosition.y), Screen.width, Screen.height), text, mouseTipGuiStyle);
                     }
-                    GUI.Label(new Rect(Input.mousePosition.x, (-Input.mousePosition.y), Screen.width, Screen.height), text, mouseTipGuiStyle);
                 }
             }
         }
 
-        */
         public void WindowFunction(int windowsId)
         {
             scrollPoint = GUILayout.BeginScrollView(scrollPoint);
