@@ -1,8 +1,10 @@
-﻿using MSCTranslateChs.Script.Common;
+﻿using MSCLoader;
+using MSCTranslateChs.Script.Common;
 using MSCTranslateChs.Script.Develop;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using UnityEngine;
 
@@ -126,6 +128,11 @@ public class GuiGameObjectExplorer {
             if (selectGameObject != null)
             {
                 GUILayout.Label("选中GameObject:" + GameObjectUtil.getGameObjectPath(selectGameObject));
+                if (GUILayout.Button("写入txt"))
+                {
+                    string text = GameObjectUtil.getGameObjectText(selectGameObject, 0);
+                    File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(develop.mscTranslateChs), "_gameObject.txt"), text);
+                }
                 viewScrollPosition = GUILayout.BeginScrollView(viewScrollPosition);
                 foreach (Component component in selectGameObjectComponent)
                 {

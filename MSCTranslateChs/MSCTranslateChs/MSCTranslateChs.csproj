@@ -57,6 +57,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Script\BoltTip\BoltTip.cs" />
     <Compile Include="Script\Common\ExecutionTime.cs" />
     <Compile Include="Script\Develop\GuiGameObjectExplorer.cs" />
     <Compile Include="Script\Common\LOGGER.cs" />

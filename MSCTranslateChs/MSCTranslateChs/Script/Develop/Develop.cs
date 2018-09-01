@@ -37,7 +37,7 @@ namespace MSCTranslateChs.Script.Develop
         {
             guiStyle = new GUIStyle();
             guiStyle.alignment = TextAnchor.LowerLeft;
-            guiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+            guiStyle.fontSize = (int)(8.0f * (float)(Screen.width) / 1000f);
             guiStyle.normal.textColor = new Color(255, 255, 255);
 
             this.mscTranslateChs = mscTranslateChs;
