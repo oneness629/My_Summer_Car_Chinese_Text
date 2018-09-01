@@ -15,7 +15,8 @@ namespace MSCTranslateChs.Script.Teleport
         private static LOGGER logger = new LOGGER(typeof(MSCTranslateChs));
 
         public bool isShowWindow = false;
-        Rect windowsRect = new Rect(0, 0, 800, 600);
+        Rect windowsRect = new Rect(0, 0, 300, 600);
+        Vector2 scrollPoint;
         int windowsId = 6292;
 
         public const String PLAYER = "PLAYER|玩家";
@@ -26,6 +27,7 @@ namespace MSCTranslateChs.Script.Teleport
         public const String HAYOSIKO = "HAYOSIKO(1500kg, 250)|面包车";
         public const String JONNEZ_ES = "JONNEZ ES(Clone)|摩托车";
         public const String RCO_RUSCKO12 = "RCO_RUSCKO12(270)|猪人车";
+
         public const String GRAVE_YARD_SPAWN = "GraveYardSpawn|玩家家";
         public const String SPAWN_TO_STORE = "SpawnToStore|商店";
         public const String SPAWN_TO_REPAIR = "SpawnToRepair|修车店";
@@ -35,7 +37,6 @@ namespace MSCTranslateChs.Script.Teleport
 
         Dictionary<string, string> targetDynamicPosition = new Dictionary<string, string>();
         Dictionary<string, string> targetStaticPosition = new Dictionary<string, string>();
-        Dictionary<string, string> targetPosition = new Dictionary<string, string>();
 
 
         public Teleport()
@@ -54,68 +55,124 @@ namespace MSCTranslateChs.Script.Teleport
             targetStaticPosition.Add("SPAWN_TO_DRAG", SPAWN_TO_DRAG);
             targetStaticPosition.Add("SPAWN_TO_COTTAGE", SPAWN_TO_COTTAGE);
             targetStaticPosition.Add("SPAWN_TO_VENTTI_PIG", SPAWN_TO_VENTTI_PIG);
-
-            targetPosition.Add("SATSUMA", SATSUMA);
-            targetPosition.Add("FERNDALE", FERNDALE);
-            targetPosition.Add("GIFU", GIFU);
-            targetPosition.Add("KEKMET", KEKMET);
-            targetPosition.Add("HAYOSIKO", HAYOSIKO);
-            targetPosition.Add("JONNEZ_ES", JONNEZ_ES);
-            targetPosition.Add("RCO_RUSCKO12", RCO_RUSCKO12);
-            targetPosition.Add("GRAVE_YARD_SPAWN", GRAVE_YARD_SPAWN);
-            targetPosition.Add("SPAWN_TO_STORE", SPAWN_TO_STORE);
-            targetPosition.Add("SPAWN_TO_REPAIR", SPAWN_TO_REPAIR);
-            targetPosition.Add("SPAWN_TO_DRAG", SPAWN_TO_DRAG);
-            targetPosition.Add("SPAWN_TO_COTTAGE", SPAWN_TO_COTTAGE);
-            targetPosition.Add("SPAWN_TO_VENTTI_PIG", SPAWN_TO_VENTTI_PIG);
+            
         }
 
         public void Update()
         {
+
+            KeyBindFunction();
+
             if (isShowWindow)
             {
                 windowsRect = GUI.Window(windowsId, windowsRect, TeleportWindowFunction, "远程传送");
             }
         }
 
-        public void TeleportWindowFunction(int windowsId)
+        public void KeyBindFunction()
         {
-            GUILayout.Label("远程传送功能：");
-            GUILayout.Label("将玩家/特定车辆 传送到特定位置（玩家/特定车辆）附近");
-            GUILayout.Label("注意：如果传送玩家到特定位置，请不要坐在车内，否则···");
-            GUILayout.Label(" ");
-            GUILayout.Label("传送到玩家");
-            GUILayout.BeginHorizontal("box");
             string playerTargetName = PLAYER.Split('|')[0];
+
+            int keyIndex = 1;
             foreach (string key in targetDynamicPosition.Keys)
             {
                 string view = targetDynamicPosition[key].Split('|')[1];
                 string targetName = targetDynamicPosition[key].Split('|')[0];
+                view = "(左Alt+" + keyIndex + ")" + view;
+                if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.Alpha0 + keyIndex))
+                {
+                    TeleportTo(targetName, playerTargetName);
+                }
+                keyIndex++;
+            }
+
+            keyIndex = 1;
+            foreach (string key in targetStaticPosition.Keys)
+            {
+                string view = targetStaticPosition[key].Split('|')[1];
+                string targetName = targetStaticPosition[key].Split('|')[0];
+                view = "(右Ctrl+" + keyIndex + ")" + view;
+                if (Input.GetKey(KeyCode.RightControl) && Input.GetKey(KeyCode.Alpha0 + keyIndex))
+                {
+                    TeleportTo(playerTargetName, targetName);
+                }
+                keyIndex++;
+            }
+            keyIndex = 1;
+            foreach (string key in targetDynamicPosition.Keys)
+            {
+                string view = targetDynamicPosition[key].Split('|')[1];
+                string targetName = targetDynamicPosition[key].Split('|')[0];
+                view = "(右ALT+" + keyIndex + ")" + view;
+                if (Input.GetKey(KeyCode.RightAlt) && Input.GetKey(KeyCode.Alpha0 + keyIndex))
+                {
+                    TeleportTo(playerTargetName, targetName);
+                }
+                keyIndex++;
+            }
+        }
+
+        public void TeleportWindowFunction(int windowsId)
+        {
+            scrollPoint = GUILayout.BeginScrollView(scrollPoint);
+
+            GUILayout.Label("远程传送功能：");
+            GUILayout.Label("将玩家/特定车辆 传送到特定位置（玩家/特定车辆）附近");
+            GUILayout.Label("注意：如果传送玩家到特定位置，请不要坐在车内，否则···");
+            GUILayout.Label("(之后可能会加是否在车内判断)");
+            GUILayout.Label(" ");
+            GUILayout.Label("传送到玩家");
+            GUILayout.BeginVertical("box");
+            string playerTargetName = PLAYER.Split('|')[0];
+
+            int keyIndex = 1;
+            foreach (string key in targetDynamicPosition.Keys)
+            {
+                string view = targetDynamicPosition[key].Split('|')[1];
+                string targetName = targetDynamicPosition[key].Split('|')[0];
+                view = "(左Alt+" + keyIndex + ")" + view;
                 if (GUILayout.Button(view))
                 {
                     TeleportTo(targetName, playerTargetName);
                 }
+                keyIndex++;
             }
-            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
             GUILayout.Label(" ");
             GUILayout.Label("传送到目标");
-            GUILayout.BeginHorizontal("box");
+            GUILayout.BeginVertical("box");
 
-            foreach (string key in targetPosition.Keys)
+            keyIndex = 1;
+            foreach (string key in targetStaticPosition.Keys)
             {
-                string view = targetPosition[key].Split('|')[1];
-                string targetName = targetPosition[key].Split('|')[0];
+                string view = targetStaticPosition[key].Split('|')[1];
+                string targetName = targetStaticPosition[key].Split('|')[0];
+                view = "(右Ctrl+" + keyIndex + ")" + view;
                 if (GUILayout.Button(view))
                 {
                     TeleportTo(playerTargetName, targetName);
                 }
+                keyIndex++;
             }
-            GUILayout.EndHorizontal();
+            keyIndex = 1;
+            foreach (string key in targetDynamicPosition.Keys)
+            {
+                string view = targetDynamicPosition[key].Split('|')[1];
+                string targetName = targetDynamicPosition[key].Split('|')[0];
+                view = "(右ALT+" + keyIndex + ")" + view;
+                if (GUILayout.Button(view))
+                {
+                    TeleportTo(playerTargetName, targetName);
+                }
+                keyIndex++;
+            }
+
+            GUILayout.EndVertical();
             if (GUILayout.Button("关闭"))
             {
                 isShowWindow = false;
             }
-
+            GUILayout.EndScrollView();
             GUI.DragWindow(new Rect(0, 0, 9999 ,9999));
         }
 

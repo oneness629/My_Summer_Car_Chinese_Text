@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Script\Common\ExecutionTime.cs" />
+    <Compile Include="Script\Develop\GuiGameObjectExplorer.cs" />
     <Compile Include="Script\Common\LOGGER.cs" />
     <Compile Include="Script\Common\FsmVariablesUtil.cs" />
     <Compile Include="Script\Common\ConverUtil.cs" />

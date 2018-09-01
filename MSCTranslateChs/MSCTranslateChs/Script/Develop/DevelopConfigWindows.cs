@@ -13,6 +13,7 @@ namespace MSCTranslateChs.Script.Develop
     {
         bool isShowDevelopConfigWindows = true;
         Rect developWindowsRect;
+        Vector2 scrollPosition;
         Develop develop;
         int windowsId = 6291;
         
@@ -38,17 +39,16 @@ namespace MSCTranslateChs.Script.Develop
 
         private void DevelopConfigWindowsFunction(int windowsId)
         {
-
-            //定义一个toggle控制窗体的显示和隐藏
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+            GUILayout.Label("左Ctrl+R,重新读取所有txt文本");
+            GUILayout.Label("左Ctrl+W,写入Systems下的GameObject到txt");
+            GUILayout.Label("左Ctrl+F,写入所有FsmVariables变量到FsmVariables.txt");
             develop.isRayGameObject = GUILayout.Toggle(develop.isRayGameObject, "是否显示鼠标指向的GameObject信息");
 
-            if (GUILayout.Button("远程传送窗口"))
+            
+            if (GUILayout.Button("GUI GameObject 查看"))
             {
-                develop.teleport.isShowWindow = true;
-            }
-            if (GUILayout.Button("Ray射线"))
-            {
-                develop.isRayGameObject = true;
+                develop.guiGameObjectExplorer.isShow = true;
             }
 
             if (GUILayout.Button("关闭")){
@@ -58,8 +58,8 @@ namespace MSCTranslateChs.Script.Develop
             GameObjectTransformUpdate();
 
             ShowAllExecutionTime();
-
-            GUI.DragWindow(new Rect(0, 0, 99999, 99999));
+            GUILayout.EndScrollView();
+            GUI.DragWindow();
         }
 
         private void ShowAllExecutionTime()
@@ -94,7 +94,7 @@ namespace MSCTranslateChs.Script.Develop
             }
             if (targetGameObject != null)
             {
-                GUILayout.Label("目标GameObject:" + targetGameObject.name);
+                GUILayout.Label("目标GameObject:" + GameObjectUtil.getGameObjectPath(targetGameObject));
             }
             GUILayout.EndHorizontal();
 

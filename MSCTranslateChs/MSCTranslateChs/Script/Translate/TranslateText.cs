@@ -136,6 +136,7 @@ namespace MSCTranslateChs.Script.Translate
                 else
                 {
                     translateTextDict[dictKey][text] = notTranslateString;
+                    WriteTranslateTextDict();
                     return notTranslateString;
                 }
             }

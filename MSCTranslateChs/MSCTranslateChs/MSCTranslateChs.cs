@@ -1,7 +1,9 @@
+using HutongGames.PlayMaker;
 using MSCLoader;
 using MSCTranslateChs.Script;
 using MSCTranslateChs.Script.Common;
 using MSCTranslateChs.Script.Develop;
+using MSCTranslateChs.Script.Teleport;
 using MSCTranslateChs.Script.Translate;
 using System;
 using System.Collections.Generic;
@@ -41,8 +43,8 @@ namespace MSCTranslateChs
         public bool IsTranslateUI = true;
         public bool IsTranslateEscInitUI = true;
         public bool IsDevelop = true;
+        public bool isEnableTeleport = true;
 
-        
         public TranslateText translateText;
 
         private TextMesh gameOverTextMesh;
@@ -66,6 +68,8 @@ namespace MSCTranslateChs
         public bool isShowWelcomeWindows = true;
 
         bool isInitSystemsGameObject = false;
+
+        public Teleport teleport = new Teleport();
 
 
         public override void OnLoad()
@@ -169,6 +173,7 @@ namespace MSCTranslateChs
                         {
                             // 额外的菜单
                             RaySystemsGameObject();
+                            RayGuiGameObject();
                         }
                         executionTime.End("UI");
                         executionTime.Start("Esc initUI");
@@ -184,10 +189,7 @@ namespace MSCTranslateChs
                         if (IsDevelop)
                         {
                             develop.Update();
-                            if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.R))
-                            {
-                                translateText.ReadTranslateTextDict();
-                            }
+                            
                         }
                         executionTime.End("Develop");
                     }
@@ -205,6 +207,13 @@ namespace MSCTranslateChs
                         welcomeWindows.Update();
                     }
                     executionTime.End("WelcomeWindows");
+                    executionTime.Start("Teleport");
+                    if (isEnableTeleport)
+                    {
+                        teleport.Update();
+                    }
+                    executionTime.End("Teleport");
+
 
                 }
             }
@@ -218,23 +227,44 @@ namespace MSCTranslateChs
 
         public void initUIRay()
         {
-            GameObject systemsGameObject = GameObject.Find("Systems");
-            if (systemsGameObject != null)
-            {
-                GameObjectUtil.addBoxColliderByChild(systemsGameObject, "");
-            }
+            InitSystemRayGameObject();
+            InitGuiRayGameObject();
         }
+
+        GameObject gameObjectSystems;
+        GameObject gameObjectSystemsDeath;
+        GameObject gameObjectSystemsDeathGameOverScreen;
+        GameObject gameObjectSystemsDeathGameOverScreenPaper;
 
         private void GameOverMessage()
         {
-            GameObject gameObject = GameObject.Find("Systems/Death/GameOverScreen/Paper");
-            if (gameObject == null)
+            // gameObjectGameOverScreenPaper = GameObject.Find("Systems/Death/GameOverScreen/Paper");
+            if (gameObjectSystems == null)
+            {
+                gameObjectSystems = GameObject.Find("Systems");
+            }
+            if (gameObjectSystems == null)
             {
                 return;
             }
-            for (int i = 0; i < gameObject.transform.childCount; i++)
+            gameObjectSystemsDeath = GameObjectUtil.GetChildGameObject(gameObjectSystems, "Death");
+            if (gameObjectSystemsDeath == null)
             {
-                GameObject childGameObject = gameObject.transform.GetChild(i).gameObject;
+                return;
+            }
+            gameObjectSystemsDeathGameOverScreen = GameObjectUtil.GetChildGameObject(gameObjectSystems, "GameOverScreen");
+            if (gameObjectSystemsDeathGameOverScreen == null)
+            {
+                return;
+            }
+            gameObjectSystemsDeathGameOverScreenPaper = GameObjectUtil.GetChildGameObject(gameObjectSystems, "Paper");
+            if (gameObjectSystemsDeathGameOverScreenPaper == null)
+            {
+                return;
+            }
+            for (int i = 0; i < gameObjectSystemsDeathGameOverScreenPaper.transform.childCount; i++)
+            {
+                GameObject childGameObject = gameObjectSystemsDeathGameOverScreenPaper.transform.GetChild(i).gameObject;
                 if (childGameObject != null && (childGameObject.activeSelf || Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.G)))
                 {
                     string path = GameObjectUtil.getGameObjectPath(childGameObject);
@@ -247,10 +277,7 @@ namespace MSCTranslateChs
                         {
                             string gameOverText = gameOverTextMesh.text.Trim();
                             string translateString = translateText.TranslateString(gameOverText, TranslateText.DICT_GAMEOVER);
-                            
-                            // ModConsole.Print("GameOver文本GameObject读取：");
-                            // ModConsole.Print("EN:" + gameOverText);
-                            // ModConsole.Print("TranslateString:" + translateString);
+
                             GUI.Label(subtitlesRect, translateString, subtitlesGuiStyle);
                         }
                     }
@@ -283,6 +310,8 @@ namespace MSCTranslateChs
             }
         }
 
+        // Camera cameraMenu;
+
         private void RaySystemsGameObject()
         {
             if (!isInitSystemsGameObject)
@@ -292,36 +321,36 @@ namespace MSCTranslateChs
             }
             else
             {
-                GameObject cam = GameObject.Find("Systems/OptionsMenu/CAM");
-                if (cam == null)
+                if (Camera.main == null)
                 {
                     return;
                 }
-                Camera camera = cam.GetComponent<Camera>();
-                if (camera == null)
-                {
-                    return;
-                }
-                Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit[] raycastHits = Physics.RaycastAll(ray, Mathf.Infinity, 1 << 14);
                 if (raycastHits != null && raycastHits.Length > 0)
                 {
                     string text = "";
                     foreach (RaycastHit hitInfo in raycastHits)
                     {
-                        GameObject gameObject = hitInfo.collider.gameObject;
-                        string textMeshString = GameObjectUtil.getGameObjectTextMeshString(gameObject);
-                        if (textMeshString != null && textMeshString.Trim().Length > 0)
+                        if (hitInfo.collider != null)
                         {
-                            text = translateText.TranslateString(textMeshString, TranslateText.DICT_UI);
-                            // text += textMeshString;
+                            GameObject gameObject = hitInfo.collider.gameObject;
+                            if (gameObject != null)
+                            {
+                                string textMeshString = GameObjectUtil.getGameObjectTextMeshString(gameObject);
+                                if (textMeshString != null && textMeshString.Trim().Length > 0)
+                                {
+                                    text = translateText.TranslateString(textMeshString, TranslateText.DICT_UI);
+                                }
+                            }
                         }
                     }
                     GUI.Label(new Rect(Input.mousePosition.x, (-Input.mousePosition.y), Screen.width, Screen.height), text, mouseTipGuiStyle);
                 }
             }
         }
+
+        
 
         private void InitSystemRayGameObject()
         {
@@ -331,7 +360,67 @@ namespace MSCTranslateChs
                 GameObjectUtil.addBoxColliderByChildByTextMesh(systemsGameObject);
             }
         }
-        
+
+        Camera guiCamera;
+        bool isInitGuiGameObject = false;
+
+        private void InitGuiRayGameObject()
+        {
+            GameObject hudGameObject = GameObject.Find("GUI/HUD");
+            if (hudGameObject != null)
+            {
+                GameObjectUtil.addBoxColliderByChildByTextMesh(hudGameObject);
+            }
+            if (guiCamera == null)
+            {
+                GameObject GuiGameObjectExplorer = GameObject.Find("GUI/CAM");
+                if (GuiGameObjectExplorer != null)
+                {
+                    guiCamera = GuiGameObjectExplorer.GetComponent<Camera>();
+                }
+
+            }
+        }
+
+        private void RayGuiGameObject()
+        {
+            if (!isInitGuiGameObject)
+            {
+                InitGuiRayGameObject();
+                isInitGuiGameObject = true;
+            }
+            else
+            {
+              
+                if (guiCamera == null)
+                {
+                    return;
+                }
+                Ray ray = guiCamera.ScreenPointToRay(Input.mousePosition);
+                RaycastHit[] raycastHits = Physics.RaycastAll(ray, Mathf.Infinity, 1 << 14);
+                if (raycastHits != null && raycastHits.Length > 0)
+                {
+                    string text = "";
+                    foreach (RaycastHit hitInfo in raycastHits)
+                    {
+                        if (hitInfo.collider != null)
+                        {
+                            GameObject gameObject = hitInfo.collider.gameObject;
+                            if (gameObject != null)
+                            {
+                                string textMeshString = GameObjectUtil.getGameObjectTextMeshString(gameObject);
+                                if (textMeshString != null && textMeshString.Trim().Length > 0)
+                                {
+                                    text = translateText.TranslateString(textMeshString, TranslateText.DICT_UI);
+                                }
+                            }
+                        }
+                    }
+                    GUI.Label(new Rect(Input.mousePosition.x, (-Input.mousePosition.y), Screen.width, Screen.height), text, mouseTipGuiStyle);
+                }
+            }
+        }
+
 
     }
 }
