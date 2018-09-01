@@ -64,6 +64,7 @@
     <Compile Include="Script\Common\ConverUtil.cs" />
     <Compile Include="Script\Common\GameObjectUtil.cs" />
     <Compile Include="Script\Common\JSON.cs" />
+    <Compile Include="Script\Money\Money.cs" />
     <Compile Include="Script\Teleport\Teleport.cs" />
     <Compile Include="Script\Translate\TranslateText.cs" />
     <Compile Include="Script\Translate\TranslateApi.cs" />

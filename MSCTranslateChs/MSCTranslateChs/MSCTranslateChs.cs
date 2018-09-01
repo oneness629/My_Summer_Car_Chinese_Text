@@ -32,6 +32,7 @@ namespace MSCTranslateChs
 
         public Dictionary<string, ExecutionTime> allExecutionTime = new Dictionary<string, ExecutionTime>();
         public ExecutionTime executionTime = new ExecutionTime();
+        public Money money = new Money();
 
         public bool IsLoadResources = false;
         public bool IsLoadGameObject = false;
@@ -214,6 +215,10 @@ namespace MSCTranslateChs
                     }
                     executionTime.End("Teleport");
 
+                    if (money.isShowWindow)
+                    {
+                        money.OnGUI();
+                    }
 
                 }
             }

@@ -62,10 +62,16 @@ namespace MSCTranslateChs.Script
             {
                 Application.OpenURL("https://steamcommunity.com/sharedfiles/filedetails/?id=1384837781");
             }
+            GUILayout.BeginHorizontal("box");
             if (GUILayout.Button("远程传送窗口"))
             {
                 mscTranslateChs.teleport.isShowWindow = true;
             }
+            if (GUILayout.Button("金钱调整"))
+            {
+                mscTranslateChs.money.isShowWindow = true;
+            }
+            GUILayout.EndHorizontal();
             GUILayout.EndScrollView();
             GUI.DragWindow();
         }

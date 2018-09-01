@@ -12,7 +12,7 @@ namespace MSCTranslateChs.Script.Teleport
     
     public class Teleport
     {
-        private static LOGGER logger = new LOGGER(typeof(MSCTranslateChs));
+        private static LOGGER logger = new LOGGER(typeof(Teleport));
 
         public bool isShowWindow = false;
         Rect windowsRect;
@@ -186,7 +186,7 @@ namespace MSCTranslateChs.Script.Teleport
                 isShowWindow = false;
             }
             GUILayout.EndScrollView();
-            GUI.DragWindow(new Rect(0, 0, 9999 ,9999));
+            GUI.DragWindow();
         }
 
         public void TeleportTo(string targetObjectName)
