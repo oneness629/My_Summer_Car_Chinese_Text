@@ -309,6 +309,12 @@ namespace MSCTranslateChs.Script.Common
             return topGameObjectList;
         }
 
+        public static List<GameObject> getAllGameObject()
+        {
+            GameObject[] allGameObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+            return new List<GameObject>(allGameObjects); ;
+        }
+
 
 
         private static string GetComponentsText(GameObject gameObject, string levelText,

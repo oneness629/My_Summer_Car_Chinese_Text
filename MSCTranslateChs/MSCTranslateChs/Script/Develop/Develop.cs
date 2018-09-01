@@ -42,7 +42,7 @@ namespace MSCTranslateChs.Script.Develop
 
             this.mscTranslateChs = mscTranslateChs;
             developConfigWindows = new DevelopConfigWindows(this);
-            guiGameObjectExplorer = new GuiGameObjectExplorer();
+            guiGameObjectExplorer = new GuiGameObjectExplorer(this);
 
 
         }

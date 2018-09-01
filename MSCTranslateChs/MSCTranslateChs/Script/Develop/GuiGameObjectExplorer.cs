@@ -1,4 +1,5 @@
 ﻿using MSCTranslateChs.Script.Common;
+using MSCTranslateChs.Script.Develop;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,13 +18,16 @@ public class GuiGameObjectExplorer {
     public Vector2 viewScrollPosition;
     public string searchName = "";
 
+    public Develop develop;
+
     public GameObject parentGameObject;
     public List<GameObject> gameObjectList;
     public GameObject selectGameObject;
     public List<Component> selectGameObjectComponent;
 
-    public GuiGameObjectExplorer()
+    public GuiGameObjectExplorer(Develop develop)
     {
+        this.develop = develop;
         windowsRect = new Rect(Screen.width / 2 - windowsWidth / 2, Screen.height / 2 - windowsHeight / 2, windowsWidth, windowsHeight);
     }
 
@@ -48,7 +52,13 @@ public class GuiGameObjectExplorer {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
         
             GUILayout.BeginArea(new Rect(0, 0, 300, 600));
-        
+
+            if (GUILayout.Button("读取所有GameObject列表(先输入要筛选的文本再点)"))
+            {
+                parentGameObject = null;
+                gameObjectList = GameObjectUtil.getAllGameObject();
+            }
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("读取根节点"))
             {
@@ -84,7 +94,7 @@ public class GuiGameObjectExplorer {
                 {
                     if (searchName != null && !searchName.Equals(""))
                     {
-                        if (gameObject.name.IndexOf(searchName) == -1)
+                        if (gameObject.name.ToLower().IndexOf(searchName.ToLower()) == -1)
                         {
                             continue;
                         }
@@ -99,6 +109,10 @@ public class GuiGameObjectExplorer {
                     {
                         parentGameObject = gameObject;
                         gameObjectList = GameObjectUtil.GetChildGameObjectList(gameObject);
+                    }
+                    if (GUILayout.Button("传送过去"))
+                    {
+                        develop.mscTranslateChs.teleport.TeleportTo(GameObjectUtil.getGameObjectPath(gameObject));
                     }
                     GUILayout.EndHorizontal();
                 }

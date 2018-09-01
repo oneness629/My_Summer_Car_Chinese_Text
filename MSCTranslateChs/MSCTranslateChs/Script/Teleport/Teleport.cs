@@ -36,10 +36,12 @@ namespace MSCTranslateChs.Script.Teleport
         public const String SPAWN_TO_DRAG = "SpawnToDrag|直线加速赛场";
         public const String SPAWN_TO_COTTAGE = "SpawnToCottage|湖心小屋";
         public const String SPAWN_TO_VENTTI_PIG = "SpawnToVenttiPig|猪人家";
+        public const String LANDFILL_SPAWN = "LandfillSpawn|垃圾场";
+        public const String SPAWN_TO_DANCE = "SpawnToDance|舞会场";
 
         Dictionary<string, string> targetDynamicPosition = new Dictionary<string, string>();
         Dictionary<string, string> targetStaticPosition = new Dictionary<string, string>();
-
+        string targetGameObjectText = "";
 
         public Teleport()
         {
@@ -60,7 +62,8 @@ namespace MSCTranslateChs.Script.Teleport
             targetStaticPosition.Add("SPAWN_TO_DRAG", SPAWN_TO_DRAG);
             targetStaticPosition.Add("SPAWN_TO_COTTAGE", SPAWN_TO_COTTAGE);
             targetStaticPosition.Add("SPAWN_TO_VENTTI_PIG", SPAWN_TO_VENTTI_PIG);
-            
+            targetStaticPosition.Add("LANDFILL_SPAWN", LANDFILL_SPAWN);
+            targetStaticPosition.Add("SPAWN_TO_DANCE", SPAWN_TO_DANCE);
         }
 
         public void Update()
@@ -171,7 +174,12 @@ namespace MSCTranslateChs.Script.Teleport
                 }
                 keyIndex++;
             }
-
+            GUILayout.Label("自定义位置（GameObject名字边上，按~看日志）");
+            targetGameObjectText = GUILayout.TextField(targetGameObjectText);
+            if (GUILayout.Button("传送到" + targetGameObjectText))
+            {
+                TeleportTo(playerTargetName, targetGameObjectText);
+            }
             GUILayout.EndVertical();
             if (GUILayout.Button("关闭"))
             {
@@ -179,6 +187,12 @@ namespace MSCTranslateChs.Script.Teleport
             }
             GUILayout.EndScrollView();
             GUI.DragWindow(new Rect(0, 0, 9999 ,9999));
+        }
+
+        public void TeleportTo(string targetObjectName)
+        {
+            string playerTargetName = PLAYER.Split('|')[0];
+            TeleportTo(playerTargetName, targetObjectName);
         }
 
         public void TeleportTo(string teleportObjectName, string targetObjectName)
