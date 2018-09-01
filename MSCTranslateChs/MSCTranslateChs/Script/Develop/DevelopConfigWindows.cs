@@ -15,6 +15,8 @@ namespace MSCTranslateChs.Script.Develop
         Rect developWindowsRect;
         Vector2 scrollPosition;
         Develop develop;
+        float windowsWidth = 800;
+        float windowsHeight = 600;
         int windowsId = 6291;
         
 
@@ -23,7 +25,7 @@ namespace MSCTranslateChs.Script.Develop
 
         public DevelopConfigWindows(Develop develop)
         {
-            developWindowsRect = new Rect(0, 0, 800, 600);
+            developWindowsRect = new Rect(Screen.width - windowsWidth , 0 , windowsWidth, windowsHeight);
             this.develop = develop;
         }
 
@@ -55,16 +57,25 @@ namespace MSCTranslateChs.Script.Develop
                 develop.isShowDevelopConfigWindows = false;
             }
 
+            ShowAllExecutionTime();
+
+            ShowCameraData();
+
             GameObjectTransformUpdate();
 
-            ShowAllExecutionTime();
+
             GUILayout.EndScrollView();
             GUI.DragWindow();
         }
 
+        private void ShowCameraData()
+        {
+            GUILayout.Label(develop.textCameraLog);
+        }
+
         private void ShowAllExecutionTime()
         {
-
+            GUILayout.Label("Mod执行效率检查:单位（毫秒）,基本为0即可，偶尔跳动对fps有细微影响，应应应该该该影响不大···");
             foreach (string key in develop.mscTranslateChs.allExecutionTime.Keys)
             {
                 ExecutionTime executionTime = develop.mscTranslateChs.allExecutionTime[key];

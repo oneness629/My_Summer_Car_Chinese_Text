@@ -10,13 +10,15 @@ namespace MSCTranslateChs.Script
     {
         bool isShowWelcomeWindows = true;
         Rect welcomeWindowsRect;
+        float windowsWidth = 800;
+        float windowsHeight = 600;
         MSCTranslateChs mscTranslateChs;
         Vector2 scrollPoint;
         int windowsId = 629;
 
         public WelcomeWindows(MSCTranslateChs mscTranslateChs)
         {
-            welcomeWindowsRect = new Rect(0, 0, 800, 600);
+            welcomeWindowsRect = new Rect(Screen.width / 2 - windowsWidth / 2, Screen.height / 2 - windowsHeight / 2, windowsWidth, windowsHeight);
             this.mscTranslateChs = mscTranslateChs;
         }
 

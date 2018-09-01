@@ -15,8 +15,10 @@ namespace MSCTranslateChs.Script.Teleport
         private static LOGGER logger = new LOGGER(typeof(MSCTranslateChs));
 
         public bool isShowWindow = false;
-        Rect windowsRect = new Rect(0, 0, 300, 600);
+        Rect windowsRect;
         Vector2 scrollPoint;
+        float windowsWidth = 300;
+        float windowsHeight = 700;
         int windowsId = 6292;
 
         public const String PLAYER = "PLAYER|玩家";
@@ -41,6 +43,9 @@ namespace MSCTranslateChs.Script.Teleport
 
         public Teleport()
         {
+
+            windowsRect = new Rect(Screen.width - windowsWidth, Screen.height - windowsHeight , windowsWidth, windowsHeight);
+
             targetDynamicPosition.Add("SATSUMA", SATSUMA);
             targetDynamicPosition.Add("FERNDALE", FERNDALE);
             targetDynamicPosition.Add("GIFU", GIFU);
