@@ -107,6 +107,13 @@ namespace MSCTranslateChs.Script.Teleport
                                 // string boltState = "未完全锁紧";
                                 text += "应该是" + Convert.ToInt32(Math.Round(targetGameObject.transform.localScale.x * 10)) + "号扳手" + targetGameObject.transform.localRotation.ToString();
                                 /*
+                                PlayMakerFSM[] playMakerFSMArray =targetGameObject.GetComponents<PlayMakerFSM>();
+                                foreach (PlayMakerFSM playMakerFSM in playMakerFSMArray)
+                                {
+                                    text += "\n" + playMakerFSM.name + playMakerFSM.FsmVariables
+                                }
+                                */
+                                /*
                                 if (
                                     /*
                                     targetGameObject.transform.localRotation.x.Equals(0f) &&

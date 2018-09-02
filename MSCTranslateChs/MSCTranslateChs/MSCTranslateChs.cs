@@ -53,7 +53,7 @@ namespace MSCTranslateChs
         private GUIStyle subtitlesGuiStyle;
         private Rect subtitlesRect;
 
-        private TextMesh partnamesTextMesh;
+        public TextMesh partnamesTextMesh;
         private GUIStyle partnamesGuiStyle;
         private Rect partnamesRect;
 
@@ -72,6 +72,7 @@ namespace MSCTranslateChs
 
         public Teleport teleport = new Teleport();
         public BoltTip boltTip = new BoltTip();
+        public ItemTransmitter itemTransmitter;
 
         public override void OnLoad()
         {
@@ -84,6 +85,8 @@ namespace MSCTranslateChs
 
                 develop = new Develop(this);
                 welcomeWindows = new WelcomeWindows(this);
+                itemTransmitter = new ItemTransmitter(this);
+
 
                 subtitlesGuiStyle = new GUIStyle();
                 subtitlesGuiStyle.alignment = TextAnchor.MiddleCenter;
@@ -223,6 +226,10 @@ namespace MSCTranslateChs
                     {
                         boltTip.OnGUI();
                     }
+                    executionTime.Start("物品传送(背包)");
+                    itemTransmitter.OnGUI();
+                    executionTime.End("物品传送(背包)");
+
 
                 }
             }

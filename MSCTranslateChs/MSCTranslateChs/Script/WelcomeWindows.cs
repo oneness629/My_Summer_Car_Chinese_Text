@@ -75,6 +75,10 @@ namespace MSCTranslateChs.Script
             {
                 mscTranslateChs.boltTip.isShowWindow = true;
             }
+            if (GUILayout.Button("物品传送(背包)"))
+            {
+                mscTranslateChs.itemTransmitter.isShowWindow = true;
+            }
             GUILayout.EndHorizontal();
             GUILayout.EndScrollView();
             GUI.DragWindow();
