@@ -6,6 +6,8 @@ using UnityEngine;
 using MSCTranslateChs.Script.Develop;
 using MSCTranslateChs.Script.Teleport;
 using MSCTranslateChs.Script.Common;
+using System.IO;
+using MSCLoader;
 
 namespace MSCTranslateChs.Script.Develop
 {
@@ -51,6 +53,31 @@ namespace MSCTranslateChs.Script.Develop
             if (GUILayout.Button("GUI GameObject 查看"))
             {
                 develop.guiGameObjectExplorer.isShow = true;
+            }
+
+            if (GUILayout.Button("读取所有Renderer"))
+            {
+                Renderer[] renderers = Resources.FindObjectsOfTypeAll<Renderer>();
+                string text = "";
+                foreach (Renderer renderer in renderers)
+                {
+                    text += renderer.name + "\n";
+                    text += "  " + GameObjectUtil.getGameObjectPath(renderer.gameObject) + "\n";
+
+                }
+                File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(develop.mscTranslateChs), "_renderers.txt"), new string[] { text });
+            }
+
+            if (GUILayout.Button("读取所有Material"))
+            {
+                Material[] materials = Resources.FindObjectsOfTypeAll<Material>();
+                string text = "";
+                foreach (Material material in materials)
+                {
+                    text += material.name + "\n";
+
+                }
+                File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(develop.mscTranslateChs), "_materials.txt"), new string[] { text });
             }
 
             if (GUILayout.Button("关闭")){

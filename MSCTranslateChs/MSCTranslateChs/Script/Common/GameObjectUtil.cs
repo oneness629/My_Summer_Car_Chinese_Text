@@ -9,7 +9,6 @@ namespace MSCTranslateChs.Script.Common
 {
     class GameObjectUtil
     {
-        public static Dictionary<string, Color> highlightRendererColorBak = new Dictionary<string, Color>();
 
         public static List<GameObject> GetChildGameObjectList(GameObject gameObject)
         {
@@ -23,6 +22,79 @@ namespace MSCTranslateChs.Script.Common
                 gameObjectList.Add(gameObject.transform.GetChild(i).gameObject);
             }
             return gameObjectList;
+        }
+
+
+        public static List<GameObject> FindChildGameObjectByName(GameObject gameObject, string childName)
+        {
+            List<GameObject> gameObjectList = new List<GameObject>();
+            if (gameObject == null || childName == null || "".Equals(childName))
+            {
+                return gameObjectList;
+            }
+            Transform[] transforms = gameObject.GetComponentsInChildren<Transform>();
+
+            foreach (Transform transform in transforms)
+            {
+                if (transform.gameObject.name.ToLower().Equals(childName.ToLower()))
+                {
+                    gameObjectList.Add(transform.gameObject);
+                }
+            }
+            return gameObjectList;
+        }
+
+        public static List<GameObject> FindChildGameObjectByLikeName(GameObject gameObject, string childName)
+        {
+            List<GameObject> gameObjectList = new List<GameObject>();
+            if (gameObject == null || childName == null || "".Equals(childName))
+            {
+                return gameObjectList;
+            }
+            Transform[] transforms = gameObject.GetComponentsInChildren<Transform>();
+
+            foreach (Transform transform in transforms)
+            {
+                if (transform.gameObject.name.ToLower().IndexOf(childName.ToLower()) > -1)
+                {
+                    gameObjectList.Add(transform.gameObject);
+                }
+            }
+            return gameObjectList;
+        }
+
+        public static List<GameObject> GetChildGameObjectLikeName(GameObject gameObject, string childName)
+        {
+            List<GameObject> gameObjectList = new List<GameObject>();
+            if (gameObject == null || childName == null || "".Equals(childName))
+            {
+                return gameObjectList;
+            }
+            for (int i = 0; i < gameObject.transform.childCount; i++)
+            {
+                if (gameObject.transform.GetChild(i).name.ToLower().IndexOf(childName.ToLower()) > -1)
+                {
+                    gameObjectList.Add(gameObject.transform.GetChild(i).gameObject);
+                }
+            }
+            return gameObjectList;
+        }
+
+
+        public static GameObject GetChildGameObjectLikeNameFirst(GameObject gameObject, string childName)
+        {
+            if (gameObject == null || childName == null || "".Equals(childName))
+            {
+                return null;
+            }
+            for (int i = 0; i < gameObject.transform.childCount; i++)
+            {
+                if (gameObject.transform.GetChild(i).name.ToLower().IndexOf(childName.ToLower()) > -1)
+                {
+                    return gameObject.transform.GetChild(i).gameObject;
+                }
+            }
+            return null;
         }
 
         public static GameObject GetChildGameObject(GameObject gameObject, string childName)
@@ -98,37 +170,10 @@ namespace MSCTranslateChs.Script.Common
                     GameObject childGameObject = gameObject.transform.GetChild(i).gameObject;
                     if (childGameObject != null)
                     {
-                        /*
-                        if (childText != null && childText != "")
-                        {
-                            if (childGameObject.name.ToUpper().Contains(childText.ToUpper()))
-                            {
-                                MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
-                                MSCLoader.ModConsole.Print(childGameObject.transform.position + " position");
-                                MSCLoader.ModConsole.Print(childGameObject.transform.rotation + " rotation");
-                                MSCLoader.ModConsole.Print(childGameObject.transform.localScale + " localScale");
-
-                                addBoxCollider(childGameObject);
-                                // Highlight(childGameObject);
-                            }
-                        }
-                        else 
-                        */
                         if (childGameObject.GetComponent<TextMesh>() != null)
                         {
-
-                            // MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
                             addBoxCollider(childGameObject);
-                            // Highlight(childGameObject);
                         }
-                        /*
-                        else
-                        {
-                            MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
-                            addBoxCollider(childGameObject);
-                            // Highlight(childGameObject);
-                        }
-                        */
                         addBoxColliderByChild(childGameObject, childText);
                     }
                 }
@@ -148,66 +193,39 @@ namespace MSCTranslateChs.Script.Common
             }
         }
 
-        public static void HighligListConver(List<GameObject> targetList, List<GameObject> oldList)
+        public static void ChangeGameObjectMaterial(GameObject gameObject, Material material)
         {
-            RemoveHighlightList(oldList);
-            HighlightList(targetList);
-        }
-
-
-        public static void RemoveHighlightList(List<GameObject> gameObjects)
-        {
-            foreach (GameObject gameObject in gameObjects)
+            if (gameObject != null && material != null)
             {
-                RemoveHighlight(gameObject);
-            }
-        }
-
-        public static void HighlightList(List<GameObject> gameObjects)
-        {
-            foreach (GameObject gameObject in gameObjects)
-            {
-                Highlight(gameObject);
-            }
-        }
-
-        public static void Highlight(GameObject gameObject)
-        {
-            Highlight(gameObject, Color.red);
-        }
-
-        public static void Highlight(GameObject gameObject, Color highlightColor)
-        {
-            if (gameObject != null)
-            {
-                string fullName = getGameObjectPath(gameObject);
                 Renderer renderer = gameObject.GetComponent<Renderer>();
                 if (renderer != null)
                 {
-                    highlightRendererColorBak.Add(fullName, renderer.material.color);
-                    renderer.material.color = highlightColor;
+                    renderer.material = material;
                 }
             }
         }
 
-        public static void RemoveHighlight(GameObject gameObject)
+        public static void ChangeGameObjectColor(GameObject gameObject, Color color)
         {
             if (gameObject != null)
             {
-                string fullName = getGameObjectPath(gameObject);
-                if (fullName != null)
+                Renderer renderer = gameObject.GetComponent<Renderer>();
+                if (renderer != null)
                 {
-                    Renderer renderer = gameObject.GetComponent<Renderer>();
-                    if (renderer != null)
-                    {
-                        if (highlightRendererColorBak.ContainsKey(fullName))
-                        {
-                            renderer.material.color = highlightRendererColorBak[fullName];
-                            highlightRendererColorBak.Remove(fullName);
-                        }
-                    }
+                    renderer.material.color = color;
                 }
+            }
+        }
 
+        public static void ChangeGameObjectColor(GameObject gameObject, Color color, string rendererNameLike)
+        {
+            if (gameObject != null && rendererNameLike != null)
+            {
+                Renderer renderer = gameObject.GetComponent<Renderer>();
+                if (renderer != null && renderer.name.ToLower().IndexOf(rendererNameLike.ToLower()) > -1)
+                {
+                    renderer.material.color = color;
+                }
             }
         }
 
