@@ -26,7 +26,7 @@ namespace MSCTranslateChs
 
         public override string Author => "oneness629";
 
-        public override string Version => "2.5";
+        public override string Version => "2.6";
 
         public override bool UseAssetsFolder => true;
 
