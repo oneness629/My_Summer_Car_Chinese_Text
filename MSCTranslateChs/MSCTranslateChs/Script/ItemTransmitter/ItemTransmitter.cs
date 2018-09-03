@@ -29,36 +29,51 @@ namespace MSCTranslateChs.Script.Teleport
 
         public string landfillSpawnGameObjectName = "LandfillSpawn";
         public GameObject landfillSpawnGameObject;
+        public string playerGameObjectName = "PLAYER";
+        public GameObject playerGameObject;
+        public FsmBool playerInMenuFsmBool;
         public Dictionary<string, GameObject> itemDict = new Dictionary<string, GameObject>();
-        
+        public int selectItemKeyIndex = 0;
+        public string selectItemKey;
 
         public ItemTransmitter(MSCTranslateChs mscTranslateChs)
         {
             this.mscTranslateChs = mscTranslateChs;
             windowsRect = new Rect(Screen.width - windowsWidth , 0, windowsWidth, windowsHeight);
+
         }
 
 
         public void OnGUI()
         {
-
             if (isShowWindow)
             {
                 windowsRect = GUI.Window(windowsId, windowsRect, WindowFunction, "物品传送（背包）");
             }
-            if (isEnable)
-            {
-                ItemProcessor();
-            }
         }
 
 
-        private void ItemProcessor()
+        public void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                mscTranslateChs.itemTransmitter.isShowWindow = !mscTranslateChs.itemTransmitter.isShowWindow;
+            }
+
             if (!isInIt)
             {
                 landfillSpawnGameObject = GameObject.Find(landfillSpawnGameObjectName);
                 if (landfillSpawnGameObject == null)
+                {
+                    return;
+                }
+                playerGameObject = GameObject.Find(playerGameObjectName);
+                if (playerGameObject == null)
+                {
+                    return;
+                }
+                playerInMenuFsmBool = FsmVariables.GlobalVariables.FindFsmBool("PlayerInMenu");
+                if (playerInMenuFsmBool == null)
                 {
                     return;
                 }
@@ -91,15 +106,54 @@ namespace MSCTranslateChs.Script.Teleport
                                 }
                                 else
                                 {
-                                    logger.LOG(targetGameObject + "已经在背包,不允许拾取");
+                                    logger.LOG(targetGameObject + "已经在背包,不允许拾取(再次传送到垃圾堆)");
                                 }
-                                
-
                                 targetGameObject.transform.parent = null;
                                 TeleportTo(targetGameObject, landfillSpawnGameObject);
                             }
                         }
                     }
+                }
+
+                float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
+                int scrollWheelInt = 0;
+                if (scrollWheel > 0)
+                {
+                    scrollWheelInt = -1;
+                }
+                else if(scrollWheel < 0)
+                {
+                    scrollWheelInt = 1;
+                }
+                selectItemKeyIndex += scrollWheelInt;
+                if (itemDict.Keys.Count <= selectItemKeyIndex || selectItemKeyIndex < 0)
+                {
+                    selectItemKeyIndex = itemDict.Keys.Count - 1;
+                }
+
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    if (itemDict.Count > 0 && selectItemKey != null && !"".Equals(selectItemKey))
+                    {
+                        logger.LOG("是否在菜单:" + playerInMenuFsmBool.Value);
+                        if (playerInMenuFsmBool.Value)
+                        {
+                            TeleportTo(itemDict[selectItemKey], playerGameObject);
+                        }
+                        else
+                        {
+                            TeleportTo(itemDict[selectItemKey]);
+                        }
+                        
+                        itemDict.Remove(selectItemKey);
+                        selectItemKey = null;
+                        selectItemKeyIndex--;
+                        if (selectItemKeyIndex < 0)
+                        {
+                            selectItemKeyIndex = 0;
+                        }
+                    }
+                    
                 }
             }
                 
@@ -114,16 +168,30 @@ namespace MSCTranslateChs.Script.Teleport
             }
             isEnable = GUILayout.Toggle(isEnable, "是否启用");
             GUILayout.Label("是否初始化 : " + isInIt);
+            GUILayout.Label("捡起/丢出物品:E/R");
+            GUILayout.Label("切换选中 鼠标滚轮");
+            GUILayout.Label("是否初始化 : " + isInIt);
             // GUILayout.Label("传送目标GameObject : " + landfillSpawnGameObject !=);
-
+            int index = 0;
             foreach (string key in itemDict.Keys)
             {
                 string view = key.Split('|')[0];
+                if (index == selectItemKeyIndex)
+                {
+                    view = ("[" + view + "]");
+                    this.selectItemKey = key;
+                }
                 if (GUILayout.Button(view))
                 {
-                    TeleportTo(itemDict[key]);
+                    logger.LOG("是否在菜单:" + playerInMenuFsmBool.Value);
+                    TeleportTo(itemDict[key], playerGameObject);
                     itemDict.Remove(key);
                 }
+                index++;
+            }
+            if (this.selectItemKey == null)
+            {
+                this.selectItemKeyIndex = 0;
             }
             GUILayout.EndScrollView();
             GUI.DragWindow();

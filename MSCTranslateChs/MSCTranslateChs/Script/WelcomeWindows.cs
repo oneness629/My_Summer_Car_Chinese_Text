@@ -19,15 +19,14 @@ namespace MSCTranslateChs.Script
 
         FsmFloat timeRotationMinute;
         FsmFloat timeRotationHour;
-        FsmFloat globalTime;
 
         public WelcomeWindows(MSCTranslateChs mscTranslateChs)
         {
             welcomeWindowsRect = new Rect(Screen.width / 2 - windowsWidth / 2, Screen.height / 2 - windowsHeight / 2, windowsWidth, windowsHeight);
             this.mscTranslateChs = mscTranslateChs;
-            timeRotationMinute = FsmVariables.GlobalVariables.FindFsmFloat("TimeRotationMinute");
+            
             timeRotationHour = FsmVariables.GlobalVariables.FindFsmFloat("TimeRotationHour");
-            globalTime = FsmVariables.GlobalVariables.FindFsmFloat("GlobalTime");
+            timeRotationMinute = FsmVariables.GlobalVariables.FindFsmFloat("TimeRotationMinute");
         }
 
 
@@ -45,7 +44,9 @@ namespace MSCTranslateChs.Script
         {
             scrollPoint = GUILayout.BeginScrollView(scrollPoint);
             GUILayout.Label("  欢迎使用我的夏季汽车中文翻译Mod");
-            GUILayout.Label("      游戏内时间:globalTime -> " + globalTime + " " + Mathf.FloorToInt(timeRotationHour.Value / (360 / 12)) + ":" + Mathf.FloorToInt(timeRotationMinute.Value / (360 / 60)));
+            int viewHour = 1 - Mathf.FloorToInt(timeRotationHour.Value / (360 / 12)) + 12;
+            int viewMinutes = 60 - Mathf.FloorToInt(timeRotationMinute.Value / (360 / 60));
+            GUILayout.Label("      游戏内时间:" + viewHour.ToString("D2") + ":" + viewMinutes.ToString("D2"));
             GUILayout.Label("  当前翻译内容：状态UI、商品动作、配件、字幕(需要打开英文字幕),中英文对照显示，不会覆盖原有英文内容。");
             GUILayout.Label("      状态UI、商品动作、配件、字幕(需要打开英文字幕),中英文对照显示，不会覆盖原有英文内容。");
             GUILayout.Label("      详细使用教程请参考steam中文模组指南(界面比较乱，以后慢慢改~)");

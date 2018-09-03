@@ -338,6 +338,11 @@ namespace MSCTranslateChs
                     }
                 }
 
+                if (itemTransmitter.isEnable)
+                {
+                    itemTransmitter.Update();
+                }
+
             }
         }
 
