@@ -55,7 +55,7 @@ public class GuiGameObjectExplorer {
         
             GUILayout.BeginArea(new Rect(0, 0, 300, 600));
 
-            if (GUILayout.Button("读取所有GameObject列表(先输入要筛选的文本再点)"))
+            if (GUILayout.Button("所有GameObject列表(先输筛选的文本再点)"))
             {
                 parentGameObject = null;
                 gameObjectList = GameObjectUtil.getAllGameObject();
@@ -71,7 +71,7 @@ public class GuiGameObjectExplorer {
             
             if (parentGameObject != null)
             {
-                if (GUILayout.Button("返回父节点"))
+                if (GUILayout.Button("<"))
                 {
                     if (parentGameObject.transform.parent == null)
                     {
@@ -107,20 +107,22 @@ public class GuiGameObjectExplorer {
                         selectGameObject = gameObject;
                         selectGameObjectComponent = new List<Component>(gameObject.GetComponents<Component>());
                     }
-                    if (GUILayout.Button("子节点"))
+                    if (GUILayout.Button(">"))
                     {
                         parentGameObject = gameObject;
                         gameObjectList = GameObjectUtil.GetChildGameObjectList(gameObject);
                     }
-                    if (GUILayout.Button("传送过去"))
+                    if (GUILayout.Button("传送"))
                     {
                         develop.mscTranslateChs.teleport.TeleportTo(GameObjectUtil.getGameObjectPath(gameObject));
                     }
-                    if (GUILayout.Button("克隆并传过来"))
+                    if (GUILayout.Button("克隆"))
                     {
-                        GameObject cloneGameObject = MonoBehaviour.Instantiate(gameObject, gameObject.transform.position, gameObject.transform.rotation) as GameObject;
                         GameObject playerGameObject = GameObject.Find("PLAYER");
-                        cloneGameObject.transform.position = playerGameObject.transform.position + Vector3.one;
+                        Vector3 clonePosition = new Vector3(playerGameObject.transform.position.x, playerGameObject.transform.position.y + 3f, playerGameObject.transform.position.z);
+                        GameObject cloneGameObject = MonoBehaviour.Instantiate(gameObject, clonePosition, gameObject.transform.rotation) as GameObject;
+                        
+                        
                     }
                     GUILayout.EndHorizontal();
                 }
@@ -136,7 +138,7 @@ public class GuiGameObjectExplorer {
                 GUILayout.Label("选中GameObject:" + GameObjectUtil.getGameObjectPath(selectGameObject));
                 if (GUILayout.Button("写入txt"))
                 {
-                    File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(develop.mscTranslateChs), "_gameObject.txt"), GameObjectUtil.getGameObjectText(selectGameObject, 0));
+                    File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(develop.mscTranslateChs), "_gameObject.txt"), GameObjectUtil.getGameObjectText(selectGameObject, 0, false, true, true, false, false));
                 }
                 
                 viewScrollPosition = GUILayout.BeginScrollView(viewScrollPosition);
@@ -175,14 +177,15 @@ public class GuiGameObjectExplorer {
                         text += view + "\n";
                         GUILayout.Label(view);
                     }
+                    
                     GUILayout.EndVertical();
                 }
+                
+                GUILayout.EndScrollView();
                 if (GUILayout.Button("写入显示内容到txt"))
                 {
                     File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(develop.mscTranslateChs), "_gameObjectViewText.txt"), text);
                 }
-                GUILayout.EndScrollView();
-
             }
             GUILayout.EndArea();
             

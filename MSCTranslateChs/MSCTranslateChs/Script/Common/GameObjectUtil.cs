@@ -374,6 +374,17 @@ namespace MSCTranslateChs.Script.Common
                     {
                         text += levelText + "\t\t" + "component.GetType().GetMethods : \t" + getGetMethodsString(component.GetType().GetMethods(), levelText, component) + "\n";
                     }
+                    if (isGetComponentTypeMethods == true)
+                    {
+                        text += levelText + "\t\t" + "component.GetType().GetProperties : \t" + getPropertyInfosString(component.GetType().GetProperties(), levelText, component) + "\n";
+                    }
+                    text += "\n";
+
+                    if (component.GetType().Name.Equals("PlayMakerFSM"))
+                    {
+                        PlayMakerFSM playMakerFSM = component as PlayMakerFSM;
+                        text += levelText + "\t\t" + "Component is PlayMakerFSM : \n" + FsmVariablesUtil.getAllFsmVariablesAndVaule(playMakerFSM.FsmVariables);
+                    }
                     text += "\n";
                 }
             }
@@ -413,6 +424,24 @@ namespace MSCTranslateChs.Script.Common
             foreach (FieldInfo fieldInfo in fieldInfos)
             {
                 text += (levelText + "\t" + fieldInfo.Name + " = " + Convert.ToString(fieldInfo.GetValue(obj)) + "\n");
+            }
+            return text;
+        }
+
+        private static string getPropertyInfosString(PropertyInfo[] propertyInfos, string levelText, object obj)
+        {
+            string text = levelText + "\t getFieldsString";
+            levelText += "\t";
+            foreach (PropertyInfo propertyInfo in propertyInfos)
+            {
+                try
+                {
+                    text += (levelText + "\t" + propertyInfo.Name + " = " + Convert.ToString(propertyInfo.GetValue(obj, null)) + "\n");
+                }
+                catch (Exception e)
+                {
+                    text += (levelText + "\t" + propertyInfo.Name + " = " + e.Message + "\n");
+                }
             }
             return text;
         }

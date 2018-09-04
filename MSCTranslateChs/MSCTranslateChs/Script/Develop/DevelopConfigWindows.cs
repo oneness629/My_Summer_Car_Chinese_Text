@@ -92,9 +92,17 @@ namespace MSCTranslateChs.Script.Develop
 
             GameObjectTransformUpdate();
 
+            ViewFsmAllVariablesAndVaule();
+
 
             GUILayout.EndScrollView();
             GUI.DragWindow();
+        }
+
+        private void ViewFsmAllVariablesAndVaule()
+        {
+            GUILayout.Label("全局变量查看:");
+            GUILayout.Label(FsmVariablesUtil.getAllFsmVariablesAndVaule());
         }
 
         private void GameOverGameObjectCheck()
