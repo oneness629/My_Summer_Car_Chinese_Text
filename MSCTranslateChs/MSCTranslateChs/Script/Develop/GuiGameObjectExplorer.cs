@@ -116,6 +116,12 @@ public class GuiGameObjectExplorer {
                     {
                         develop.mscTranslateChs.teleport.TeleportTo(GameObjectUtil.getGameObjectPath(gameObject));
                     }
+                    if (GUILayout.Button("克隆并传过来"))
+                    {
+                        GameObject cloneGameObject = MonoBehaviour.Instantiate(gameObject, gameObject.transform.position, gameObject.transform.rotation) as GameObject;
+                        GameObject playerGameObject = GameObject.Find("PLAYER");
+                        cloneGameObject.transform.position = playerGameObject.transform.position + Vector3.one;
+                    }
                     GUILayout.EndHorizontal();
                 }
             }
