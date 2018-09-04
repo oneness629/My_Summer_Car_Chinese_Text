@@ -136,10 +136,11 @@ public class GuiGameObjectExplorer {
                 GUILayout.Label("选中GameObject:" + GameObjectUtil.getGameObjectPath(selectGameObject));
                 if (GUILayout.Button("写入txt"))
                 {
-                    string text = GameObjectUtil.getGameObjectText(selectGameObject, 0);
-                    File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(develop.mscTranslateChs), "_gameObject.txt"), text);
+                    File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(develop.mscTranslateChs), "_gameObject.txt"), GameObjectUtil.getGameObjectText(selectGameObject, 0));
                 }
+                
                 viewScrollPosition = GUILayout.BeginScrollView(viewScrollPosition);
+                string text = "";
                 foreach (Component component in selectGameObjectComponent)
                 {
                     Type type = component.GetType();
@@ -147,22 +148,38 @@ public class GuiGameObjectExplorer {
                     GUILayout.BeginVertical("box");
                     foreach (FieldInfo fieldInfo in type.GetFields())
                     {
-                        GUILayout.Label(fieldInfo.Name + " : " + fieldInfo.GetValue(component));
+                        string view = fieldInfo.Name + " : " + fieldInfo.GetValue(component);
+                        text += view + "\n";
+                        GUILayout.Label(view);
                     }
-                
                     foreach (PropertyInfo propertyInfo in type.GetProperties())
                     {
                         try
                         {
-                            GUILayout.Label("  " + propertyInfo.Name + " : \n" + propertyInfo.GetValue(component, null));
+                            string view = "  " + propertyInfo.Name + " : \n" + propertyInfo.GetValue(component, null);
+                            text += view + "\n";
+                            GUILayout.Label(view);
                         }
                         catch (Exception e)
                         {
-                            GUILayout.Label("  " + propertyInfo.Name + " : \n Error " + e.Message);
+                            string view = "  " + propertyInfo.Name + " : \n Error " + e.Message;
+                            text += view + "\n";
+                            GUILayout.Label(view);
                         }
                     
                     }
+                    if (component.GetType().Name.Equals("PlayMakerFSM"))
+                    {
+                        PlayMakerFSM playMakerFSM = component as PlayMakerFSM;
+                        string view = "Component is PlayMakerFSM : \n" + FsmVariablesUtil.getAllFsmVariablesAndVaule(playMakerFSM.FsmVariables);
+                        text += view + "\n";
+                        GUILayout.Label(view);
+                    }
                     GUILayout.EndVertical();
+                }
+                if (GUILayout.Button("写入显示内容到txt"))
+                {
+                    File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(develop.mscTranslateChs), "_gameObjectViewText.txt"), text);
                 }
                 GUILayout.EndScrollView();
 
