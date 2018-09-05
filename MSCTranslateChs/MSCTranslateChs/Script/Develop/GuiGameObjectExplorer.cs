@@ -9,10 +9,11 @@ using System.Reflection;
 using UnityEngine;
 
 public class GuiGameObjectExplorer {
+    private static LOGGER logger = new LOGGER(typeof(GuiGameObjectExplorer));
 
     public bool isShow = false;
     public int windowsId = 6293;
-    public float windowsWidth = 800;
+    public float windowsWidth = 1000;
     public float windowsHeight = 600;
     public Rect windowsRect;
     public Vector2 scrollPosition;
@@ -39,6 +40,9 @@ public class GuiGameObjectExplorer {
         {
             windowsRect = GUI.Window(windowsId, windowsRect, GuiGameObjectExplorerWindows, "GameObject查看");
             // windowsRect = GUILayout.Window(windowsId, windowsRect, GuiGameObjectExplorerWindows, "GameObject查看");
+
+            
+
         }
     }
 
@@ -49,16 +53,31 @@ public class GuiGameObjectExplorer {
         {
             isShow = false;
         }
+        
         try
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
         
-            GUILayout.BeginArea(new Rect(0, 0, 300, 600));
+            GUILayout.BeginArea(new Rect(0, 0, 500, 600));
 
             if (GUILayout.Button("所有GameObject列表(先输筛选的文本再点)"))
             {
                 parentGameObject = null;
                 gameObjectList = GameObjectUtil.getAllGameObject();
+            }
+            if (GUILayout.Button("所有GameObject写入txt(out目录,会卡)"))
+            {
+                parentGameObject = null;
+                gameObjectList = GameObjectUtil.getAllGameObject();
+                string text = "";
+                int index = 0;
+                foreach (GameObject gameObject in gameObjectList)
+                {
+                    text += GameObjectUtil.getGameObjectText(gameObject, 0, false, true, true, false, false);
+                    text += "\n";
+                    logger.LOG("写入gameObject ->" + index++);
+                    File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(develop.mscTranslateChs), "out/_AllGameObject"+index + "_" + gameObject.name + ".txt"), text);
+                }
             }
 
             GUILayout.BeginHorizontal();
@@ -112,18 +131,40 @@ public class GuiGameObjectExplorer {
                         parentGameObject = gameObject;
                         gameObjectList = GameObjectUtil.GetChildGameObjectList(gameObject);
                     }
-                    if (GUILayout.Button("传送"))
+                    if (GUILayout.Button("去"))
                     {
                         develop.mscTranslateChs.teleport.TeleportTo(GameObjectUtil.getGameObjectPath(gameObject));
+                    }
+                    if (GUILayout.Button("来"))
+                    {
+                        GameObject playerGameObject = GameObject.Find("PLAYER");
+                        Vector3 clonePosition = new Vector3(playerGameObject.transform.position.x, playerGameObject.transform.position.y + 3f, playerGameObject.transform.position.z);
+                        gameObject.transform.position = clonePosition;
                     }
                     if (GUILayout.Button("克隆"))
                     {
                         GameObject playerGameObject = GameObject.Find("PLAYER");
                         Vector3 clonePosition = new Vector3(playerGameObject.transform.position.x, playerGameObject.transform.position.y + 3f, playerGameObject.transform.position.z);
-                        GameObject cloneGameObject = MonoBehaviour.Instantiate(gameObject, clonePosition, gameObject.transform.rotation) as GameObject;
-                        
-                        
+                        // GameObject cloneGameObject = MonoBehaviour.Instantiate(gameObject, clonePosition, gameObject.transform.rotation) as GameObject;
+                        gameObject.SetActive(false);
+                        GameObject cloneGameObject = GameObject.Instantiate(gameObject);
+                        cloneGameObject.transform.position = clonePosition;
                     }
+                    if (gameObject.activeSelf == false)
+                    {
+                        if (GUILayout.Button("启用"))
+                        {
+                            gameObject.SetActive(true);
+                        }
+                    }
+                    else
+                    {
+                        if (GUILayout.Button("禁用"))
+                        {
+                            gameObject.SetActive(false);
+                        }
+                    }
+
                     GUILayout.EndHorizontal();
                 }
             }
@@ -132,7 +173,7 @@ public class GuiGameObjectExplorer {
             GUILayout.EndArea();
 
             
-            GUILayout.BeginArea(new Rect(300, 0, 500, 600));
+            GUILayout.BeginArea(new Rect(500, 0, 500, 600));
             if (selectGameObject != null)
             {
                 GUILayout.Label("选中GameObject:" + GameObjectUtil.getGameObjectPath(selectGameObject));
