@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace MSCTranslateChs.Script
 {
-    class WelcomeWindows
+    public class WelcomeWindows
     {
         bool isShowWelcomeWindows = true;
         Rect welcomeWindowsRect;

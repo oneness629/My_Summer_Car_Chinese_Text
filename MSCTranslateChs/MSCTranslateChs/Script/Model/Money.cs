@@ -8,7 +8,7 @@ using MSCLoader;
 using MSCTranslateChs.Script.Common;
 using HutongGames.PlayMaker;
 
-namespace MSCTranslateChs.Script.Teleport
+namespace MSCTranslateChs.Script.Model
 {
     
     public class Money

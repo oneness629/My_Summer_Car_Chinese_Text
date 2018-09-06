@@ -8,7 +8,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace MSCTranslateChs.Script.Develop
+namespace MSCTranslateChs.Script.Model.Develop
 {
     public class Develop
     {

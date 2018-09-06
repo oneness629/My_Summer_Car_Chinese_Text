@@ -11,13 +11,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 
-namespace MSCTranslateChs.Script.Translate
+namespace MSCTranslateChs.Script.Common.Translate
 {
     public class TranslateText
     {
         private static LOGGER logger = new LOGGER(typeof(TranslateText));
 
-        Mod mod;
         Dictionary<string, Dictionary<string, string>> translateTextDict = new Dictionary<string, Dictionary<string, string>>();
         Dictionary<string, int> translateTextSizeDict = new Dictionary<string, int>();
 
@@ -40,9 +39,8 @@ namespace MSCTranslateChs.Script.Translate
         private string autoTranslateStringing = "[自动翻译中 ... ]";
         private string autoTranslateString = "[自动翻译]";
 
-        public TranslateText(Mod mod)
+        public TranslateText()
         {
-            this.mod = mod;
             ReadTranslateTextDict();
             InitTranslateApi();
         }
@@ -82,7 +80,7 @@ namespace MSCTranslateChs.Script.Translate
 
         public void ReadTranslateTextDict(string dictKey)
         {
-            List<string> list = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(mod), dictKey + ".txt")).ToList();
+            List<string> list = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(globalVariables), dictKey + ".txt")).ToList();
             Dictionary<string, string> dict = ConverUtil.ConverListToDictionary(list);
             translateTextDict[dictKey] = dict;
             translateTextSizeDict[dictKey] = dict.Count;

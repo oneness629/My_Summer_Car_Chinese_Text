@@ -7,7 +7,7 @@ using MSCTranslateChs.Script.Develop;
 using MSCLoader;
 using MSCTranslateChs.Script.Common;
 
-namespace MSCTranslateChs.Script.Teleport
+namespace MSCTranslateChs.Script.Model
 {
     
     public class Teleport

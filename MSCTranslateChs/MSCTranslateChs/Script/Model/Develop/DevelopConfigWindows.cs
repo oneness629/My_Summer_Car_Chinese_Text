@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using MSCTranslateChs.Script.Develop;
-using MSCTranslateChs.Script.Teleport;
 using MSCTranslateChs.Script.Common;
 using System.IO;
 using MSCLoader;
 
-namespace MSCTranslateChs.Script.Develop
+namespace MSCTranslateChs.Script.Model.Develop
 {
     class DevelopConfigWindows
     {

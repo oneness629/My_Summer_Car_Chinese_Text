@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 
-namespace MSCTranslateChs.Script.Translate
+namespace MSCTranslateChs.Script.Common.Translate
 {
     public class TranslateApi
     {

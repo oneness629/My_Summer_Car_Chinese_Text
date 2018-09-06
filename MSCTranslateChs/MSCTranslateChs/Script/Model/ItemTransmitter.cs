@@ -6,10 +6,9 @@ using UnityEngine;
 using MSCTranslateChs.Script.Develop;
 using MSCLoader;
 using MSCTranslateChs.Script.Common;
-using MSCTranslateChs.Script.Translate;
 using HutongGames.PlayMaker;
 
-namespace MSCTranslateChs.Script.Teleport
+namespace MSCTranslateChs.Script.Model
 {
 
     public class ItemTransmitter
