@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using MSCTranslateChs.Script.Develop;
 using MSCLoader;
 using MSCTranslateChs.Script.Common;
 using HutongGames.PlayMaker;
@@ -15,15 +14,16 @@ namespace MSCTranslateChs.Script.Model
     {
         private static LOGGER logger = new LOGGER(typeof(Money));
 
+        public bool isEnable = true;
         public bool isShowWindow = false;
         Rect windowsRect;
-        // Vector2 scrollPoint;
-        float windowsWidth = 260;
-        float windowsHeight = 50;
+
+        readonly float windowsWidth = 260;
+        readonly float windowsHeight = 50;
         int windowsId = 6294;
 
         float money;
-        String moneyKey = "PlayerMoney";
+        readonly String moneyKey = "PlayerMoney";
         FsmFloat moneyFsmFloat;
 
         public Money()
@@ -33,7 +33,6 @@ namespace MSCTranslateChs.Script.Model
             {
                 money = moneyFsmFloat.Value;
             }
-            
             windowsRect = new Rect(0, 0, windowsWidth, windowsHeight);
 
         }
@@ -48,7 +47,6 @@ namespace MSCTranslateChs.Script.Model
 
         public void MoneyWindowFunction(int windowsId)
         {
-            // scrollPoint = GUILayout.BeginScrollView(scrollPoint);
             string moneyStr = money.ToString();
             GUILayout.BeginHorizontal("box");
             GUILayout.Label("修改金钱：");
@@ -71,7 +69,6 @@ namespace MSCTranslateChs.Script.Model
                 isShowWindow = false;
             }
             GUILayout.EndHorizontal();
-            // GUILayout.EndScrollView();
             GUI.DragWindow();
         }
     }

@@ -15,15 +15,9 @@ namespace MSCTranslateChs.Script.Model.Develop
 
         private static LOGGER logger = new LOGGER(typeof(Develop));
 
-        public MSCTranslateChs mscTranslateChs;
-
-        DevelopConfigWindows developConfigWindows;
-
-        public GuiGameObjectExplorer guiGameObjectExplorer;
-
         public GUIStyle guiStyle;
 
-        bool isDevelop = false;
+        public bool isEnable = false;
 
         public bool isShowDevelopConfigWindows = false;
 
@@ -33,44 +27,40 @@ namespace MSCTranslateChs.Script.Model.Develop
 
         public bool isRaySystemsGameObject = false;
 
-        public Develop(MSCTranslateChs mscTranslateChs)
+        public Develop()
         {
-            guiStyle = new GUIStyle();
-            guiStyle.alignment = TextAnchor.LowerLeft;
-            guiStyle.fontSize = (int)(8.0f * (float)(Screen.width) / 1000f);
+            guiStyle = new GUIStyle()
+            {
+                alignment = TextAnchor.LowerLeft,
+                fontSize = (int)(8.0f * (float)(Screen.width) / 1000f)
+            };
             guiStyle.normal.textColor = new Color(255, 255, 255);
-
-            this.mscTranslateChs = mscTranslateChs;
-            developConfigWindows = new DevelopConfigWindows(this);
-            guiGameObjectExplorer = new GuiGameObjectExplorer(this);
-
-
         }
 
-        public void Update()
+        public void OnGUI()
         {
             if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.T))
             {
-                isDevelop = true;
+                isEnable = true;
                 isShowDevelopConfigWindows = true;
             }
             if (Input.GetKey(KeyCode.RightAlt) && Input.GetKey(KeyCode.T))
             {
-                isDevelop = false;
+                isEnable = false;
                 isShowDevelopConfigWindows = false;
             }
             if (isShowDevelopConfigWindows)
             {
-                developConfigWindows.Update();
+                GlobalVariables.GetGlobalVariables().developConfigWindows.Update();
             }
             
-            if (isDevelop)
+            if (isEnable)
             {
                 GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "MSCTranslateChs开发模式", guiStyle);
 
                 if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.R))
                 {
-                    mscTranslateChs.translateText.ReadTranslateTextDict();
+                    GlobalVariables.GetGlobalVariables().mscTranslate.translateText.ReadTranslateTextDict();
                 }
 
                 if (isRayGameObject)
@@ -78,9 +68,9 @@ namespace MSCTranslateChs.Script.Model.Develop
                     RayGameObject();
                 }
 
-                if (guiGameObjectExplorer.isShow)
+                if (GlobalVariables.GetGlobalVariables().guiGameObjectExplorer.isShow)
                 {
-                    guiGameObjectExplorer.OnGUI();
+                    GlobalVariables.GetGlobalVariables().guiGameObjectExplorer.OnGUI();
                 }
 
                 if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.W))
@@ -90,8 +80,8 @@ namespace MSCTranslateChs.Script.Model.Develop
                 }
                 if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.F))
                 {
-                    string[] text = { FsmVariablesUtil.getAllFsmVariablesAndVaule() };
-                    File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(mscTranslateChs), "_FsmVariables.txt"), text);
+                    string[] text = { FsmVariablesUtil.GetAllFsmVariablesAndVaule() };
+                    File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), "_FsmVariables.txt"), text);
                     logger.LOG("写入所有FsmVariables变量到FsmVariables.txt");
                 }
             }
@@ -105,7 +95,7 @@ namespace MSCTranslateChs.Script.Model.Develop
             {
                 if (c != null)
                 {
-                    textCameraLog += GameObjectUtil.getGameObjectPath(c.gameObject) + "\n";
+                    textCameraLog += GameObjectUtil.GetGameObjectPath(c.gameObject) + "\n";
                     textCameraLog += "\t farClipPlane :  " + c.farClipPlane + "\n";
                     textCameraLog += "\t nearClipPlane :  " + c.nearClipPlane + "\n";
                     textCameraLog += "\t orthographic :  " + c.orthographic + "\n";
@@ -137,7 +127,7 @@ namespace MSCTranslateChs.Script.Model.Develop
                         GameObject gameObject = hitInfo.collider.gameObject;
                         if (gameObject != null)
                         {
-                            text += GameObjectUtil.getGameObjectText(gameObject);
+                            text += GameObjectUtil.GetGameObjectText(gameObject);
                             
                         }
                     }
@@ -153,19 +143,19 @@ namespace MSCTranslateChs.Script.Model.Develop
 
         private void WriteText(string text , string fileNmae)
         {
-            File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(mscTranslateChs), fileNmae), text);
+            File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), fileNmae), text);
         }
 
         private void WriteGameObject(string path)
         {
-            string text = GameObjectUtil.getGameObjectText(path, 0, true, true, false, false, false);
-            File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(mscTranslateChs), "_pathGameObject.txt"), text);
+            string text = GameObjectUtil.GetGameObjectText(path, 0, true, true, false, false, false);
+            File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), "_pathGameObject.txt"), text);
         }
 
         private void WriteGameObject(GameObject gameObject)
         {
-            string text = GameObjectUtil.getGameObjectText(gameObject,0, true, true);
-            File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(mscTranslateChs), "_gameObject.txt"), text);
+            string text = GameObjectUtil.GetGameObjectText(gameObject,0, true, true);
+            File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), "_gameObject.txt"), text);
         }
 
         

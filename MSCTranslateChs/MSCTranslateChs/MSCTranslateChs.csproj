@@ -29,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>
@@ -76,7 +77,7 @@
     <Compile Include="Script\Model\Develop\Develop.cs" />
     <Compile Include="MSCTranslateChs.cs" />
     <Compile Include="Script\Model\Develop\DevelopConfigWindows.cs" />
-    <Compile Include="Script\WelcomeWindows.cs" />
+    <Compile Include="Script\Model\WelcomeWindows.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

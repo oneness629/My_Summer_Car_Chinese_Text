@@ -10,7 +10,7 @@ namespace MSCTranslateChs.Script.Common
 {
     public class ExecutionTime
     {
-        private static LOGGER logger = new LOGGER(typeof(ExecutionTime));
+        private static readonly LOGGER logger = new LOGGER(typeof(ExecutionTime));
 
         public Dictionary<string, long> executionStartTimeDict = new Dictionary<string, long>();
         public Dictionary<string, long> executionEndTimeDict = new Dictionary<string, long>();

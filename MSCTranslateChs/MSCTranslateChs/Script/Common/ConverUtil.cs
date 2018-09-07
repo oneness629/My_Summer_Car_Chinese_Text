@@ -68,9 +68,10 @@ namespace MSCTranslateChs.Script.Common
         public static void Main(string[] args)
         {
 
-            List<string> list = new List<string>();
-            list.Add("111=222");
-            list.Add("aaa=222aaa");
+            List<string> list = new List<string>()
+            {
+                "111=222","aaa=222aaa"
+            };
             Dictionary<string, string> dict = ConverUtil.ConverListToDictionary(list, "=");
             
             logger.LOG(dict.ToString());

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using MSCTranslateChs.Script.Develop;
 using MSCLoader;
 using MSCTranslateChs.Script.Common;
 
@@ -12,16 +11,16 @@ namespace MSCTranslateChs.Script.Model
 
     public class BoltTip
     {
-        private static LOGGER logger = new LOGGER(typeof(BoltTip));
+        private static readonly LOGGER logger = new LOGGER(typeof(BoltTip));
 
         public bool isShowWindow = false;
         public bool isEnable = true;
         public bool isInIt = false;
         Rect windowsRect;
         Vector2 scrollPoint;
-        float windowsWidth = 500;
-        float windowsHeight = 550;
-        int windowsId = 6295;
+        readonly float windowsWidth = 500;
+        readonly float windowsHeight = 550;
+        readonly int windowsId = 6295;
 
         private GUIStyle mouseTipGuiStyle;
 
@@ -38,9 +37,11 @@ namespace MSCTranslateChs.Script.Model
         {
             windowsRect = new Rect(Screen.width / 2 - windowsWidth / 2, Screen.height / 2 - windowsHeight / 2, windowsWidth, windowsHeight);
 
-            mouseTipGuiStyle = new GUIStyle();
-            mouseTipGuiStyle.alignment = TextAnchor.LowerLeft;
-            mouseTipGuiStyle.fontSize = (int)(8.0f * (float)(Screen.width) / 1000f);
+            mouseTipGuiStyle = new GUIStyle()
+            {
+                alignment = TextAnchor.LowerLeft,
+                fontSize = (int)(8.0f * (float)(Screen.width) / 1000f),
+            };
             mouseTipGuiStyle.normal.textColor = new Color(255, 255, 255);
         }
 
@@ -102,7 +103,7 @@ namespace MSCTranslateChs.Script.Model
                             
                             if (targetGameObject.name.ToLower().IndexOf("boltpm") > -1)
                             {
-                                text += "\n" + GameObjectUtil.getGameObjectPath(targetGameObject) + "\n";
+                                text += "\n" + GameObjectUtil.GetGameObjectPath(targetGameObject) + "\n";
                                 // Color changeColor = Color.yellow;
                                 // string boltState = "未完全锁紧";
                                 text += "应该是" + Convert.ToInt32(Math.Round(targetGameObject.transform.localScale.x * 10)) + "号扳手" + targetGameObject.transform.localRotation.ToString();
@@ -161,7 +162,7 @@ namespace MSCTranslateChs.Script.Model
                                 List<GameObject> boltPmGameObjectList = GameObjectUtil.FindChildGameObjectByName(targetGameObject, "boltPM");
                                 if (boltPmGameObjectList.Count > 0)
                                 {
-                                    text += "\n" + GameObjectUtil.getGameObjectPath(targetGameObject) + "\n";
+                                    text += "\n" + GameObjectUtil.GetGameObjectPath(targetGameObject) + "\n";
                                     text += " 这个部件下面应该有" + boltPmGameObjectList.Count + "个螺栓/螺丝";
                                     foreach (GameObject boltPmGameObjec in boltPmGameObjectList)
                                     {

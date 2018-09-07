@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using MSCTranslateChs.Script.Develop;
 using MSCLoader;
 using MSCTranslateChs.Script.Common;
 
@@ -14,11 +13,12 @@ namespace MSCTranslateChs.Script.Model
     {
         private static LOGGER logger = new LOGGER(typeof(Teleport));
 
+        public bool isEnable = true;
         public bool isShowWindow = false;
         Rect windowsRect;
         Vector2 scrollPoint;
-        float windowsWidth = 300;
-        float windowsHeight = 700;
+        readonly float windowsWidth = 300;
+        readonly float windowsHeight = 700;
         int windowsId = 6292;
 
         public const String PLAYER = "PLAYER|玩家";
@@ -66,7 +66,7 @@ namespace MSCTranslateChs.Script.Model
             targetStaticPosition.Add("SPAWN_TO_DANCE", SPAWN_TO_DANCE);
         }
 
-        public void Update()
+        public void OnGUI()
         {
 
             KeyBindFunction();

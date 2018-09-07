@@ -10,7 +10,7 @@ namespace MSCTranslateChs.Script.Common
 {
     public class LOGGER
     {
-        private string typeName;
+        private readonly string typeName;
         private readonly string logFrontText;
 
         public LOGGER(Type type)

@@ -140,7 +140,7 @@ namespace MSCTranslateChs.Script.Common
             throw new Exception("无法找到GameObject对应的TextMesh 路径->" + path);
         }
 
-        public static void addBoxColliderByChildByTextMesh(GameObject gameObject)
+        public static void AddBoxColliderByChildByTextMesh(GameObject gameObject)
         {
             if (gameObject != null && gameObject.transform != null && gameObject.transform.childCount > 0)
             {
@@ -151,17 +151,16 @@ namespace MSCTranslateChs.Script.Common
                     {
                         if (childGameObject.GetComponent<TextMesh>() != null)
                         {
-                            // MSCLoader.ModConsole.Print(childGameObject.name + "添加BoxCollider");
-                            addBoxCollider(childGameObject);
+                            AddBoxCollider(childGameObject);
                         }
-                        addBoxColliderByChildByTextMesh(childGameObject);
+                        AddBoxColliderByChildByTextMesh(childGameObject);
                     }
                 }
             }
         }
 
 
-        public static void addBoxColliderByChild(GameObject gameObject, string childText)
+        public static void AddBoxColliderByChild(GameObject gameObject, string childText)
         {
             if (gameObject != null && gameObject.transform != null && gameObject.transform.childCount > 0)
             {
@@ -172,15 +171,15 @@ namespace MSCTranslateChs.Script.Common
                     {
                         if (childGameObject.GetComponent<TextMesh>() != null)
                         {
-                            addBoxCollider(childGameObject);
+                            AddBoxCollider(childGameObject);
                         }
-                        addBoxColliderByChild(childGameObject, childText);
+                        AddBoxColliderByChild(childGameObject, childText);
                     }
                 }
             }
         }
 
-        public static void addBoxCollider(GameObject gameObject)
+        public static void AddBoxCollider(GameObject gameObject)
         {
             if (gameObject != null)
             {
@@ -229,7 +228,7 @@ namespace MSCTranslateChs.Script.Common
             }
         }
 
-        public static string getGameObjectPath(GameObject gameObject)
+        public static string GetGameObjectPath(GameObject gameObject)
         {
             if (gameObject != null)
             {
@@ -255,7 +254,7 @@ namespace MSCTranslateChs.Script.Common
             return null;
         }
 
-        public static string getGameObjectText(string path,
+        public static string GetGameObjectText(string path,
             int level = 0,
             bool isGetOtherTypeMembers = false,
             bool isGetComponentsText = false,
@@ -266,12 +265,12 @@ namespace MSCTranslateChs.Script.Common
             GameObject gameObject = GameObject.Find(path);
             if (gameObject != null)
             {
-                return getGameObjectText(gameObject, 0, isGetOtherTypeMembers, isGetComponentsText, isGetComponentTypeFields, isGetComponentTypeMembers, isGetComponentTypeMethods);
+                return GetGameObjectText(gameObject, 0, isGetOtherTypeMembers, isGetComponentsText, isGetComponentTypeFields, isGetComponentTypeMembers, isGetComponentTypeMethods);
             }
             return null;
         }
 
-        public static string getGameObjectTextMeshString(GameObject gameObject)
+        public static string GetGameObjectTextMeshString(GameObject gameObject)
         {
             if (gameObject != null && gameObject.GetComponent<TextMesh>() != null && gameObject.GetComponent<TextMesh>().text != null)
             {
@@ -280,7 +279,7 @@ namespace MSCTranslateChs.Script.Common
             return "";
         }
 
-        public static string getGameObjectText(GameObject gameObject,
+        public static string GetGameObjectText(GameObject gameObject,
             int level = 0,
             bool isGetOtherTypeMembers = false,
             bool isGetComponentsText = false,
@@ -292,9 +291,9 @@ namespace MSCTranslateChs.Script.Common
             if (gameObject != null)
             {
                 string text = "";
-                string tabText = getLevelText(level);
+                string tabText = GetLevelText(level);
                 text += (tabText + "gameObject name : " + gameObject.name + "\n");
-                text += (tabText + "           path : " + getGameObjectPath(gameObject) + "\n");
+                text += (tabText + "           path : " + GetGameObjectPath(gameObject) + "\n");
                 if (isGetOtherTypeMembers == true)
                 {
                     text += tabText + "\t            tag : " + gameObject.tag + "\n";
@@ -316,7 +315,7 @@ namespace MSCTranslateChs.Script.Common
                 {
                     for (int i = 0; i < gameObject.transform.childCount; i++)
                     {
-                        text += (getGameObjectText(gameObject.transform.GetChild(i).gameObject, level + 1,
+                        text += (GetGameObjectText(gameObject.transform.GetChild(i).gameObject, level + 1,
                             isGetOtherTypeMembers, isGetComponentsText, isGetComponentTypeFields, isGetComponentTypeMembers, isGetComponentTypeMethods));
                     }
                 }
@@ -326,7 +325,7 @@ namespace MSCTranslateChs.Script.Common
         }
 
 
-        public static List<GameObject> getRootGameObject()
+        public static List<GameObject> GetRootGameObject()
         {
             GameObject[] allGameObjects = Resources.FindObjectsOfTypeAll<GameObject>();
             List<GameObject> topGameObjectList = new List<GameObject>();
@@ -340,7 +339,7 @@ namespace MSCTranslateChs.Script.Common
             return topGameObjectList;
         }
 
-        public static List<GameObject> getAllGameObject()
+        public static List<GameObject> GetAllGameObject()
         {
             GameObject[] allGameObjects = Resources.FindObjectsOfTypeAll<GameObject>();
             return new List<GameObject>(allGameObjects); ;
@@ -364,26 +363,26 @@ namespace MSCTranslateChs.Script.Common
                     text += levelText + "\t\t" + "component.GetType().FullName : \t" + component.GetType().FullName + "\n";
                     if (isGetComponentTypeFields == true)
                     {
-                        text += levelText + "\t\t" + "component.GetType().GetFields : \t" + getFieldsString(component.GetType().GetFields(), levelText, component) + "\n";
+                        text += levelText + "\t\t" + "component.GetType().GetFields : \t" + GetFieldsString(component.GetType().GetFields(), levelText, component) + "\n";
                     }
                     if (isGetComponentTypeMembers == true)
                     {
-                        text += levelText + "\t\t" + "component.GetType().GetMembers : \t" + getGetMembersString(component.GetType().GetMembers(), levelText, component) + "\n";
+                        text += levelText + "\t\t" + "component.GetType().GetMembers : \t" + GetMembersString(component.GetType().GetMembers(), levelText, component) + "\n";
                     }
                     if (isGetComponentTypeMethods == true)
                     {
-                        text += levelText + "\t\t" + "component.GetType().GetMethods : \t" + getGetMethodsString(component.GetType().GetMethods(), levelText, component) + "\n";
+                        text += levelText + "\t\t" + "component.GetType().GetMethods : \t" + GetMethodsString(component.GetType().GetMethods(), levelText, component) + "\n";
                     }
                     if (isGetComponentTypeMethods == true)
                     {
-                        text += levelText + "\t\t" + "component.GetType().GetProperties : \t" + getPropertyInfosString(component.GetType().GetProperties(), levelText, component) + "\n";
+                        text += levelText + "\t\t" + "component.GetType().GetProperties : \t" + GetPropertyInfosString(component.GetType().GetProperties(), levelText, component) + "\n";
                     }
                     text += "\n";
 
                     if (component.GetType().Name.Equals("PlayMakerFSM"))
                     {
                         PlayMakerFSM playMakerFSM = component as PlayMakerFSM;
-                        text += levelText + "\t\t" + "Component is PlayMakerFSM : \n" + FsmVariablesUtil.getAllFsmVariablesAndVaule(playMakerFSM.FsmVariables);
+                        text += levelText + "\t\t" + "Component is PlayMakerFSM : \n" + FsmVariablesUtil.GetAllFsmVariablesAndVaule(playMakerFSM.FsmVariables);
                     }
                     text += "\n";
                 }
@@ -391,7 +390,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        private static string getGetMethodsString(MethodInfo[] methodInfos, string levelText, object obj)
+        private static string GetMethodsString(MethodInfo[] methodInfos, string levelText, object obj)
         {
             string text = levelText + "\t getGetMethodsString";
             levelText += "\t";
@@ -406,7 +405,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        private static string getGetMembersString(MemberInfo[] memberInfos, string levelText, object obj)
+        private static string GetMembersString(MemberInfo[] memberInfos, string levelText, object obj)
         {
             string text = levelText + "\t getGetMembersString";
             levelText += "\t";
@@ -417,7 +416,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        private static string getFieldsString(FieldInfo[] fieldInfos, string levelText, object obj)
+        private static string GetFieldsString(FieldInfo[] fieldInfos, string levelText, object obj)
         {
             string text = levelText + "\t getFieldsString";
             levelText += "\t";
@@ -428,7 +427,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        private static string getPropertyInfosString(PropertyInfo[] propertyInfos, string levelText, object obj)
+        private static string GetPropertyInfosString(PropertyInfo[] propertyInfos, string levelText, object obj)
         {
             string text = levelText + "\t getFieldsString";
             levelText += "\t";
@@ -446,7 +445,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        private static string getLevelText(int level)
+        private static string GetLevelText(int level)
         {
             string text = "";
             for (int i = 0; i < level; i++)

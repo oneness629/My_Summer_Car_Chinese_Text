@@ -2,17 +2,21 @@ using HutongGames.PlayMaker;
 using MSCLoader;
 using MSCTranslateChs.Script;
 using MSCTranslateChs.Script.Common;
+using MSCTranslateChs.Script.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using UnityEngine;
 
-
+[assembly: AssemblyVersionAttribute("2.7")]
 namespace MSCTranslateChs
 {
+    [ComVisible(false)]
     public class MSCTranslateChs : Mod
     {
         private static LOGGER logger = new LOGGER(typeof(MSCTranslateChs));
@@ -27,41 +31,13 @@ namespace MSCTranslateChs
 
         public override bool UseAssetsFolder => true;
 
-
-        public GlobalVariables globalVariables;
-
-
-        public bool IsLoadResources = false;
-        public bool IsLoadGameObject = false;
-        
-        public bool IsDevelop = true;
-        public bool isEnableTeleport = true;
-
-        
-
-       
-        public bool isShowWelcomeWindows = true;
-
-        bool isInitSystemsGameObject = false;
-
-        
+        public bool IsEnable = true;
 
         public override void OnLoad()
         {
             try
             {
-
-                IsLoadResources = false;
-                IsLoadGameObject = false;
-
-                develop = new Develop(this);
-                welcomeWindows = new WelcomeWindows(this);
-                itemTransmitter = new ItemTransmitter(this);
-
-
-               
-
-                IsLoadResources = true;
+                GlobalVariables.GetGlobalVariables().Init();
             }
             catch (Exception e)
             {
@@ -72,113 +48,94 @@ namespace MSCTranslateChs
 
         public override void OnGUI()
         {
-            executionTime.Start("OnGUI");
+            GlobalVariables.GetGlobalVariables().executionTime.Start("OnGUI");
             try
             {
-                if (IsLoadResources && IsLoadGameObject && Application.loadedLevelName == "GAME")
+                if (!GlobalVariables.GetGlobalVariables().isInit || Application.loadedLevelName != "GAME")
                 {
-                    if (IsEnable)
-                    {
-                        
-                        executionTime.Start("Develop");
-                        if (IsDevelop)
-                        {
-                            develop.Update();
-                            
-                        }
-                        executionTime.End("Develop");
-                    }
-                    if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.W))
-                    {
-                        isShowWelcomeWindows = true;
-                    }
-                    if (Input.GetKey(KeyCode.RightAlt) && Input.GetKey(KeyCode.W))
-                    {
-                        isShowWelcomeWindows = false;
-                    }
-                    executionTime.Start("WelcomeWindows");
-                    if (isShowWelcomeWindows)
-                    {
-                        welcomeWindows.Update();
-                    }
-                    executionTime.End("WelcomeWindows");
-                    executionTime.Start("Teleport");
-                    if (isEnableTeleport)
-                    {
-                        teleport.Update();
-                    }
-                    executionTime.End("Teleport");
-
-                    if (money.isShowWindow)
-                    {
-                        money.OnGUI();
-                    }
-                    if (boltTip.isShowWindow)
-                    {
-                        boltTip.OnGUI();
-                    }
-                    executionTime.Start("物品传送(背包)");
-                    itemTransmitter.OnGUI();
-                    executionTime.End("物品传送(背包)");
-
-
+                    return;
                 }
+
+
+
+                GlobalVariables.GetGlobalVariables().executionTime.Start("开发模式 OnGUI");
+                if (GlobalVariables.GetGlobalVariables().develop.isEnable)
+                {
+                    GlobalVariables.GetGlobalVariables().develop.OnGUI();
+                }
+                GlobalVariables.GetGlobalVariables().executionTime.End("开发模式 OnGUI");
+
+                GlobalVariables.GetGlobalVariables().executionTime.Start("欢迎窗口 OnGUI");
+                if (GlobalVariables.GetGlobalVariables().welcomeWindows.isEnable)
+                {
+                    GlobalVariables.GetGlobalVariables().welcomeWindows.OnGUI();
+                }
+                GlobalVariables.GetGlobalVariables().executionTime.End("欢迎窗口 OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.Start("远程传送 OnGUI");
+                if (GlobalVariables.GetGlobalVariables().teleport.isEnable)
+                {
+                    GlobalVariables.GetGlobalVariables().teleport.OnGUI();
+                }
+                GlobalVariables.GetGlobalVariables().executionTime.End("远程传送 OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.End("金钱调整 OnGUI");
+                if (GlobalVariables.GetGlobalVariables().money.isEnable)
+                {
+                    GlobalVariables.GetGlobalVariables().money.OnGUI();
+                }
+                GlobalVariables.GetGlobalVariables().executionTime.End("金钱调整 OnGUI");
+                if (GlobalVariables.GetGlobalVariables().boltTip.isEnable)
+                {
+                    GlobalVariables.GetGlobalVariables().boltTip.OnGUI();
+                }
+                GlobalVariables.GetGlobalVariables().executionTime.Start("物品传送 OnGUI");
+                if (GlobalVariables.GetGlobalVariables().itemTransmitter.isEnable)
+                {
+                    GlobalVariables.GetGlobalVariables().itemTransmitter.OnGUI();
+                }
+                GlobalVariables.GetGlobalVariables().executionTime.End("物品传送 OnGUI");
             }
             catch (Exception e)
             {
                 logger.LOG("OnGUI Exception : " + e.Message);
                 logger.LOG(e);
             }
-            executionTime.End("OnGUI");
+            GlobalVariables.GetGlobalVariables().executionTime.End("OnGUI");
         }
 
         
 
         public override void Update()
         {
-            if (IsLoadResources && Application.loadedLevelName == "GAME")
+            try
             {
-                if (!IsLoadGameObject)
+                if (!GlobalVariables.GetGlobalVariables().isInit)
                 {
-                    // load gameobject
-                    try
-                    {
-                        subtitlesTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Subtitles");
-                        partnamesTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Partname");
-                        interactionsTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Interaction");
-
-                        IsLoadGameObject = true;
-                    }
-                    catch (Exception e)
-                    {
-                        IsLoadGameObject = false;
-                        logger.LOG("加载GameObject过程出现异常: " + e.Message);
-                    }
+                    GlobalVariables.GetGlobalVariables().Init();
                 }
 
-                if (itemTransmitter.isEnable)
+
+                GlobalVariables.GetGlobalVariables().executionTime.Start("欢迎窗口 Update");
+                if (GlobalVariables.GetGlobalVariables().welcomeWindows.isEnable)
                 {
-                    itemTransmitter.Update();
+                    GlobalVariables.GetGlobalVariables().welcomeWindows.Update();
                 }
+                GlobalVariables.GetGlobalVariables().executionTime.End("欢迎窗口 Update");
+
+
+                GlobalVariables.GetGlobalVariables().executionTime.Start("物品传送 Update");
+                if (GlobalVariables.GetGlobalVariables().itemTransmitter.isEnable)
+                {
+                    GlobalVariables.GetGlobalVariables().itemTransmitter.Update();
+                }
+                GlobalVariables.GetGlobalVariables().executionTime.End("物品传送 Update");
 
             }
+            catch (Exception e)
+            {
+                logger.LOG("Update Exception: " + e.Message);
+                logger.LOG(e);
+            }
         }
-
-        // Camera cameraMenu;
-
-        
-
-        
-
-        
-
-        Camera guiCamera;
-        bool isInitGuiGameObject = false;
-
-        
-
-        
-
 
     }
 }

@@ -17,7 +17,7 @@ namespace MSCTranslateChs.Script.Model
 {
     public class MSCTranslate
     {
-        private static LOGGER logger = new LOGGER(typeof(MSCTranslate));
+        private static readonly LOGGER logger = new LOGGER(typeof(MSCTranslate));
 
         public bool IsEnable = true;
         public bool IsTranslateSubtitles = true;
@@ -48,9 +48,13 @@ namespace MSCTranslateChs.Script.Model
 
         public void Init()
         {
-            subtitlesGuiStyle = new GUIStyle();
-            subtitlesGuiStyle.alignment = TextAnchor.MiddleCenter;
-            subtitlesGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+            translateText = new TranslateText();
+
+            subtitlesGuiStyle = new GUIStyle()
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = (int)(14.0f * (float)(Screen.width) / 1000f)
+            };
             subtitlesGuiStyle.normal.textColor = new Color(255, 165, 0);
 
             subtitlesRect = new Rect(0, (Screen.height) / 2.15f, Screen.width, Screen.height);
@@ -59,19 +63,26 @@ namespace MSCTranslateChs.Script.Model
 
             partnamesRect = new Rect(0, (Screen.height) / 2.4f, Screen.width, Screen.height);
 
-            interactionsGuiStyle = new GUIStyle();
-            interactionsGuiStyle.alignment = TextAnchor.MiddleCenter;
-            interactionsGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+            interactionsGuiStyle = new GUIStyle()
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = (int)(14.0f * (float)(Screen.width) / 1000f)
+            };
             interactionsGuiStyle.normal.textColor = new Color(255, 255, 255);
 
             interactionsRect = new Rect(0, (Screen.height) / 12f, Screen.width, Screen.height);
 
-            mouseTipGuiStyle = new GUIStyle();
-            mouseTipGuiStyle.alignment = TextAnchor.LowerLeft;
-            mouseTipGuiStyle.fontSize = (int)(14.0f * (float)(Screen.width) / 1000f);
+            mouseTipGuiStyle = new GUIStyle()
+            {
+                alignment = TextAnchor.LowerLeft,
+                fontSize = (int)(14.0f * (float)(Screen.width) / 1000f)
+            };
             mouseTipGuiStyle.normal.textColor = new Color(255, 255, 255);
 
-            translateText = new TranslateText();
+            subtitlesTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Subtitles");
+            partnamesTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Partname");
+            interactionsTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Interaction");
+            
         }
 
 
@@ -149,12 +160,12 @@ namespace MSCTranslateChs.Script.Model
             GameObject systemsGameObject = GameObject.Find("Systems");
             if (systemsGameObject != null)
             {
-                GameObjectUtil.addBoxColliderByChildByTextMesh(systemsGameObject);
+                GameObjectUtil.AddBoxColliderByChildByTextMesh(systemsGameObject);
             }
             GameObject hudGameObject = GameObject.Find("GUI/HUD");
             if (hudGameObject != null)
             {
-                GameObjectUtil.addBoxColliderByChildByTextMesh(hudGameObject);
+                GameObjectUtil.AddBoxColliderByChildByTextMesh(hudGameObject);
             }
         }
 
@@ -180,7 +191,7 @@ namespace MSCTranslateChs.Script.Model
                             GameObject gameObject = hitInfo.collider.gameObject;
                             if (gameObject != null && gameObject.layer == 14)
                             {
-                                string textMeshString = GameObjectUtil.getGameObjectTextMeshString(gameObject);
+                                string textMeshString = GameObjectUtil.GetGameObjectTextMeshString(gameObject);
                                 if (textMeshString != null && textMeshString.Trim().Length > 0)
                                 {
                                     text = translateText.TranslateString(textMeshString, TranslateText.DICT_UI);

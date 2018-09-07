@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using MSCTranslateChs.Script.Develop;
 using MSCLoader;
 using MSCTranslateChs.Script.Common;
 using HutongGames.PlayMaker;
+using MSCTranslateChs.Script.Common.Translate;
 
 namespace MSCTranslateChs.Script.Model
 {
@@ -15,15 +15,13 @@ namespace MSCTranslateChs.Script.Model
     {
         private static LOGGER logger = new LOGGER(typeof(ItemTransmitter));
 
-        MSCTranslateChs mscTranslateChs;
-
         public bool isShowWindow = false;
         public bool isEnable = true;
         public bool isInIt = false;
         Rect windowsRect;
         Vector2 scrollPoint;
-        float windowsWidth = 200;
-        float windowsHeight = Screen.height;
+        readonly float windowsWidth = 200;
+        readonly float windowsHeight = Screen.height;
         int windowsId = 6296;
 
         public string landfillSpawnGameObjectName = "LandfillSpawn";
@@ -35,9 +33,8 @@ namespace MSCTranslateChs.Script.Model
         public int selectItemKeyIndex = 0;
         public string selectItemKey;
 
-        public ItemTransmitter(MSCTranslateChs mscTranslateChs)
+        public ItemTransmitter()
         {
-            this.mscTranslateChs = mscTranslateChs;
             windowsRect = new Rect(Screen.width - windowsWidth , 0, windowsWidth, windowsHeight);
 
         }
@@ -56,7 +53,7 @@ namespace MSCTranslateChs.Script.Model
         {
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                mscTranslateChs.itemTransmitter.isShowWindow = !mscTranslateChs.itemTransmitter.isShowWindow;
+                GlobalVariables.GetGlobalVariables().itemTransmitter.isShowWindow = !GlobalVariables.GetGlobalVariables().itemTransmitter.isShowWindow;
             }
 
             if (!isInIt)
@@ -98,7 +95,7 @@ namespace MSCTranslateChs.Script.Model
                             if (targetGameObject != null && CanPickUp(targetGameObject))
                             {
                                 string partName = targetGameObject.name.Replace("(Clone)", "").Replace("(itemx)", "").Replace("(xxxxx)", "");
-                                string text = partName + "(" + mscTranslateChs.translateText.TranslateString(partName, TranslateText.DICT_PARTNAME) + ")" + "|" + targetGameObject.GetInstanceID();
+                                string text = partName + "(" + GlobalVariables.GetGlobalVariables().mscTranslate.translateText.TranslateString(partName, TranslateText.DICT_PARTNAME) + ")" + "|" + targetGameObject.GetInstanceID();
                                 if (!itemDict.ContainsKey(text))
                                 {
                                     itemDict.Add(text, targetGameObject);

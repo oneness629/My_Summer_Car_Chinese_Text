@@ -11,6 +11,7 @@ namespace MSCTranslateChs.Script.Common.Translate
 {
     public class TranslateApi
     {
+        private static LOGGER logger = new LOGGER(typeof(TranslateApi));
 
         public string appid = "";
         public string apikey = "";
@@ -26,7 +27,7 @@ namespace MSCTranslateChs.Script.Common.Translate
         {
             string str = appid + source + salt + apikey;
             string result = StringToMd5(str);
-            Console.WriteLine("StringToMd5 : " + str + "->" + result);
+            logger.LOG("StringToMd5 : " + str + "->" + result);
             return result;
         }
 
@@ -63,14 +64,11 @@ namespace MSCTranslateChs.Script.Common.Translate
                     salt,
                     GetSign(source, salt)
                 );
-
-            Console.WriteLine("url : " + url);
-            ModConsole.Print("url : " + url);
+            logger.LOG("翻译API请求的URL : " + url);
             WebClient wc = new WebClient();
 
             jsonResult = wc.DownloadString(url);
-            Console.WriteLine("jsonResult : " + jsonResult);
-            ModConsole.Print("jsonResult : " + jsonResult);
+            logger.LOG("翻译API请求的结果 : " + jsonResult);
 
             Byte[] jsonResultEncodedBytes = utf8.GetBytes(jsonResult);
             jsonResult = utf8.GetString(jsonResultEncodedBytes);
@@ -104,7 +102,8 @@ namespace MSCTranslateChs.Script.Common.Translate
             }
             catch (Exception e)
             {
-                ModConsole.Print("error : " + e);
+                logger.LOG("翻译API英文到中文出现异常 : " + e.Message);
+                logger.LOG(e);
                 return translationErrorString;
             }
         }

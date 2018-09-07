@@ -1,6 +1,7 @@
 ﻿using MSCLoader;
 using MSCTranslateChs.Script.Common;
 using MSCTranslateChs.Script.Common.Procurios.Public;
+using MSCTranslateChs.Script.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,9 +17,8 @@ namespace MSCTranslateChs.Script.Common.Translate
     public class TranslateText
     {
         private static LOGGER logger = new LOGGER(typeof(TranslateText));
-
-        Dictionary<string, Dictionary<string, string>> translateTextDict = new Dictionary<string, Dictionary<string, string>>();
-        Dictionary<string, int> translateTextSizeDict = new Dictionary<string, int>();
+        readonly Dictionary<string, Dictionary<string, string>> translateTextDict = new Dictionary<string, Dictionary<string, string>>();
+        readonly Dictionary<string, int> translateTextSizeDict = new Dictionary<string, int>();
 
         public const string DICT_SUBTITLE = "subtitle";
         public const string DICT_UI = "ui";
@@ -35,9 +35,9 @@ namespace MSCTranslateChs.Script.Common.Translate
         private string autoTranslateApiAppId;
         private string autoTranslateApiApikey;
         
-        private string notTranslateString = "[未翻译文本]";
-        private string autoTranslateStringing = "[自动翻译中 ... ]";
-        private string autoTranslateString = "[自动翻译]";
+        private readonly string notTranslateString = "[未翻译文本]";
+        private readonly string autoTranslateStringing = "[自动翻译中 ... ]";
+        private readonly string autoTranslateString = "[自动翻译]";
 
         public TranslateText()
         {
@@ -80,7 +80,7 @@ namespace MSCTranslateChs.Script.Common.Translate
 
         public void ReadTranslateTextDict(string dictKey)
         {
-            List<string> list = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(globalVariables), dictKey + ".txt")).ToList();
+            List<string> list = File.ReadAllLines(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), dictKey + ".txt")).ToList();
             Dictionary<string, string> dict = ConverUtil.ConverListToDictionary(list);
             translateTextDict[dictKey] = dict;
             translateTextSizeDict[dictKey] = dict.Count;
@@ -101,7 +101,7 @@ namespace MSCTranslateChs.Script.Common.Translate
         public void WriteTranslateTextDict(string dictKey)
         {
             List<string> list = ConverUtil.ConverDictionaryToList(translateTextDict[dictKey]);
-            File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(mod), dictKey + ".txt"), list.ToArray());
+            File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), dictKey + ".txt"), list.ToArray());
             logger.LOG("写入"+ dictKey + ".txt文件完成");
         }
 
@@ -124,9 +124,11 @@ namespace MSCTranslateChs.Script.Common.Translate
 
 
                     Thread thread = new Thread(new ParameterizedThreadStart(this.AutoTranslateString));
-                    Dictionary<string, string> param = new Dictionary<string, string>();
-                    param.Add("text", text);
-                    param.Add("dictKey", dictKey);
+                    Dictionary<string, string> param = new Dictionary<string, string>()
+                    {
+                        { "text", text },
+                        { "dictKey", dictKey }
+                    };
                     thread.IsBackground = true;
                     thread.Start(param);
                     return autoTranslateStringing;
@@ -145,15 +147,14 @@ namespace MSCTranslateChs.Script.Common.Translate
         {
             try
             {
-                Dictionary<string, string> paramDict = dict as Dictionary<string, string>;
-                if (paramDict != null && paramDict["text"] != null && paramDict["dictKey"] != null)
+                if (dict is Dictionary<string, string> paramDict && paramDict["text"] != null && paramDict["dictKey"] != null)
                 {
                     if (translateApi != null)
                     {
                         string waitTranslateString = paramDict["text"];
                         string dictKey = paramDict["dictKey"];
                         string result = translateApi.TranslationEnglishToChineseFromBaiduFanyi(waitTranslateString);
-                        logger.LOG("自动翻译"+ dictKey + "文本完成，替换目标文本 -> \n" + translateTextDict[dictKey][waitTranslateString]);
+                        logger.LOG("自动翻译" + dictKey + "文本完成，替换目标文本 -> \n" + translateTextDict[dictKey][waitTranslateString]);
                         translateTextDict[dictKey][waitTranslateString] = autoTranslateString + result;
                         logger.LOG("自动翻译" + dictKey + "文本结果:" + result);
                         WriteTranslateTextDict();

@@ -8,45 +8,46 @@ namespace MSCTranslateChs.Script.Common
 {
     class FsmVariablesUtil
     {
+        private static readonly LOGGER logger = new LOGGER(typeof(ExecutionTime));
 
-        public static string getAllFsmVariablesAndVaule(FsmVariables fsmVariables)
+        public static string GetAllFsmVariablesAndVaule(FsmVariables fsmVariables)
         {
             string text = "";
-            text += getAllBooleanFsmVariables(fsmVariables) + "\n\n\n\n\n";
-            text += getAllColorFsmVariables(fsmVariables) + "\n\n\n\n\n";
-            text += getAllFloatFsmVariables(fsmVariables) + "\n\n\n\n\n";
-            text += getAllGameObjectFsmVariables(fsmVariables) + "\n\n\n\n\n";
-            text += getAllIntFsmVariables(fsmVariables) + "\n\n\n\n\n";
-            text += getAllObjectFsmVariables(fsmVariables) + "\n\n\n\n\n";
-            text += getAllQuaternionFsmVariables(fsmVariables) + "\n\n\n\n\n";
-            text += getAllRectFsmVariables(fsmVariables) + "\n\n\n\n\n";
-            text += getAllStringFsmVariables(fsmVariables) + "\n\n\n\n\n";
-            text += getAllTextureFsmVariables(fsmVariables) + "\n\n\n\n\n";
-            text += getAllVector2FsmVariables(fsmVariables) + "\n\n\n\n\n";
-            text += getAllVector3FsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllBooleanFsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllColorFsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllFloatFsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllGameObjectFsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllIntFsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllObjectFsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllQuaternionFsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllRectFsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllStringFsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllTextureFsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllVector2FsmVariables(fsmVariables) + "\n\n\n\n\n";
+            text += GetAllVector3FsmVariables(fsmVariables) + "\n\n\n\n\n";
             return text;
         }
 
-        public static string getAllFsmVariablesAndVaule()
+        public static string GetAllFsmVariablesAndVaule()
         {
             string text = "";
-            text += getAllBooleanFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
-            text += getAllColorFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
-            text += getAllFloatFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
-            text += getAllGameObjectFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
-            text += getAllIntFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
-            text += getAllObjectFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
-            text += getAllQuaternionFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
-            text += getAllRectFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
-            text += getAllStringFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
-            text += getAllTextureFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
-            text += getAllVector2FsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
-            text += getAllVector3FsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllBooleanFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllColorFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllFloatFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllGameObjectFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllIntFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllObjectFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllQuaternionFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllRectFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllStringFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllTextureFsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllVector2FsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
+            text += GetAllVector3FsmVariables(FsmVariables.GlobalVariables) + "\n\n\n\n\n";
             return text;
         }
 
 
-        public static string getAllFsmVariablesGlobalVariablesNames(FsmVariables fsmVariables)
+        public static string GetAllFsmVariablesGlobalVariablesNames(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (NamedVariable namedVariable in fsmVariables.GetAllNamedVariables())
@@ -56,7 +57,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllBooleanFsmVariables(FsmVariables fsmVariables)
+        public static string GetAllBooleanFsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmBool fsmBool in fsmVariables.BoolVariables)
@@ -66,7 +67,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllColorFsmVariables(FsmVariables fsmVariables)
+        public static string GetAllColorFsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmColor fsmColor in fsmVariables.ColorVariables)
@@ -76,7 +77,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllFloatFsmVariables(FsmVariables fsmVariables)
+        public static string GetAllFloatFsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmFloat fsmFloat in fsmVariables.FloatVariables)
@@ -86,17 +87,17 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllGameObjectFsmVariables(FsmVariables fsmVariables)
+        public static string GetAllGameObjectFsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmGameObject fsmGameObject in fsmVariables.GameObjectVariables)
             {
-                text += "fsmGameObject name: " + fsmGameObject.Name + ":" + GameObjectUtil.getGameObjectPath(fsmGameObject.Value) + "\n";
+                text += "fsmGameObject name: " + fsmGameObject.Name + ":" + GameObjectUtil.GetGameObjectPath(fsmGameObject.Value) + "\n";
             }
             return text;
         }
 
-        public static string getAllIntFsmVariables(FsmVariables fsmVariables)
+        public static string GetAllIntFsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmInt fsmInt in fsmVariables.IntVariables)
@@ -106,7 +107,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllMaterialFsmVariables(FsmVariables fsmVariables)
+        public static string GetAllMaterialFsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmMaterial fsmMaterial in fsmVariables.MaterialVariables)
@@ -116,7 +117,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllObjectFsmVariables(FsmVariables fsmVariables)
+        public static string GetAllObjectFsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmObject fsmObject in fsmVariables.ObjectVariables)
@@ -126,7 +127,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllQuaternionFsmVariables(FsmVariables fsmVariables)
+        public static string GetAllQuaternionFsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmQuaternion fsmQuaternion in fsmVariables.QuaternionVariables)
@@ -136,7 +137,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllRectFsmVariables(FsmVariables fsmVariables)
+        public static string GetAllRectFsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmRect fsmRect in fsmVariables.RectVariables)
@@ -146,7 +147,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllStringFsmVariables(FsmVariables fsmVariables)
+        public static string GetAllStringFsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmString fsmString in fsmVariables.StringVariables)
@@ -156,7 +157,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllTextureFsmVariables(FsmVariables fsmVariables)
+        public static string GetAllTextureFsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmTexture fsmTexture in fsmVariables.TextureVariables)
@@ -166,7 +167,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllVector2FsmVariables(FsmVariables fsmVariables)
+        public static string GetAllVector2FsmVariables(FsmVariables fsmVariables)
         {
             string text = "";
             foreach (FsmVector2 fsmVector2 in fsmVariables.Vector2Variables)
@@ -176,7 +177,7 @@ namespace MSCTranslateChs.Script.Common
             return text;
         }
 
-        public static string getAllVector3FsmVariables(FsmVariables fsmVariables)
+        public static string GetAllVector3FsmVariables(FsmVariables fsmVariables)
         {
             string text = ""; 
             foreach (FsmVector3 fsmVector3 in fsmVariables.Vector3Variables)

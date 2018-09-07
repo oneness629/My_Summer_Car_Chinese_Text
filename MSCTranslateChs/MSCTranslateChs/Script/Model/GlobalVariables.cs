@@ -13,12 +13,16 @@ namespace MSCTranslateChs.Script.Model
 {
     public class GlobalVariables
     {
-        private static LOGGER logger = new LOGGER(typeof(GlobalVariables));
+        private static readonly LOGGER logger = new LOGGER(typeof(GlobalVariables));
 
         public bool isInit = false;
 
         private static GlobalVariables globalVariables;
 
+        public Develop.Develop develop;
+        public DevelopConfigWindows developConfigWindows;
+        public GuiGameObjectExplorer guiGameObjectExplorer;
+        public WelcomeWindows welcomeWindows;
         public PhysicsRaycast physicsRaycast;
         public MSCTranslateChs mscTranslateChs;
         public ExecutionTime executionTime = new ExecutionTime();
@@ -26,8 +30,7 @@ namespace MSCTranslateChs.Script.Model
         public Teleport teleport = new Teleport();
         public BoltTip boltTip = new BoltTip();
         public ItemTransmitter itemTransmitter;
-        public Develop develop;
-        public WelcomeWindows welcomeWindows;
+        public MSCTranslate mscTranslate;
 
         private GlobalVariables()
         {
@@ -46,6 +49,9 @@ namespace MSCTranslateChs.Script.Model
         public void Init()
         {
             physicsRaycast = new PhysicsRaycast();
+            develop = new Develop.Develop();
+            welcomeWindows = new WelcomeWindows();
+            itemTransmitter = new ItemTransmitter();
 
             this.isInit = true;
         }

@@ -11,7 +11,7 @@ namespace MSCTranslateChs.Script.Common
 {
     public class PhysicsRaycast
     {
-        private static LOGGER logger = new LOGGER(typeof(PhysicsRaycast));
+        private static readonly LOGGER logger = new LOGGER(typeof(PhysicsRaycast));
 
         public bool isInit = false;
 
