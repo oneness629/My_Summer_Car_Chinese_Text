@@ -20,7 +20,6 @@ namespace MSCTranslateChs.Script.Model
 
         readonly float windowsWidth = 260;
         readonly float windowsHeight = 50;
-        int windowsId = 6294;
 
         float money;
         readonly String moneyKey = "PlayerMoney";
@@ -41,7 +40,7 @@ namespace MSCTranslateChs.Script.Model
         {
             if (isShowWindow)
             {
-                windowsRect = GUI.Window(windowsId, windowsRect, MoneyWindowFunction, "金钱调整");
+                windowsRect = GUI.Window(GlobalVariables.windowsIdByMoney, windowsRect, MoneyWindowFunction, "金钱调整");
             }
         }
 

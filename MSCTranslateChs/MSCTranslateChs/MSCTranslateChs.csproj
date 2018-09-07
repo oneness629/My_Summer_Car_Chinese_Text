@@ -23,13 +23,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DebugSymbols>false</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>
@@ -76,7 +76,7 @@
     <Compile Include="Script\Common\Translate\TranslateApi.cs" />
     <Compile Include="Script\Model\Develop\Develop.cs" />
     <Compile Include="MSCTranslateChs.cs" />
-    <Compile Include="Script\Model\Develop\DevelopConfigWindows.cs" />
+    <Compile Include="Script\Model\Develop\DevelopWindows.cs" />
     <Compile Include="Script\Model\WelcomeWindows.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -22,7 +22,6 @@ namespace MSCTranslateChs.Script.Model
         Vector2 scrollPoint;
         readonly float windowsWidth = 200;
         readonly float windowsHeight = Screen.height;
-        int windowsId = 6296;
 
         public string landfillSpawnGameObjectName = "LandfillSpawn";
         public GameObject landfillSpawnGameObject;
@@ -44,7 +43,7 @@ namespace MSCTranslateChs.Script.Model
         {
             if (isShowWindow)
             {
-                windowsRect = GUI.Window(windowsId, windowsRect, WindowFunction, "物品传送（背包）");
+                windowsRect = GUI.Window(GlobalVariables.windowsIdByItemTransmitter, windowsRect, WindowFunction, "物品传送（背包）");
             }
         }
 

@@ -14,7 +14,6 @@ namespace MSCTranslateChs.Script.Model
         readonly float windowsWidth = 800;
         readonly float windowsHeight = 600;
         Vector2 scrollPoint;
-        int windowsId = 629;
 
         FsmFloat timeRotationMinute;
         FsmFloat timeRotationHour;
@@ -32,7 +31,7 @@ namespace MSCTranslateChs.Script.Model
         {
             if (isEnable)
             {
-                welcomeWindowsRect = GUI.Window(windowsId, welcomeWindowsRect, WelcomeWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod");
+                welcomeWindowsRect = GUI.Window(GlobalVariables.windowsIdByWelcomeWindows, welcomeWindowsRect, WelcomeWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod");
             }
         }
 

@@ -9,20 +9,19 @@ using MSCLoader;
 
 namespace MSCTranslateChs.Script.Model.Develop
 {
-    public class DevelopConfigWindows
+    public class DevelopWindows
     {
         public bool isEnable = true;
         Rect developWindowsRect;
         Vector2 scrollPosition;
         readonly float windowsWidth = 800;
         readonly float windowsHeight = 600;
-        int windowsId = 6291;
         
 
         public string targetGameObjectPath = "Systems";
         public GameObject targetGameObject = null;
 
-        public DevelopConfigWindows(Develop develop)
+        public DevelopWindows(Develop develop)
         {
             developWindowsRect = new Rect(Screen.width - windowsWidth , 0 , windowsWidth, windowsHeight);
         }
@@ -31,7 +30,7 @@ namespace MSCTranslateChs.Script.Model.Develop
         {
             if (GlobalVariables.GetGlobalVariables().develop != null && isEnable)
             {
-                developWindowsRect = GUI.Window(windowsId, developWindowsRect, DevelopConfigWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod 开发模式");
+                developWindowsRect = GUI.Window(GlobalVariables.windowsIdByDevelopWindows, developWindowsRect, DevelopConfigWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod 开发模式");
             }
         }
 

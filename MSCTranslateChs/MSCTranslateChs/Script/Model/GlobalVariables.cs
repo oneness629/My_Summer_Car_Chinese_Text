@@ -17,10 +17,17 @@ namespace MSCTranslateChs.Script.Model
 
         public bool isInit = false;
 
+        public const int windowsIdByWelcomeWindows = 629;
+        public const int windowsIdByDevelopWindows = 6291;
+        public const int windowsIdByTeleport = 6292;
+        public const int windowsIdByBoltTip = 6293;
+        public const int windowsIdByMoney = 6294;
+        public const int windowsIdByItemTransmitter = 6295;
+
         private static GlobalVariables globalVariables;
 
         public Develop.Develop develop;
-        public DevelopConfigWindows developConfigWindows;
+        public DevelopWindows developWindows;
         public GuiGameObjectExplorer guiGameObjectExplorer;
         public WelcomeWindows welcomeWindows;
         public PhysicsRaycast physicsRaycast;

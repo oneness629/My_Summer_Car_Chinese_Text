@@ -19,7 +19,6 @@ namespace MSCTranslateChs.Script.Model
         Vector2 scrollPoint;
         readonly float windowsWidth = 300;
         readonly float windowsHeight = 700;
-        int windowsId = 6292;
 
         public const String PLAYER = "PLAYER|玩家";
         public const String SATSUMA = "SATSUMA(557kg, 248)|拼装车";
@@ -73,7 +72,7 @@ namespace MSCTranslateChs.Script.Model
 
             if (isShowWindow)
             {
-                windowsRect = GUI.Window(windowsId, windowsRect, TeleportWindowFunction, "远程传送");
+                windowsRect = GUI.Window(GlobalVariables.windowsIdByTeleport, windowsRect, TeleportWindowFunction, "远程传送");
             }
         }
 

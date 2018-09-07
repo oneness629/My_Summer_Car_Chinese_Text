@@ -51,7 +51,7 @@ namespace MSCTranslateChs.Script.Model.Develop
             }
             if (isShowDevelopConfigWindows)
             {
-                GlobalVariables.GetGlobalVariables().developConfigWindows.Update();
+                GlobalVariables.GetGlobalVariables().developWindows.Update();
             }
             
             if (isEnable)
