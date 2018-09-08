@@ -77,6 +77,7 @@ namespace MSCTranslateChs.Script
 
         public void Init()
         {
+            logger.LOG("Mod初始化 ... ");
             executeModuleList = new List<BaseModule>
             {
                 physicsRaycast,
@@ -92,7 +93,7 @@ namespace MSCTranslateChs.Script
             ModelInit();
             GameObjectInit();
             FsmVariablesInit();
-
+            logger.LOG("Mod初始化完成");
             this.isInit = true;
         }
 

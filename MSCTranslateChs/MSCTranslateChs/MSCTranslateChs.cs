@@ -51,6 +51,7 @@ namespace MSCTranslateChs
             {
                 if (!GlobalVariables.GetGlobalVariables().isInit || Application.loadedLevelName != "GAME")
                 {
+                    logger.LOG("尚未初始化");
                     return;
                 }
 
@@ -90,17 +91,15 @@ namespace MSCTranslateChs
         {
             try
             {
-                if (!GlobalVariables.GetGlobalVariables().isInit)
+                if (!GlobalVariables.GetGlobalVariables().isInit || Application.loadedLevelName != "GAME")
                 {
+                    logger.LOG("尚未初始化,初始化中...");
                     GlobalVariables.GetGlobalVariables().Init();
                 }
 
 
                 GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.moduleComment + UpdateTip);
-                if (GlobalVariables.GetGlobalVariables().welcomeWindows.isEnable)
-                {
-                    GlobalVariables.GetGlobalVariables().welcomeWindows.Update();
-                }
+                GlobalVariables.GetGlobalVariables().welcomeWindows.Update();
                 GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.moduleComment + UpdateTip);
 
                 if (!GlobalVariables.GetGlobalVariables().mscTranslateChs.IsEnable)
