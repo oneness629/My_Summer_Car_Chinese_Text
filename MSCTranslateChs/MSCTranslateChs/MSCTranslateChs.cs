@@ -1,16 +1,10 @@
-using HutongGames.PlayMaker;
 using MSCLoader;
 using MSCTranslateChs.Script;
 using MSCTranslateChs.Script.Common;
-using MSCTranslateChs.Script.Model;
+using MSCTranslateChs.Script.Module.Base;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
 using UnityEngine;
 
 [assembly: AssemblyVersionAttribute("2.7")]
@@ -33,10 +27,14 @@ namespace MSCTranslateChs
 
         public bool IsEnable = true;
 
+        public static string OnGUITip = " OnGUI";
+        public static string UpdateTip = " Update";
+
         public override void OnLoad()
         {
             try
             {
+                GlobalVariables.GetGlobalVariables().mscTranslateChs = this;
                 GlobalVariables.GetGlobalVariables().Init();
             }
             catch (Exception e)
@@ -56,43 +54,27 @@ namespace MSCTranslateChs
                     return;
                 }
 
-
-
-                GlobalVariables.GetGlobalVariables().executionTime.Start("开发模式 OnGUI");
-                if (GlobalVariables.GetGlobalVariables().develop.isEnable)
-                {
-                    GlobalVariables.GetGlobalVariables().develop.OnGUI();
-                }
-                GlobalVariables.GetGlobalVariables().executionTime.End("开发模式 OnGUI");
-
-                GlobalVariables.GetGlobalVariables().executionTime.Start("欢迎窗口 OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.moduleComment + OnGUITip);
                 if (GlobalVariables.GetGlobalVariables().welcomeWindows.isEnable)
                 {
                     GlobalVariables.GetGlobalVariables().welcomeWindows.OnGUI();
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End("欢迎窗口 OnGUI");
-                GlobalVariables.GetGlobalVariables().executionTime.Start("远程传送 OnGUI");
-                if (GlobalVariables.GetGlobalVariables().teleport.isEnable)
+                GlobalVariables.GetGlobalVariables().executionTime.End(GlobalVariables.GetGlobalVariables().welcomeWindows.moduleComment + OnGUITip);
+
+                if (!GlobalVariables.GetGlobalVariables().mscTranslateChs.IsEnable)
                 {
-                    GlobalVariables.GetGlobalVariables().teleport.OnGUI();
+                    return;
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End("远程传送 OnGUI");
-                GlobalVariables.GetGlobalVariables().executionTime.End("金钱调整 OnGUI");
-                if (GlobalVariables.GetGlobalVariables().money.isEnable)
+
+                foreach (BaseModule baseModule in GlobalVariables.GetGlobalVariables().executeModuleList)
                 {
-                    GlobalVariables.GetGlobalVariables().money.OnGUI();
+                    GlobalVariables.GetGlobalVariables().executionTime.Start(baseModule.moduleComment + OnGUITip);
+                    if (GlobalVariables.GetGlobalVariables().develop.isEnable)
+                    {
+                        baseModule.OnGUI();
+                    }
+                    GlobalVariables.GetGlobalVariables().executionTime.End(baseModule.moduleComment + OnGUITip);
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End("金钱调整 OnGUI");
-                if (GlobalVariables.GetGlobalVariables().boltTip.isEnable)
-                {
-                    GlobalVariables.GetGlobalVariables().boltTip.OnGUI();
-                }
-                GlobalVariables.GetGlobalVariables().executionTime.Start("物品传送 OnGUI");
-                if (GlobalVariables.GetGlobalVariables().itemTransmitter.isEnable)
-                {
-                    GlobalVariables.GetGlobalVariables().itemTransmitter.OnGUI();
-                }
-                GlobalVariables.GetGlobalVariables().executionTime.End("物品传送 OnGUI");
             }
             catch (Exception e)
             {
@@ -114,20 +96,26 @@ namespace MSCTranslateChs
                 }
 
 
-                GlobalVariables.GetGlobalVariables().executionTime.Start("欢迎窗口 Update");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.moduleComment + UpdateTip);
                 if (GlobalVariables.GetGlobalVariables().welcomeWindows.isEnable)
                 {
                     GlobalVariables.GetGlobalVariables().welcomeWindows.Update();
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End("欢迎窗口 Update");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.moduleComment + UpdateTip);
 
-
-                GlobalVariables.GetGlobalVariables().executionTime.Start("物品传送 Update");
-                if (GlobalVariables.GetGlobalVariables().itemTransmitter.isEnable)
+                if (!GlobalVariables.GetGlobalVariables().mscTranslateChs.IsEnable)
                 {
-                    GlobalVariables.GetGlobalVariables().itemTransmitter.Update();
+                    return;
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End("物品传送 Update");
+                foreach (BaseModule baseModule in GlobalVariables.GetGlobalVariables().executeModuleList)
+                {
+                    GlobalVariables.GetGlobalVariables().executionTime.Start(baseModule.moduleComment + UpdateTip);
+                    if (GlobalVariables.GetGlobalVariables().develop.isEnable)
+                    {
+                        baseModule.Update();
+                    }
+                    GlobalVariables.GetGlobalVariables().executionTime.End(baseModule.moduleComment + UpdateTip);
+                }
 
             }
             catch (Exception e)

@@ -58,26 +58,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Script\Model\BoltTip.cs" />
-    <Compile Include="Script\Common\PhysicsRaycast.cs" />
-    <Compile Include="Script\Model\GlobalVariables.cs" />
+    <Compile Include="Script\Module\Base\BaseModule.cs" />
+    <Compile Include="Script\Module\BoltTip.cs" />
+    <Compile Include="Script\Module\PhysicsRaycast.cs" />
+    <Compile Include="Script\GlobalVariables.cs" />
     <Compile Include="Script\Common\ExecutionTime.cs" />
-    <Compile Include="Script\Common\GuiGameObjectExplorer.cs" />
+    <Compile Include="Script\Module\GuiGameObjectExplorer.cs" />
     <Compile Include="Script\Common\LOGGER.cs" />
     <Compile Include="Script\Common\FsmVariablesUtil.cs" />
     <Compile Include="Script\Common\ConverUtil.cs" />
     <Compile Include="Script\Common\GameObjectUtil.cs" />
     <Compile Include="Script\Common\JSON.cs" />
-    <Compile Include="Script\Model\ItemTransmitter.cs" />
-    <Compile Include="Script\Model\Money.cs" />
-    <Compile Include="Script\Model\Teleport.cs" />
-    <Compile Include="Script\Model\MSCTranslate.cs" />
+    <Compile Include="Script\Module\ItemTransmitter.cs" />
+    <Compile Include="Script\Module\Money.cs" />
+    <Compile Include="Script\Module\Teleport.cs" />
+    <Compile Include="Script\Module\MSCTranslate.cs" />
     <Compile Include="Script\Common\Translate\TranslateText.cs" />
     <Compile Include="Script\Common\Translate\TranslateApi.cs" />
-    <Compile Include="Script\Model\Develop\Develop.cs" />
+    <Compile Include="Script\Module\Develop.cs" />
     <Compile Include="MSCTranslateChs.cs" />
-    <Compile Include="Script\Model\Develop\DevelopWindows.cs" />
-    <Compile Include="Script\Model\WelcomeWindows.cs" />
+    <Compile Include="Script\Module\DevelopWindows.cs" />
+    <Compile Include="Script\Module\WelcomeWindows.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

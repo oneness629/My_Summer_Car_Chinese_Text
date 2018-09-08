@@ -1,42 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
-using MSCLoader;
 using MSCTranslateChs.Script.Common;
-using HutongGames.PlayMaker;
+using MSCTranslateChs.Script.Module.Base;
 
-namespace MSCTranslateChs.Script.Model
+namespace MSCTranslateChs.Script.Module
 {
     
-    public class Money
+    public class Money : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(Money));
+        public new string moduleComment = "金钱调整";
 
         public bool isEnable = true;
         public bool isShowWindow = false;
         Rect windowsRect;
 
-        readonly float windowsWidth = 260;
-        readonly float windowsHeight = 50;
+        public float windowsWidth = 260;
+        public float windowsHeight = 50;
 
         float money;
-        readonly String moneyKey = "PlayerMoney";
-        FsmFloat moneyFsmFloat;
 
         public Money()
         {
-            moneyFsmFloat = FsmVariables.GlobalVariables.FindFsmFloat(moneyKey);
-            if (moneyFsmFloat != null)
+            if (GlobalVariables.GetGlobalVariables().fsmFloatPlayerMoney != null)
             {
-                money = moneyFsmFloat.Value;
+                money = GlobalVariables.GetGlobalVariables().fsmFloatPlayerMoney.Value;
             }
             windowsRect = new Rect(0, 0, windowsWidth, windowsHeight);
 
         }
 
-        public void OnGUI()
+        public override void OnGUI()
         {
             if (isShowWindow)
             {
@@ -61,7 +55,7 @@ namespace MSCTranslateChs.Script.Model
             }
             if (GUILayout.Button("修改"))
             {
-                moneyFsmFloat.Value = money;
+                GlobalVariables.GetGlobalVariables().fsmFloatPlayerMoney.Value = money;
             }
             if (GUILayout.Button("关闭"))
             {

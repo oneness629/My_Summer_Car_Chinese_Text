@@ -1,23 +1,14 @@
-﻿using MSCLoader;
-using MSCTranslateChs.Script.Common;
-using MSCTranslateChs.Script.Common.Procurios.Public;
+﻿using MSCTranslateChs.Script.Common;
 using MSCTranslateChs.Script.Common.Translate;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
+using MSCTranslateChs.Script.Module.Base;
 using UnityEngine;
 
-namespace MSCTranslateChs.Script.Model
+namespace MSCTranslateChs.Script.Module
 {
-    public class MSCTranslate
+    public class MSCTranslate : BaseModule
     {
         private static readonly LOGGER logger = new LOGGER(typeof(MSCTranslate));
+        public new string moduleComment = "文本翻译";
 
         public bool IsEnable = true;
         public bool IsTranslateSubtitles = true;
@@ -44,9 +35,13 @@ namespace MSCTranslateChs.Script.Model
 
         public GUIStyle mouseTipGuiStyle;
 
+        public GameObject gameObjectSystemsDeath;
+        public GameObject gameObjectSystemsDeathGameOverScreen;
+        public GameObject gameObjectSystemsDeathGameOverScreenPaper;
+
         public bool isInitUIRayGameObject = false;
 
-        public void Init()
+        public override void Init()
         {
             translateText = new TranslateText();
 
@@ -86,14 +81,13 @@ namespace MSCTranslateChs.Script.Model
         }
 
 
-        public void OnGUI()
+        public override void OnGUI()
         {
             if (GlobalVariables.GetGlobalVariables().isInit)
             {
-                GlobalVariables.GetGlobalVariables().executionTime.Start("字幕");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " 字幕 OnGUI");
                 if (IsTranslateSubtitles)
                 {
-
                     // 字幕
                     string subtitlesText = subtitlesTextMesh.text.Trim();
                     if (subtitlesTextMesh.gameObject.activeSelf && !string.IsNullOrEmpty(subtitlesText))
@@ -101,8 +95,8 @@ namespace MSCTranslateChs.Script.Model
                         GUI.Label(subtitlesRect, translateText.TranslateString(subtitlesText, TranslateText.DICT_SUBTITLE), subtitlesGuiStyle);
                     }
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End("字幕");
-                GlobalVariables.GetGlobalVariables().executionTime.Start("物品名称");
+                GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " 字幕 OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " 部件/物品名称 OnGUI");
                 if (IsTranslatePartnames)
                 {
                     // 部件/物品名称
@@ -112,8 +106,8 @@ namespace MSCTranslateChs.Script.Model
                         GUI.Label(partnamesRect, translateText.TranslateString(partnamesText, TranslateText.DICT_PARTNAME), partnamesGuiStyle);
                     }
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End("物品名称");
-                GlobalVariables.GetGlobalVariables().executionTime.Start("操作动作");
+                GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " 部件/物品名称 OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " 操作动作 OnGUI");
                 if (IsTranslateInteractions)
                 {
                     // 操作动作
@@ -123,49 +117,47 @@ namespace MSCTranslateChs.Script.Model
                         GUI.Label(interactionsRect, translateText.TranslateString(interactionsText, TranslateText.DICT_INTERACTION), interactionsGuiStyle);
                     }
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End("操作动作");
-                GlobalVariables.GetGlobalVariables().executionTime.Start("GameOver");
+                GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " 操作动作 OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " GameOver OnGUI");
                 if (IsTranslateGameOverMessage)
                 {
                     // game over 提示
                     GameOverMessage();
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End("GameOver");
-                GlobalVariables.GetGlobalVariables().executionTime.Start("UI");
+                GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " GameOver OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " UI OnGUI");
                 if (IsTranslateUI)
                 {
                     // 额外的Systems UI菜单
                     TranslateUIRayGameObject();
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End("UI");
-                GlobalVariables.GetGlobalVariables().executionTime.Start("Esc initUI");
-                if (IsTranslateEscInitUI)
-                {
-                    if (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.F1))
-                    {
-                        InitUIRayGameObject();
-                    }
-                }
-                GlobalVariables.GetGlobalVariables().executionTime.End("Esc initUI");
+                GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " UI OnGUI");
+                
             }
         }
 
-        public void Update()
+        public override void Update()
         {
-
+            GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " ESC 初始化UI Update");
+            if (IsTranslateEscInitUI)
+            {
+                if (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.F1))
+                {
+                    InitUIRayGameObject();
+                }
+            }
+            GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " ESC 初始化UI Update");
         }
 
         private void InitUIRayGameObject()
         {
-            GameObject systemsGameObject = GameObject.Find("Systems");
-            if (systemsGameObject != null)
+            if (GlobalVariables.GetGlobalVariables().gameObjectSystems != null)
             {
-                GameObjectUtil.AddBoxColliderByChildByTextMesh(systemsGameObject);
+                GameObjectUtil.AddBoxColliderByChildByTextMesh(GlobalVariables.GetGlobalVariables().gameObjectSystems);
             }
-            GameObject hudGameObject = GameObject.Find("GUI/HUD");
-            if (hudGameObject != null)
+            if (GlobalVariables.GetGlobalVariables().gameObjectGuiHud != null)
             {
-                GameObjectUtil.AddBoxColliderByChildByTextMesh(hudGameObject);
+                GameObjectUtil.AddBoxColliderByChildByTextMesh(GlobalVariables.GetGlobalVariables().gameObjectGuiHud);
             }
         }
 
@@ -178,7 +170,6 @@ namespace MSCTranslateChs.Script.Model
             }
             else
             {
-
                 RaycastHit[] raycastHits = GlobalVariables.GetGlobalVariables().physicsRaycast.mainCameraRaycastHits;
                 if (raycastHits != null && raycastHits.Length > 0)
                 {
@@ -204,33 +195,16 @@ namespace MSCTranslateChs.Script.Model
             }
         }
 
-        public GameObject gameObjectSystems;
-        public GameObject gameObjectSystemsDeath;
-        public GameObject gameObjectSystemsDeathGameOverScreen;
-        public GameObject gameObjectSystemsDeathGameOverScreenPaper;
-        public string gameOverMessage;
-        public bool isGameOverScreen = false;
-
-        private void GameOverMessageGUI()
-        {
-            if (gameOverMessage != null && isGameOverScreen)
-            {
-                GUI.Label(subtitlesRect, gameOverMessage, subtitlesGuiStyle);
-            }
-        }
+        
 
         private void GameOverMessage()
         {
             // gameObjectGameOverScreenPaper = GameObject.Find("Systems/Death/GameOverScreen/Paper");
-            if (gameObjectSystems == null)
-            {
-                gameObjectSystems = GameObject.Find("Systems");
-            }
-            if (gameObjectSystems == null)
+            if (GlobalVariables.GetGlobalVariables().gameObjectSystems == null)
             {
                 return;
             }
-            gameObjectSystemsDeath = GameObjectUtil.GetChildGameObject(gameObjectSystems, "Death");
+            gameObjectSystemsDeath = GameObjectUtil.GetChildGameObject(GlobalVariables.GetGlobalVariables().gameObjectSystems, "Death");
             if (gameObjectSystemsDeath == null)
             {
                 return;
@@ -247,14 +221,9 @@ namespace MSCTranslateChs.Script.Model
             }
             for (int i = 0; i < gameObjectSystemsDeathGameOverScreenPaper.transform.childCount; i++)
             {
-                isGameOverScreen = false;
                 GameObject childGameObject = gameObjectSystemsDeathGameOverScreenPaper.transform.GetChild(i).gameObject;
                 if (childGameObject != null && (childGameObject.activeSelf || Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.G)))
                 {
-                    isGameOverScreen = true;
-                    // string path = GameObjectUtil.getGameObjectPath(childGameObject);
-                    // string pathTextEn = path + "/TextEN";
-                    // GameObject textEnGameObject = GameObject.Find(pathTextEn);
                     GameObject textEnGameObject = GameObjectUtil.GetChildGameObject(childGameObject, "TextEN");
                     if (textEnGameObject != null)
                     {

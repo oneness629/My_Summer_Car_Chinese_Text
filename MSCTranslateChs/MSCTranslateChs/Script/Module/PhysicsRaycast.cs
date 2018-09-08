@@ -1,31 +1,22 @@
-﻿using MSCLoader;
-using MSCTranslateChs.Script.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+﻿using MSCTranslateChs.Script.Common;
+using MSCTranslateChs.Script.Module.Base;
 using UnityEngine;
 
-namespace MSCTranslateChs.Script.Common
+namespace MSCTranslateChs.Script.Module
 {
-    public class PhysicsRaycast
+    public class PhysicsRaycast : BaseModule
     {
         private static readonly LOGGER logger = new LOGGER(typeof(PhysicsRaycast));
+        public new string moduleComment = "基础射线";
 
-        public bool isInit = false;
+        public bool isEnable = true;
 
         public RaycastHit[] mainCameraRaycastHits;
 
         public RaycastHit mainCameraRaycastHit;
 
 
-        public void Init()
-        {
-            this.isInit = true;
-        }
-
-        public void Update()
+        public override void Update()
         {
             if (GlobalVariables.GetGlobalVariables().isInit)
             {

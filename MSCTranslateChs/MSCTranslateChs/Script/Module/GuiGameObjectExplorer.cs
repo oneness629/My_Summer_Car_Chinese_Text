@@ -1,20 +1,19 @@
 ﻿using MSCLoader;
 using MSCTranslateChs.Script.Common;
-using MSCTranslateChs.Script.Model;
+using MSCTranslateChs.Script.Module.Base;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
-namespace MSCTranslateChs.Script.Common
+namespace MSCTranslateChs.Script.Module
 {
-    public class GuiGameObjectExplorer
+    public class GuiGameObjectExplorer : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(GuiGameObjectExplorer));
+        public new string moduleComment = "GameObject查看";
 
         public bool isShow = false;
-        public int windowsId = 6293;
         public float windowsWidth = 1000;
         public float windowsHeight = 600;
         public Rect windowsRect;
@@ -33,11 +32,11 @@ namespace MSCTranslateChs.Script.Common
             windowsRect = new Rect(Screen.width / 2 - windowsWidth / 2, Screen.height / 2 - windowsHeight / 2, windowsWidth, windowsHeight);
         }
 
-        public void OnGUI()
+        public override void OnGUI()
         {
             if (isShow)
             {
-                windowsRect = GUI.Window(windowsId, windowsRect, GuiGameObjectExplorerWindows, "GameObject查看");
+                windowsRect = GUI.Window(GlobalVariables.windowsIdByGuiGameObjectExplorer, windowsRect, GuiGameObjectExplorerWindows, "GameObject查看");
             }
         }
 

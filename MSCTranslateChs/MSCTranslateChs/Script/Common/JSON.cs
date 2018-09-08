@@ -226,13 +226,13 @@ namespace MSCTranslateChs.Script.Common.Procurios.Public
 					} else if (c == 'u') {
 						int remainingLength = json.Length - index;
 						if (remainingLength >= 4) {
-							// parse the 32 bit hex into an integer codepoint
-							uint codePoint;
-							if (!(success = UInt32.TryParse(new string(json, index, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out codePoint))) {
-								return "";
-							}
-							// convert the integer codepoint to a unicode char and add to string
-							s.Append(Char.ConvertFromUtf32((int)codePoint));
+                            // parse the 32 bit hex into an integer codepoint
+                            if (!(success = UInt32.TryParse(new string(json, index, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint codePoint)))
+                            {
+                                return "";
+                            }
+                            // convert the integer codepoint to a unicode char and add to string
+                            s.Append(Char.ConvertFromUtf32((int)codePoint));
 							// skip 4 chars
 							index += 4;
 						} else {
@@ -261,10 +261,9 @@ namespace MSCTranslateChs.Script.Common.Procurios.Public
 			int lastIndex = GetLastIndexOfNumber(json, index);
 			int charLength = (lastIndex - index) + 1;
 
-			double number;
-			success = Double.TryParse(new string(json, index, charLength), NumberStyles.Any, CultureInfo.InvariantCulture, out number);
+            success = Double.TryParse(new string(json, index, charLength), NumberStyles.Any, CultureInfo.InvariantCulture, out double number);
 
-			index = lastIndex + 1;
+            index = lastIndex + 1;
 			return number;
 		}
 

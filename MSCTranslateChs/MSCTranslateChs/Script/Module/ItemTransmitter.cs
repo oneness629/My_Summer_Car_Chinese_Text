@@ -1,33 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using MSCLoader;
 using MSCTranslateChs.Script.Common;
 using HutongGames.PlayMaker;
 using MSCTranslateChs.Script.Common.Translate;
+using MSCTranslateChs.Script.Module.Base;
 
-namespace MSCTranslateChs.Script.Model
+namespace MSCTranslateChs.Script.Module
 {
 
-    public class ItemTransmitter
+    public class ItemTransmitter : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(ItemTransmitter));
+        public new string moduleComment = "物品传送";
 
         public bool isShowWindow = false;
         public bool isEnable = true;
-        public bool isInIt = false;
         Rect windowsRect;
         Vector2 scrollPoint;
         readonly float windowsWidth = 200;
         readonly float windowsHeight = Screen.height;
 
-        public string landfillSpawnGameObjectName = "LandfillSpawn";
-        public GameObject landfillSpawnGameObject;
-        public string playerGameObjectName = "PLAYER";
-        public GameObject playerGameObject;
-        public FsmBool playerInMenuFsmBool;
+       
         public Dictionary<string, GameObject> itemDict = new Dictionary<string, GameObject>();
         public int selectItemKeyIndex = 0;
         public string selectItemKey;
@@ -35,11 +28,10 @@ namespace MSCTranslateChs.Script.Model
         public ItemTransmitter()
         {
             windowsRect = new Rect(Screen.width - windowsWidth , 0, windowsWidth, windowsHeight);
-
         }
 
 
-        public void OnGUI()
+        public override void OnGUI()
         {
             if (isShowWindow)
             {
@@ -48,67 +40,38 @@ namespace MSCTranslateChs.Script.Model
         }
 
 
-        public void Update()
+        public override void Update()
         {
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 GlobalVariables.GetGlobalVariables().itemTransmitter.isShowWindow = !GlobalVariables.GetGlobalVariables().itemTransmitter.isShowWindow;
             }
-
-            if (!isInIt)
+            
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                landfillSpawnGameObject = GameObject.Find(landfillSpawnGameObjectName);
-                if (landfillSpawnGameObject == null)
+                if (GlobalVariables.GetGlobalVariables().physicsRaycast.mainCameraRaycastHits != null && GlobalVariables.GetGlobalVariables().physicsRaycast.mainCameraRaycastHits.Length > 0)
                 {
-                    return;
-                }
-                playerGameObject = GameObject.Find(playerGameObjectName);
-                if (playerGameObject == null)
-                {
-                    return;
-                }
-                playerInMenuFsmBool = FsmVariables.GlobalVariables.FindFsmBool("PlayerInMenu");
-                if (playerInMenuFsmBool == null)
-                {
-                    return;
-                }
-                isInIt = true;
-            }
-            else
-            {
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-
-                    if (Camera.main == null)
+                    foreach (RaycastHit hitInfo in GlobalVariables.GetGlobalVariables().physicsRaycast.mainCameraRaycastHits)
                     {
-                        return;
-                    }
-
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit[] raycastHits = Physics.RaycastAll(ray, Mathf.Infinity);
-                    if (raycastHits != null && raycastHits.Length > 0)
-                    {
-                        foreach (RaycastHit hitInfo in raycastHits)
+                        GameObject targetGameObject = hitInfo.collider.gameObject;
+                        if (targetGameObject != null && CanPickUp(targetGameObject))
                         {
-                            GameObject targetGameObject = hitInfo.collider.gameObject;
-                            if (targetGameObject != null && CanPickUp(targetGameObject))
+                            string partName = targetGameObject.name.Replace("(Clone)", "").Replace("(itemx)", "").Replace("(xxxxx)", "");
+                            string text = partName + "(" + GlobalVariables.GetGlobalVariables().mscTranslate.translateText.TranslateString(partName, TranslateText.DICT_PARTNAME) + ")" + "|" + targetGameObject.GetInstanceID();
+                            if (!itemDict.ContainsKey(text))
                             {
-                                string partName = targetGameObject.name.Replace("(Clone)", "").Replace("(itemx)", "").Replace("(xxxxx)", "");
-                                string text = partName + "(" + GlobalVariables.GetGlobalVariables().mscTranslate.translateText.TranslateString(partName, TranslateText.DICT_PARTNAME) + ")" + "|" + targetGameObject.GetInstanceID();
-                                if (!itemDict.ContainsKey(text))
-                                {
-                                    itemDict.Add(text, targetGameObject);
-                                }
-                                else
-                                {
-                                    logger.LOG(targetGameObject + "已经在背包,不允许拾取(再次传送到垃圾堆)");
-                                }
-                                targetGameObject.transform.parent = null;
-                                TeleportTo(targetGameObject, landfillSpawnGameObject);
+                                itemDict.Add(text, targetGameObject);
                             }
+                            else
+                            {
+                                logger.LOG(targetGameObject + "已经在背包,不允许拾取(再次传送到垃圾堆)");
+                            }
+                            targetGameObject.transform.parent = null;
+                            GlobalVariables.GetGlobalVariables().teleport.TeleportTo(targetGameObject, GlobalVariables.GetGlobalVariables().gameObjectLandfillSpawn);
                         }
                     }
                 }
+                
 
                 float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
                 int scrollWheelInt = 0;
@@ -130,14 +93,14 @@ namespace MSCTranslateChs.Script.Model
                 {
                     if (itemDict.Count > 0 && selectItemKey != null && !"".Equals(selectItemKey))
                     {
-                        logger.LOG("是否在菜单:" + playerInMenuFsmBool.Value);
-                        if (playerInMenuFsmBool.Value)
+                        logger.LOG("是否在菜单:" + GlobalVariables.GetGlobalVariables().fsmBoolPlayerInMenu.Value);
+                        if (GlobalVariables.GetGlobalVariables().fsmBoolPlayerInMenu.Value)
                         {
-                            TeleportTo(itemDict[selectItemKey], playerGameObject);
+                            GlobalVariables.GetGlobalVariables().teleport.TeleportTo(itemDict[selectItemKey], GlobalVariables.GetGlobalVariables().gameObjectPalyer);
                         }
                         else
                         {
-                            TeleportTo(itemDict[selectItemKey]);
+                            TeleportToCamera(itemDict[selectItemKey]);
                         }
                         
                         itemDict.Remove(selectItemKey);
@@ -162,11 +125,8 @@ namespace MSCTranslateChs.Script.Model
                 isShowWindow = false;
             }
             isEnable = GUILayout.Toggle(isEnable, "是否启用");
-            GUILayout.Label("是否初始化 : " + isInIt);
             GUILayout.Label("捡起/丢出物品:E/R");
             GUILayout.Label("切换选中 鼠标滚轮");
-            GUILayout.Label("是否初始化 : " + isInIt);
-            // GUILayout.Label("传送目标GameObject : " + landfillSpawnGameObject !=);
             int index = 0;
             foreach (string key in itemDict.Keys)
             {
@@ -178,8 +138,8 @@ namespace MSCTranslateChs.Script.Model
                 }
                 if (GUILayout.Button(view))
                 {
-                    logger.LOG("是否在菜单:" + playerInMenuFsmBool.Value);
-                    TeleportTo(itemDict[key], playerGameObject);
+                    logger.LOG("是否在菜单:" + GlobalVariables.GetGlobalVariables().fsmBoolPlayerInMenu.Value);
+                    GlobalVariables.GetGlobalVariables().teleport.TeleportTo(itemDict[key], GlobalVariables.GetGlobalVariables().gameObjectPalyer);
                     itemDict.Remove(key);
                 }
                 index++;
@@ -192,19 +152,7 @@ namespace MSCTranslateChs.Script.Model
             GUI.DragWindow();
         }
 
-        public void TeleportTo(GameObject teleportObject, GameObject targetGameObject)
-        {
-            logger.LOG("物品传送 " + teleportObject + " 到 " + targetGameObject);
-            if (targetGameObject == null || teleportObject == null)
-            {
-                logger.LOG("传送物品或目标为空");
-                return;
-            }
-            Vector3 position = new Vector3(targetGameObject.transform.position.x + 0.5f, targetGameObject.transform.position.y, targetGameObject.transform.position.z);
-            teleportObject.transform.position = position;
-        }
-
-        public void TeleportTo(GameObject teleportObject)
+        public void TeleportToCamera(GameObject teleportObject)
         {
             logger.LOG("物品传送 " + teleportObject + " 到当前位置");
             if (teleportObject == null)

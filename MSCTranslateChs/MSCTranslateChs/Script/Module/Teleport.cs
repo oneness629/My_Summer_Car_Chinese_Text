@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
-using MSCLoader;
 using MSCTranslateChs.Script.Common;
+using MSCTranslateChs.Script.Module.Base;
 
-namespace MSCTranslateChs.Script.Model
+namespace MSCTranslateChs.Script.Module
 {
     
-    public class Teleport
+    public class Teleport : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(Teleport));
+        public new string moduleComment = "远程传送";
 
         public bool isEnable = true;
         public bool isShowWindow = false;
@@ -65,20 +64,16 @@ namespace MSCTranslateChs.Script.Model
             targetStaticPosition.Add("SPAWN_TO_DANCE", SPAWN_TO_DANCE);
         }
 
-        public void OnGUI()
+        public override void OnGUI()
         {
-
-            KeyBindFunction();
-
             if (isShowWindow)
             {
                 windowsRect = GUI.Window(GlobalVariables.windowsIdByTeleport, windowsRect, TeleportWindowFunction, "远程传送");
             }
         }
 
-        public void KeyBindFunction()
+        public override void Update()
         {
-            string playerTargetName = PLAYER.Split('|')[0];
 
             int keyIndex = 1;
             foreach (string key in targetDynamicPosition.Keys)
@@ -88,7 +83,7 @@ namespace MSCTranslateChs.Script.Model
                 view = "(左Alt+" + keyIndex + ")" + view;
                 if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.Alpha0 + keyIndex))
                 {
-                    TeleportTo(targetName, playerTargetName);
+                    TeleportTo(targetName, GlobalVariables.GetGlobalVariables().gameObjectPalyer);
                 }
                 keyIndex++;
             }
@@ -101,10 +96,11 @@ namespace MSCTranslateChs.Script.Model
                 view = "(右Ctrl+" + keyIndex + ")" + view;
                 if (Input.GetKey(KeyCode.RightControl) && Input.GetKey(KeyCode.Alpha0 + keyIndex))
                 {
-                    TeleportTo(playerTargetName, targetName);
+                    TeleportTo(GlobalVariables.GetGlobalVariables().gameObjectPalyer, targetName);
                 }
                 keyIndex++;
             }
+
             keyIndex = 1;
             foreach (string key in targetDynamicPosition.Keys)
             {
@@ -113,7 +109,7 @@ namespace MSCTranslateChs.Script.Model
                 view = "(右ALT+" + keyIndex + ")" + view;
                 if (Input.GetKey(KeyCode.RightAlt) && Input.GetKey(KeyCode.Alpha0 + keyIndex))
                 {
-                    TeleportTo(playerTargetName, targetName);
+                    TeleportTo(GlobalVariables.GetGlobalVariables().gameObjectPalyer, targetName);
                 }
                 keyIndex++;
             }
@@ -130,7 +126,6 @@ namespace MSCTranslateChs.Script.Model
             GUILayout.Label(" ");
             GUILayout.Label("传送到玩家");
             GUILayout.BeginVertical("box");
-            string playerTargetName = PLAYER.Split('|')[0];
 
             int keyIndex = 1;
             foreach (string key in targetDynamicPosition.Keys)
@@ -140,7 +135,7 @@ namespace MSCTranslateChs.Script.Model
                 view = "(左Alt+" + keyIndex + ")" + view;
                 if (GUILayout.Button(view))
                 {
-                    TeleportTo(targetName, playerTargetName);
+                    TeleportTo(targetName, GlobalVariables.GetGlobalVariables().gameObjectPalyer);
                 }
                 keyIndex++;
             }
@@ -157,7 +152,7 @@ namespace MSCTranslateChs.Script.Model
                 view = "(右Ctrl+" + keyIndex + ")" + view;
                 if (GUILayout.Button(view))
                 {
-                    TeleportTo(playerTargetName, targetName);
+                    TeleportTo(GlobalVariables.GetGlobalVariables().gameObjectPalyer, targetName);
                 }
                 keyIndex++;
             }
@@ -169,7 +164,7 @@ namespace MSCTranslateChs.Script.Model
                 view = "(右ALT+" + keyIndex + ")" + view;
                 if (GUILayout.Button(view))
                 {
-                    TeleportTo(playerTargetName, targetName);
+                    TeleportTo(GlobalVariables.GetGlobalVariables().gameObjectPalyer, targetName);
                 }
                 keyIndex++;
             }
@@ -177,7 +172,7 @@ namespace MSCTranslateChs.Script.Model
             targetGameObjectText = GUILayout.TextField(targetGameObjectText);
             if (GUILayout.Button("传送到" + targetGameObjectText))
             {
-                TeleportTo(playerTargetName, targetGameObjectText);
+                TeleportTo(GlobalVariables.GetGlobalVariables().gameObjectPalyer, targetGameObjectText);
             }
             GUILayout.EndVertical();
             if (GUILayout.Button("关闭"))
@@ -190,8 +185,7 @@ namespace MSCTranslateChs.Script.Model
 
         public void TeleportTo(string targetObjectName)
         {
-            string playerTargetName = PLAYER.Split('|')[0];
-            TeleportTo(playerTargetName, targetObjectName);
+            TeleportTo(GlobalVariables.GetGlobalVariables().gameObjectPalyer, targetObjectName);
         }
 
         public void TeleportTo(string teleportObjectName, string targetObjectName)
@@ -203,14 +197,47 @@ namespace MSCTranslateChs.Script.Model
                 logger.LOG("无法找到目标:" + targetObjectName);
                 return;
             }
-
-            Vector3 position = new Vector3(targetGameObject.transform.position.x + 3f, targetGameObject.transform.position.y, targetGameObject.transform.position.z);
             GameObject teleportObject = GameObject.Find(teleportObjectName);
+            if (teleportObject == null)
+            {
+                logger.LOG("无法找到要传送的目标:" + teleportObjectName);
+                return;
+            }
+            TeleportTo(teleportObject, targetGameObject);
+        }
+
+        public void TeleportTo(GameObject teleportObject, string targetObjectName)
+        {
+
+            if (targetObjectName == null)
+            {
+                logger.LOG("无法找到传送的目标:" + targetObjectName);
+                return;
+            }
+            GameObject targetObject = GameObject.Find(targetObjectName);
+            TeleportTo(teleportObject, targetObject);
+        }
+
+        public void TeleportTo(string teleportObjectName, GameObject targetObject)
+        {
+            
             if (teleportObjectName == null)
             {
                 logger.LOG("无法找到要传送的目标:" + teleportObjectName);
                 return;
             }
+            GameObject teleportObject = GameObject.Find(teleportObjectName);
+            TeleportTo(teleportObject, targetObject);
+        }
+
+        public void TeleportTo(GameObject teleportObject, GameObject targetObject)
+        {
+            if (teleportObject == null || targetObject == null)
+            {
+                logger.LOG("远程传送传送/目标为空" + teleportObject + " / " + targetObject);
+            }
+            logger.LOG("远程传送 " + GameObjectUtil.GetGameObjectPath(teleportObject) + " 到 " + GameObjectUtil.GetGameObjectPath(targetObject));
+            Vector3 position = new Vector3(targetObject.transform.position.x + 3f, targetObject.transform.position.y, targetObject.transform.position.z);
             teleportObject.transform.position = position;
         }
     }

@@ -1,15 +1,8 @@
 ﻿using MSCLoader;
-using MSCTranslateChs.Script.Common;
-using MSCTranslateChs.Script.Common.Procurios.Public;
-using MSCTranslateChs.Script.Model;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 
 namespace MSCTranslateChs.Script.Common.Translate
