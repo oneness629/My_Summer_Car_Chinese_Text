@@ -10,11 +10,11 @@ namespace MSCTranslateChs.Script.Module
     {
 
         private static LOGGER logger = new LOGGER(typeof(Develop));
-        public new string moduleComment = "开发模式";
+        public new string ModuleComment = "开发测试模式";
 
         public GUIStyle guiStyle;
 
-        public bool isEnable = false;
+        public new bool IsEnable = false;
 
         public bool isRayGameObject = false;
 
@@ -30,6 +30,14 @@ namespace MSCTranslateChs.Script.Module
 
         public override void Update()
         {
+            if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.T))
+            {
+                GlobalVariables.GetGlobalVariables().developWindows.IsEnable = true;
+            }
+            if (Input.GetKey(KeyCode.RightAlt) && Input.GetKey(KeyCode.T))
+            {
+                GlobalVariables.GetGlobalVariables().developWindows.IsEnable = false;
+            }
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.R))
             {
                 GlobalVariables.GetGlobalVariables().mscTranslate.translateText.ReadTranslateTextDict();
@@ -45,6 +53,10 @@ namespace MSCTranslateChs.Script.Module
                 File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), "_FsmVariables.txt"), text);
                 logger.LOG("写入所有FsmVariables变量到FsmVariables.txt");
             }
+            if (GlobalVariables.GetGlobalVariables().developWindows.isShowCameraData)
+            {
+                ReadCameraState();
+            }
         }
 
 
@@ -52,23 +64,18 @@ namespace MSCTranslateChs.Script.Module
         public override void OnGUI()
         {
             
-            
-            if (isEnable)
+            GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "MSCTranslateChs开发模式", guiStyle);
+
+            if (isRayGameObject)
             {
-                GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "MSCTranslateChs开发模式", guiStyle);
-
-                if (isRayGameObject)
-                {
-                    RayGameObject();
-                }
-
-                if (GlobalVariables.GetGlobalVariables().guiGameObjectExplorer.isShow)
-                {
-                    GlobalVariables.GetGlobalVariables().guiGameObjectExplorer.OnGUI();
-                }
-
-               
+                RayGameObject();
             }
+
+            if (GlobalVariables.GetGlobalVariables().guiGameObjectExplorer.isShow)
+            {
+                GlobalVariables.GetGlobalVariables().guiGameObjectExplorer.OnGUI();
+            }
+               
         }
         public string cameraState;
 

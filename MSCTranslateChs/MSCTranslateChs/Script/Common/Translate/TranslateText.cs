@@ -10,8 +10,8 @@ namespace MSCTranslateChs.Script.Common.Translate
     public class TranslateText
     {
         private static LOGGER logger = new LOGGER(typeof(TranslateText));
-        readonly Dictionary<string, Dictionary<string, string>> translateTextDict = new Dictionary<string, Dictionary<string, string>>();
-        readonly Dictionary<string, int> translateTextSizeDict = new Dictionary<string, int>();
+        public Dictionary<string, Dictionary<string, string>> translateTextDict = new Dictionary<string, Dictionary<string, string>>();
+        public Dictionary<string, int> translateTextSizeDict = new Dictionary<string, int>();
 
         public const string DICT_SUBTITLE = "subtitle";
         public const string DICT_UI = "ui";

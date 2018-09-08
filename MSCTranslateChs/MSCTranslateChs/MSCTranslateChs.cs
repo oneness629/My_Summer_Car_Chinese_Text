@@ -27,15 +27,14 @@ namespace MSCTranslateChs
 
         public bool IsEnable = true;
 
-        public static string OnGUITip = " OnGUI";
-        public static string UpdateTip = " Update";
+        public static string onGUITip = " OnGUI";
+        public static string updateTip = " Update";
 
         public override void OnLoad()
         {
             try
             {
                 GlobalVariables.GetGlobalVariables().mscTranslateChs = this;
-                GlobalVariables.GetGlobalVariables().Init();
             }
             catch (Exception e)
             {
@@ -55,12 +54,12 @@ namespace MSCTranslateChs
                     return;
                 }
 
-                GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.moduleComment + OnGUITip);
-                if (GlobalVariables.GetGlobalVariables().welcomeWindows.isEnable)
+                GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.ModuleComment + onGUITip);
+                if (GlobalVariables.GetGlobalVariables().welcomeWindows.IsEnable)
                 {
                     GlobalVariables.GetGlobalVariables().welcomeWindows.OnGUI();
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End(GlobalVariables.GetGlobalVariables().welcomeWindows.moduleComment + OnGUITip);
+                GlobalVariables.GetGlobalVariables().executionTime.End(GlobalVariables.GetGlobalVariables().welcomeWindows.ModuleComment + onGUITip);
 
                 if (!GlobalVariables.GetGlobalVariables().mscTranslateChs.IsEnable)
                 {
@@ -69,12 +68,20 @@ namespace MSCTranslateChs
 
                 foreach (BaseModule baseModule in GlobalVariables.GetGlobalVariables().executeModuleList)
                 {
-                    GlobalVariables.GetGlobalVariables().executionTime.Start(baseModule.moduleComment + OnGUITip);
-                    if (GlobalVariables.GetGlobalVariables().develop.isEnable)
+                    GlobalVariables.GetGlobalVariables().executionTime.Start(baseModule.ModuleComment + onGUITip);
+                    if (baseModule.IsEnable)
                     {
-                        baseModule.OnGUI();
+                        try
+                        {
+                            baseModule.OnGUI();
+                        }
+                        catch (Exception e)
+                        {
+                            logger.LOG(baseModule.ModuleComment + " OnGUI 中出现异常 -> " + e.Message);
+                            logger.LOG(e);
+                        }
                     }
-                    GlobalVariables.GetGlobalVariables().executionTime.End(baseModule.moduleComment + OnGUITip);
+                    GlobalVariables.GetGlobalVariables().executionTime.End(baseModule.ModuleComment + onGUITip);
                 }
             }
             catch (Exception e)
@@ -98,9 +105,9 @@ namespace MSCTranslateChs
                 }
 
 
-                GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.moduleComment + UpdateTip);
+                GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.ModuleComment + updateTip);
                 GlobalVariables.GetGlobalVariables().welcomeWindows.Update();
-                GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.moduleComment + UpdateTip);
+                GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.ModuleComment + updateTip);
 
                 if (!GlobalVariables.GetGlobalVariables().mscTranslateChs.IsEnable)
                 {
@@ -108,12 +115,20 @@ namespace MSCTranslateChs
                 }
                 foreach (BaseModule baseModule in GlobalVariables.GetGlobalVariables().executeModuleList)
                 {
-                    GlobalVariables.GetGlobalVariables().executionTime.Start(baseModule.moduleComment + UpdateTip);
-                    if (GlobalVariables.GetGlobalVariables().develop.isEnable)
+                    GlobalVariables.GetGlobalVariables().executionTime.Start(baseModule.ModuleComment + updateTip);
+                    if (baseModule.IsEnable)
                     {
-                        baseModule.Update();
+                        try
+                        {
+                            baseModule.Update();
+                        }
+                        catch (Exception e)
+                        {
+                            logger.LOG(baseModule.ModuleComment + " Update 中出现异常 -> " + e.Message);
+                            logger.LOG(e);
+                        }
                     }
-                    GlobalVariables.GetGlobalVariables().executionTime.End(baseModule.moduleComment + UpdateTip);
+                    GlobalVariables.GetGlobalVariables().executionTime.End(baseModule.ModuleComment + updateTip);
                 }
 
             }

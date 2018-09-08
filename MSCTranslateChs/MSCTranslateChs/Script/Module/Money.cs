@@ -9,9 +9,9 @@ namespace MSCTranslateChs.Script.Module
     public class Money : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(Money));
-        public new string moduleComment = "金钱调整";
+        public new string ModuleComment = "金钱调整";
 
-        public bool isEnable = true;
+        public new bool IsEnable = true;
         public bool isShowWindow = false;
         Rect windowsRect;
 
@@ -36,6 +36,10 @@ namespace MSCTranslateChs.Script.Module
             {
                 windowsRect = GUI.Window(GlobalVariables.windowsIdByMoney, windowsRect, MoneyWindowFunction, "金钱调整");
             }
+        }
+
+        public override void Update()
+        {
         }
 
         public void MoneyWindowFunction(int windowsId)
@@ -64,6 +68,8 @@ namespace MSCTranslateChs.Script.Module
             GUILayout.EndHorizontal();
             GUI.DragWindow();
         }
+
+       
     }
 
    

@@ -11,10 +11,10 @@ namespace MSCTranslateChs.Script.Module
     public class ItemTransmitter : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(ItemTransmitter));
-        public new string moduleComment = "物品传送";
+        public new string ModuleComment = "物品传送";
 
         public bool isShowWindow = false;
-        public bool isEnable = true;
+        public new bool IsEnable = true;
         Rect windowsRect;
         Vector2 scrollPoint;
         readonly float windowsWidth = 200;
@@ -124,9 +124,7 @@ namespace MSCTranslateChs.Script.Module
             {
                 isShowWindow = false;
             }
-            isEnable = GUILayout.Toggle(isEnable, "是否启用");
-            GUILayout.Label("捡起/丢出物品:E/R");
-            GUILayout.Label("切换选中 鼠标滚轮");
+            IsEnable = GUILayout.Toggle(IsEnable, "是否启用");
             int index = 0;
             foreach (string key in itemDict.Keys)
             {

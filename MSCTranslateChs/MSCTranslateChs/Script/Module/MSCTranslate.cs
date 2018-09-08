@@ -8,15 +8,15 @@ namespace MSCTranslateChs.Script.Module
     public class MSCTranslate : BaseModule
     {
         private static readonly LOGGER logger = new LOGGER(typeof(MSCTranslate));
-        public new string moduleComment = "文本翻译";
+        public new string ModuleComment = "文本翻译";
 
-        public bool IsEnable = true;
-        public bool IsTranslateSubtitles = true;
-        public bool IsTranslatePartnames = true;
-        public bool IsTranslateInteractions = true;
-        public bool IsTranslateGameOverMessage = true;
-        public bool IsTranslateUI = true;
-        public bool IsTranslateEscInitUI = true;
+        public new bool IsEnable = true;
+        public bool isTranslateSubtitles = true;
+        public bool isTranslatePartnames = true;
+        public bool isTranslateInteractions = true;
+        public bool isTranslateGameOverMessage = true;
+        public bool isTranslateUI = true;
+        public bool isTranslateEscInitUI = true;
 
         public TranslateText translateText;
 
@@ -43,8 +43,6 @@ namespace MSCTranslateChs.Script.Module
 
         public override void Init()
         {
-            translateText = new TranslateText();
-
             subtitlesGuiStyle = new GUIStyle()
             {
                 alignment = TextAnchor.MiddleCenter,
@@ -77,7 +75,8 @@ namespace MSCTranslateChs.Script.Module
             subtitlesTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Subtitles");
             partnamesTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Partname");
             interactionsTextMesh = GameObjectUtil.FindGameObjectTextMesh("GUI/Indicators/Interaction");
-            
+
+            translateText = new TranslateText();
         }
 
 
@@ -85,8 +84,8 @@ namespace MSCTranslateChs.Script.Module
         {
             if (GlobalVariables.GetGlobalVariables().isInit)
             {
-                GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " 字幕 OnGUI");
-                if (IsTranslateSubtitles)
+                GlobalVariables.GetGlobalVariables().executionTime.Start(ModuleComment + " 字幕 OnGUI");
+                if (isTranslateSubtitles)
                 {
                     // 字幕
                     string subtitlesText = subtitlesTextMesh.text.Trim();
@@ -95,9 +94,9 @@ namespace MSCTranslateChs.Script.Module
                         GUI.Label(subtitlesRect, translateText.TranslateString(subtitlesText, TranslateText.DICT_SUBTITLE), subtitlesGuiStyle);
                     }
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " 字幕 OnGUI");
-                GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " 部件/物品名称 OnGUI");
-                if (IsTranslatePartnames)
+                GlobalVariables.GetGlobalVariables().executionTime.End(ModuleComment + " 字幕 OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(ModuleComment + " 部件/物品名称 OnGUI");
+                if (isTranslatePartnames)
                 {
                     // 部件/物品名称
                     string partnamesText = partnamesTextMesh.text.Trim();
@@ -106,9 +105,9 @@ namespace MSCTranslateChs.Script.Module
                         GUI.Label(partnamesRect, translateText.TranslateString(partnamesText, TranslateText.DICT_PARTNAME), partnamesGuiStyle);
                     }
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " 部件/物品名称 OnGUI");
-                GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " 操作动作 OnGUI");
-                if (IsTranslateInteractions)
+                GlobalVariables.GetGlobalVariables().executionTime.End(ModuleComment + " 部件/物品名称 OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(ModuleComment + " 操作动作 OnGUI");
+                if (isTranslateInteractions)
                 {
                     // 操作动作
                     string interactionsText = interactionsTextMesh.text.Trim();
@@ -117,36 +116,36 @@ namespace MSCTranslateChs.Script.Module
                         GUI.Label(interactionsRect, translateText.TranslateString(interactionsText, TranslateText.DICT_INTERACTION), interactionsGuiStyle);
                     }
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " 操作动作 OnGUI");
-                GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " GameOver OnGUI");
-                if (IsTranslateGameOverMessage)
+                GlobalVariables.GetGlobalVariables().executionTime.End(ModuleComment + " 操作动作 OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(ModuleComment + " GameOver OnGUI");
+                if (isTranslateGameOverMessage)
                 {
                     // game over 提示
                     GameOverMessage();
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " GameOver OnGUI");
-                GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " UI OnGUI");
-                if (IsTranslateUI)
+                GlobalVariables.GetGlobalVariables().executionTime.End(ModuleComment + " GameOver OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.Start(ModuleComment + " UI OnGUI");
+                if (isTranslateUI)
                 {
                     // 额外的Systems UI菜单
                     TranslateUIRayGameObject();
                 }
-                GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " UI OnGUI");
+                GlobalVariables.GetGlobalVariables().executionTime.End(ModuleComment + " UI OnGUI");
                 
             }
         }
 
         public override void Update()
         {
-            GlobalVariables.GetGlobalVariables().executionTime.Start(moduleComment + " ESC 初始化UI Update");
-            if (IsTranslateEscInitUI)
+            GlobalVariables.GetGlobalVariables().executionTime.Start(ModuleComment + " ESC 初始化UI Update");
+            if (isTranslateEscInitUI)
             {
                 if (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.F1))
                 {
                     InitUIRayGameObject();
                 }
             }
-            GlobalVariables.GetGlobalVariables().executionTime.End(moduleComment + " ESC 初始化UI Update");
+            GlobalVariables.GetGlobalVariables().executionTime.End(ModuleComment + " ESC 初始化UI Update");
         }
 
         private void InitUIRayGameObject()

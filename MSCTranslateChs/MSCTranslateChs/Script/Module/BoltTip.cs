@@ -10,10 +10,10 @@ namespace MSCTranslateChs.Script.Module
     public class BoltTip : BaseModule
     {
         private static readonly LOGGER logger = new LOGGER(typeof(BoltTip));
-        public new string moduleComment = "螺栓提示";
+        public new string ModuleComment = "螺栓提示";
 
         public bool isShowWindow = false;
-        public bool isEnable = true;
+        public new bool IsEnable = true;
 
         Rect windowsRect;
         Vector2 scrollPoint;
@@ -59,10 +59,14 @@ namespace MSCTranslateChs.Script.Module
             {
                 windowsRect = GUI.Window(GlobalVariables.windowsIdByBoltTip, windowsRect, WindowFunction, "螺栓提示");
             }
-            if (isEnable)
+            if (IsEnable)
             {
                 RayGameObject();
             }
+        }
+
+        public override void Update()
+        {
         }
 
 
@@ -141,7 +145,7 @@ namespace MSCTranslateChs.Script.Module
             {
                 isShowWindow = false;
             }
-            isEnable = GUILayout.Toggle(isEnable, "是否启用部件螺栓提示");
+            IsEnable = GUILayout.Toggle(IsEnable, "是否启用部件螺栓提示");
             GUILayout.Label("···应该没有人一直需要检查螺丝吧···");
             GUILayout.Label("···功能说明···");
             GUILayout.Label("1、鼠标移到螺丝上，能看到螺丝的扳手型号、部件下有几个螺丝");
@@ -167,6 +171,7 @@ namespace MSCTranslateChs.Script.Module
             GUI.DragWindow();
         }
 
+        
     }
    
 }

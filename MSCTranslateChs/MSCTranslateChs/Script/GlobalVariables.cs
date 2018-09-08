@@ -112,10 +112,7 @@ namespace MSCTranslateChs.Script
 
             foreach (BaseModule baseModule in executeModuleList)
             {
-                if (GlobalVariables.GetGlobalVariables().develop.isEnable)
-                {
-                    baseModule.Init();
-                }
+                baseModule.Init();
             }
 
         }

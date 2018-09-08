@@ -3,24 +3,19 @@
 namespace MSCTranslateChs.Script.Module.Base
 {
 
-    public class BaseModule
+    public abstract class BaseModule
     {
         private static readonly LOGGER logger = new LOGGER(typeof(BaseModule));
 
-        public string moduleComment = "基础模块";
+        public virtual string ModuleComment { get;  set; }
 
-        public virtual void Init()
-        {
+        public virtual bool IsEnable { get; set; }
 
-        }
+        public abstract void Init();
 
-        public virtual void OnGUI()
-        {
-        }
+        public abstract void OnGUI();
 
-        public virtual void Update()
-        {
-        }
+        public abstract void Update();
 
     }
    

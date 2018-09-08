@@ -10,17 +10,23 @@ namespace MSCTranslateChs.Script.Module
     public class DevelopWindows : BaseModule
     {
         private static readonly LOGGER logger = new LOGGER(typeof(DevelopWindows));
-        public new string moduleComment = "开发窗口";
+        public new string ModuleComment = "开发测试窗口";
 
-        public bool isEnable = true;
+        public new bool IsEnable = true;
         Rect developWindowsRect;
         Vector2 scrollPosition;
         readonly float windowsWidth = 800;
         readonly float windowsHeight = 600;
-        
 
         public string targetGameObjectPath = "Systems";
         public GameObject targetGameObject = null;
+
+        public bool isShowAllExecutionTime = false;
+        public bool isShowCameraData = false;
+        public bool isShowGameOverGameObjectCheck = false;
+        public bool isShowGameObjectTransformUpdate = false;
+        public bool isViewFsmAllVariablesAndVaule = false;
+        public bool isShowGlobalVariablesValue = false;
 
         public override void Init()
         {
@@ -29,34 +35,31 @@ namespace MSCTranslateChs.Script.Module
 
         public override void OnGUI()
         {
-            if (isEnable)
+            if (IsEnable)
             {
-                developWindowsRect = GUI.Window(GlobalVariables.windowsIdByDevelopWindows, developWindowsRect, DevelopConfigWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod 开发模式");
+                developWindowsRect = GUI.Window(GlobalVariables.windowsIdByDevelopWindows, developWindowsRect, DevelopConfigWindowsFunction, "欢迎使用我的夏季汽车中文翻译Mod 开发测试模式");
             }
         }
 
         public override void Update()
         {
-            if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.T))
-            {
-                isEnable = true;
-            }
-            if (Input.GetKey(KeyCode.RightAlt) && Input.GetKey(KeyCode.T))
-            {
-                isEnable = false;
-            }
         }
 
         private void DevelopConfigWindowsFunction(int windowsId)
         {
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+            if (GUILayout.Button("关闭"))
+            {
+                IsEnable = false;
+            }
             GUILayout.Label("左Ctrl+R,重新读取所有txt文本");
             GUILayout.Label("左Ctrl+W,写入Systems下的GameObject到txt");
             GUILayout.Label("左Ctrl+F,写入所有FsmVariables变量到FsmVariables.txt");
+            GUILayout.Label("左Ctrl+F,写入所有FsmVariables变量到FsmVariables.txt");
             GlobalVariables.GetGlobalVariables().develop.isRayGameObject = GUILayout.Toggle(GlobalVariables.GetGlobalVariables().develop.isRayGameObject, "是否显示鼠标指向的GameObject信息");
 
-            
-            if (GUILayout.Button("GUI GameObject 查看"))
+            GlobalVariables.GetGlobalVariables().guiGameObjectExplorer.IsEnable = GUILayout.Toggle(GlobalVariables.GetGlobalVariables().guiGameObjectExplorer.IsEnable, "是否启用GUI GameObject查看");
+            if (GUILayout.Button("GUI GameObject 查看窗口"))
             {
                 GlobalVariables.GetGlobalVariables().guiGameObjectExplorer.isShow = true;
             }
@@ -86,20 +89,40 @@ namespace MSCTranslateChs.Script.Module
                 File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), "_materials.txt"), new string[] { text });
             }
 
-            if (GUILayout.Button("关闭")){
-                isEnable = false;
+            if (GUILayout.Button("重新初始化Mod全局变量"))
+            {
+                GlobalVariables.GetGlobalVariables().Init();
+            }
+            isShowGlobalVariablesValue = GUILayout.Toggle(isShowGlobalVariablesValue, "是否显示Mod全局变量详情");
+
+            isShowAllExecutionTime = GUILayout.Toggle(isShowAllExecutionTime, "是否显示Mod执行效率详情");
+            if (isShowAllExecutionTime)
+            {
+                ShowAllExecutionTime();
             }
 
-            ShowAllExecutionTime();
+            isShowCameraData = GUILayout.Toggle(isShowCameraData, "是否显示摄像机详情");
+            if (isShowCameraData)
+            {
+                ShowCameraData();
+            }
 
-            ShowCameraData();
+            isShowGameOverGameObjectCheck = GUILayout.Toggle(isShowGameOverGameObjectCheck, "是否显示GameOver变量详情");
+            if (isShowGameOverGameObjectCheck)
+            {
+                ShowGameOverGameObjectCheck();
+            }
 
-            GameOverGameObjectCheck();
-
-            GameObjectTransformUpdate();
-
-            ViewFsmAllVariablesAndVaule();
-
+            isShowGameObjectTransformUpdate = GUILayout.Toggle(isShowGameObjectTransformUpdate, "是否显示GameObject位置微调");
+            if (isShowGameObjectTransformUpdate)
+            {
+                ShowGameObjectTransformUpdate();
+            }
+            isViewFsmAllVariablesAndVaule = GUILayout.Toggle(isViewFsmAllVariablesAndVaule, "是否显示所有游戏内全局变量");
+            if (isViewFsmAllVariablesAndVaule)
+            {
+                ViewFsmAllVariablesAndVaule();
+            }
 
             GUILayout.EndScrollView();
             GUI.DragWindow();
@@ -111,9 +134,8 @@ namespace MSCTranslateChs.Script.Module
             GUILayout.Label(FsmVariablesUtil.GetAllFsmVariablesAndVaule());
         }
 
-        private void GameOverGameObjectCheck()
+        private void ShowGameOverGameObjectCheck()
         {
-            
             GUILayout.Label("GameOver GameObject 检查:");
             GUILayout.Label("gameObjectSystems:" + GlobalVariables.GetGlobalVariables().gameObjectSystems);
             GUILayout.Label("gameObjectSystemsDeath:" + GlobalVariables.GetGlobalVariables().mscTranslate.gameObjectSystemsDeath);
@@ -125,7 +147,6 @@ namespace MSCTranslateChs.Script.Module
                 GlobalVariables.GetGlobalVariables().mscTranslate.gameObjectSystemsDeathGameOverScreen = null;
                 GlobalVariables.GetGlobalVariables().mscTranslate.gameObjectSystemsDeathGameOverScreenPaper = null;
             }
-            
         }
 
         private void ShowCameraData()
@@ -147,7 +168,7 @@ namespace MSCTranslateChs.Script.Module
             
         }
 
-        private void GameObjectTransformUpdate()
+        private void ShowGameObjectTransformUpdate()
         {
 
             GUILayout.BeginHorizontal("box");
@@ -345,6 +366,7 @@ namespace MSCTranslateChs.Script.Module
                 GUILayout.EndHorizontal();
             }
         }
-        
+
+     
     }
 }

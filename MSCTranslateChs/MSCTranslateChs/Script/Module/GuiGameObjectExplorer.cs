@@ -11,8 +11,9 @@ namespace MSCTranslateChs.Script.Module
     public class GuiGameObjectExplorer : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(GuiGameObjectExplorer));
-        public new string moduleComment = "GameObject查看";
+        public new string ModuleComment = "GameObject查看";
 
+        public new bool IsEnable = true;
         public bool isShow = false;
         public float windowsWidth = 1000;
         public float windowsHeight = 600;
@@ -38,6 +39,10 @@ namespace MSCTranslateChs.Script.Module
             {
                 windowsRect = GUI.Window(GlobalVariables.windowsIdByGuiGameObjectExplorer, windowsRect, GuiGameObjectExplorerWindows, "GameObject查看");
             }
+        }
+
+        public override void Update()
+        {
         }
 
         private void GuiGameObjectExplorerWindows(int windowsId)

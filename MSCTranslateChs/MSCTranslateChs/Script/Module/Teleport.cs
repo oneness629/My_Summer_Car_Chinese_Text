@@ -10,9 +10,9 @@ namespace MSCTranslateChs.Script.Module
     public class Teleport : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(Teleport));
-        public new string moduleComment = "远程传送";
+        public new string ModuleComment = "远程传送";
 
-        public bool isEnable = true;
+        public new bool IsEnable = true;
         public bool isShowWindow = false;
         Rect windowsRect;
         Vector2 scrollPoint;
