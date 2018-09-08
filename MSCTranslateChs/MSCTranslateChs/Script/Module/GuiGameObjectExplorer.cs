@@ -27,7 +27,7 @@ namespace MSCTranslateChs.Script.Module
         public GameObject selectGameObject;
         public List<Component> selectGameObjectComponent;
 
-        public GuiGameObjectExplorer()
+        public override void Init()
         {
             windowsRect = new Rect(Screen.width / 2 - windowsWidth / 2, Screen.height / 2 - windowsHeight / 2, windowsWidth, windowsHeight);
         }

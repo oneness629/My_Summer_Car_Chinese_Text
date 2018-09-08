@@ -13,7 +13,7 @@ namespace MSCTranslateChs.Script.Module
         readonly float windowsHeight = 600;
         Vector2 scrollPoint;
 
-        public WelcomeWindows()
+        public override void Init()
         {
             welcomeWindowsRect = new Rect(Screen.width / 2 - windowsWidth / 2, Screen.height / 2 - windowsHeight / 2, windowsWidth, windowsHeight);
         }

@@ -20,7 +20,7 @@ namespace MSCTranslateChs.Script.Module
 
         float money;
 
-        public Money()
+        public override void Init()
         {
             if (GlobalVariables.GetGlobalVariables().fsmFloatPlayerMoney != null)
             {

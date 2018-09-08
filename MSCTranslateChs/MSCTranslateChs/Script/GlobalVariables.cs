@@ -22,7 +22,7 @@ namespace MSCTranslateChs.Script
         public const int windowsIdByItemTransmitter = 6295;
         public const int windowsIdByGuiGameObjectExplorer = 6296;
 
-        private static GlobalVariables globalVariables;
+        private static readonly GlobalVariables globalVariables = new GlobalVariables();
 
         public MSCTranslateChs mscTranslateChs;
         public ExecutionTime executionTime = new ExecutionTime();
@@ -68,15 +68,10 @@ namespace MSCTranslateChs.Script
 
         private GlobalVariables()
         {
-
         }
 
         public static GlobalVariables GetGlobalVariables()
         {
-            if (globalVariables == null)
-            {
-                globalVariables = new GlobalVariables();
-            }
             return globalVariables;
         }
 
@@ -118,7 +113,7 @@ namespace MSCTranslateChs.Script
             {
                 if (GlobalVariables.GetGlobalVariables().develop.isEnable)
                 {
-                    baseModule.OnGUI();
+                    baseModule.Init();
                 }
             }
 

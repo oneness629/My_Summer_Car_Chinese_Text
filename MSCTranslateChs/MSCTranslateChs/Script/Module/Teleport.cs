@@ -41,7 +41,7 @@ namespace MSCTranslateChs.Script.Module
         Dictionary<string, string> targetStaticPosition = new Dictionary<string, string>();
         string targetGameObjectText = "";
 
-        public Teleport()
+        public override void Init()
         {
 
             windowsRect = new Rect(Screen.width - windowsWidth, Screen.height - windowsHeight , windowsWidth, windowsHeight);

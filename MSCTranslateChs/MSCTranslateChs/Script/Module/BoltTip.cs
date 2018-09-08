@@ -28,7 +28,7 @@ namespace MSCTranslateChs.Script.Module
         public Material activeBoltMaterial;
 
 
-        public BoltTip()
+        public override void Init()
         {
             windowsRect = new Rect(Screen.width / 2 - windowsWidth / 2, Screen.height / 2 - windowsHeight / 2, windowsWidth, windowsHeight);
 
@@ -38,10 +38,7 @@ namespace MSCTranslateChs.Script.Module
                 fontSize = (int)(8.0f * (float)(Screen.width) / 1000f),
             };
             mouseTipGuiStyle.normal.textColor = new Color(255, 255, 255);
-        }
 
-        public override void Init()
-        {
             Material[] materials = Resources.FindObjectsOfTypeAll<Material>();
             foreach (Material material in materials)
             {

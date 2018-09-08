@@ -22,7 +22,7 @@ namespace MSCTranslateChs.Script.Module
         public string targetGameObjectPath = "Systems";
         public GameObject targetGameObject = null;
 
-        public DevelopWindows()
+        public override void Init()
         {
             developWindowsRect = new Rect(Screen.width - windowsWidth , 0 , windowsWidth, windowsHeight);
         }

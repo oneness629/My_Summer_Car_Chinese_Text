@@ -18,7 +18,7 @@ namespace MSCTranslateChs.Script.Module
 
         public bool isRayGameObject = false;
 
-        public Develop()
+        public override void Init()
         {
             guiStyle = new GUIStyle()
             {

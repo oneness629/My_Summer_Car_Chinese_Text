@@ -25,7 +25,7 @@ namespace MSCTranslateChs.Script.Module
         public int selectItemKeyIndex = 0;
         public string selectItemKey;
 
-        public ItemTransmitter()
+        public override void Init()
         {
             windowsRect = new Rect(Screen.width - windowsWidth , 0, windowsWidth, windowsHeight);
         }
