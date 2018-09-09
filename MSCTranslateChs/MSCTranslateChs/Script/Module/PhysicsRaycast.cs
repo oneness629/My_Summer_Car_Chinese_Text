@@ -7,9 +7,7 @@ namespace MSCTranslateChs.Script.Module
     public class PhysicsRaycast : BaseModule
     {
         private static readonly LOGGER logger = new LOGGER(typeof(PhysicsRaycast));
-        public new string ModuleComment = "基础射线";
-
-        public new bool IsEnable = true;
+        public override string ModuleComment { get => "基础射线"; }
 
         public RaycastHit[] mainCameraRaycastHits;
 

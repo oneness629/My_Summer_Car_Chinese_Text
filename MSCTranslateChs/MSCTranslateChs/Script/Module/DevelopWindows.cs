@@ -4,15 +4,15 @@ using MSCTranslateChs.Script.Common;
 using System.IO;
 using MSCLoader;
 using MSCTranslateChs.Script.Module.Base;
+using System.Reflection;
 
 namespace MSCTranslateChs.Script.Module
 {
     public class DevelopWindows : BaseModule
     {
         private static readonly LOGGER logger = new LOGGER(typeof(DevelopWindows));
-        public new string ModuleComment = "开发测试窗口";
+        public override string ModuleComment { get => "开发测试窗口"; }
 
-        public new bool IsEnable = true;
         Rect developWindowsRect;
         Vector2 scrollPosition;
         readonly float windowsWidth = 800;
@@ -94,6 +94,10 @@ namespace MSCTranslateChs.Script.Module
                 GlobalVariables.GetGlobalVariables().Init();
             }
             isShowGlobalVariablesValue = GUILayout.Toggle(isShowGlobalVariablesValue, "是否显示Mod全局变量详情");
+            if (isShowGlobalVariablesValue)
+            {
+                ShowGlobalVariablesValue();
+            }
 
             isShowAllExecutionTime = GUILayout.Toggle(isShowAllExecutionTime, "是否显示Mod执行效率详情");
             if (isShowAllExecutionTime)
@@ -126,6 +130,36 @@ namespace MSCTranslateChs.Script.Module
 
             GUILayout.EndScrollView();
             GUI.DragWindow();
+        }
+
+        private void ShowGlobalVariablesValue()
+        {
+            GUILayout.BeginVertical("box");
+            string text = "";
+            Type type = GlobalVariables.GetGlobalVariables().GetType();
+            foreach (FieldInfo fieldInfo in type.GetFields())
+            {
+                string view = "fieldInfo -> " + fieldInfo.Name + " : " + fieldInfo.GetValue(GlobalVariables.GetGlobalVariables());
+                text += view + "\n";
+                GUILayout.Label(view);
+            }
+            foreach (PropertyInfo propertyInfo in type.GetProperties())
+            {
+                try
+                {
+                    string view = "propertyInfo  -> " + propertyInfo.Name + " : \n" + propertyInfo.GetValue(GlobalVariables.GetGlobalVariables(), null);
+                    text += view + "\n";
+                    GUILayout.Label(view);
+                }
+                catch (Exception e)
+                {
+                    string view = "propertyInfo  ->   " + propertyInfo.Name + " : \n Error " + e.Message;
+                    text += view + "\n";
+                    GUILayout.Label(view);
+                }
+
+            }
+            GUILayout.EndVertical();
         }
 
         private void ViewFsmAllVariablesAndVaule()

@@ -10,10 +10,9 @@ namespace MSCTranslateChs.Script.Module
     public class BoltTip : BaseModule
     {
         private static readonly LOGGER logger = new LOGGER(typeof(BoltTip));
-        public new string ModuleComment = "螺栓提示";
+        public override string ModuleComment { get => "螺栓提示"; }
 
         public bool isShowWindow = false;
-        public new bool IsEnable = true;
 
         Rect windowsRect;
         Vector2 scrollPoint;

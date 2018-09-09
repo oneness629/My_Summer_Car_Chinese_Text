@@ -9,9 +9,8 @@ namespace MSCTranslateChs.Script.Module
     public class Money : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(Money));
-        public new string ModuleComment = "金钱调整";
+        public override string ModuleComment { get => "金钱调整"; }
 
-        public new bool IsEnable = true;
         public bool isShowWindow = false;
         Rect windowsRect;
 

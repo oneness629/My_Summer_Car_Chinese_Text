@@ -10,11 +10,9 @@ namespace MSCTranslateChs.Script.Module
     {
 
         private static LOGGER logger = new LOGGER(typeof(Develop));
-        public new string ModuleComment = "开发测试模式";
+        public override string ModuleComment { get => "开发测试模式"; }
 
         public GUIStyle guiStyle;
-
-        public new bool IsEnable = false;
 
         public bool isRayGameObject = false;
 
@@ -64,7 +62,7 @@ namespace MSCTranslateChs.Script.Module
         public override void OnGUI()
         {
             
-            GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "MSCTranslateChs开发模式", guiStyle);
+            GUI.Label(new Rect(0, 0, Screen.width, Screen.height), "MSCTranslateChs开发测试模式", guiStyle);
 
             if (isRayGameObject)
             {

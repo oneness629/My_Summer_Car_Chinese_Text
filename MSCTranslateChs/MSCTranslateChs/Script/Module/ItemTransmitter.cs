@@ -11,10 +11,9 @@ namespace MSCTranslateChs.Script.Module
     public class ItemTransmitter : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(ItemTransmitter));
-        public new string ModuleComment = "物品传送";
+        public override string ModuleComment { get => "物品传送"; }
 
         public bool isShowWindow = false;
-        public new bool IsEnable = true;
         Rect windowsRect;
         Vector2 scrollPoint;
         readonly float windowsWidth = 200;
@@ -71,50 +70,49 @@ namespace MSCTranslateChs.Script.Module
                         }
                     }
                 }
-                
-
-                float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
-                int scrollWheelInt = 0;
-                if (scrollWheel > 0)
-                {
-                    scrollWheelInt = -1;
-                }
-                else if(scrollWheel < 0)
-                {
-                    scrollWheelInt = 1;
-                }
-                selectItemKeyIndex += scrollWheelInt;
-                if (itemDict.Keys.Count <= selectItemKeyIndex || selectItemKeyIndex < 0)
-                {
-                    selectItemKeyIndex = itemDict.Keys.Count - 1;
-                }
-
-                if (Input.GetKeyDown(KeyCode.R))
-                {
-                    if (itemDict.Count > 0 && selectItemKey != null && !"".Equals(selectItemKey))
-                    {
-                        logger.LOG("是否在菜单:" + GlobalVariables.GetGlobalVariables().fsmBoolPlayerInMenu.Value);
-                        if (GlobalVariables.GetGlobalVariables().fsmBoolPlayerInMenu.Value)
-                        {
-                            GlobalVariables.GetGlobalVariables().teleport.TeleportTo(itemDict[selectItemKey], GlobalVariables.GetGlobalVariables().gameObjectPalyer);
-                        }
-                        else
-                        {
-                            TeleportToCamera(itemDict[selectItemKey]);
-                        }
-                        
-                        itemDict.Remove(selectItemKey);
-                        selectItemKey = null;
-                        selectItemKeyIndex--;
-                        if (selectItemKeyIndex < 0)
-                        {
-                            selectItemKeyIndex = 0;
-                        }
-                    }
-                    
-                }
             }
-                
+
+            float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
+            int scrollWheelInt = 0;
+            if (scrollWheel > 0)
+            {
+                scrollWheelInt = -1;
+            }
+            else if (scrollWheel < 0)
+            {
+                scrollWheelInt = 1;
+            }
+            selectItemKeyIndex += scrollWheelInt;
+            if (itemDict.Keys.Count <= selectItemKeyIndex || selectItemKeyIndex < 0)
+            {
+                selectItemKeyIndex = itemDict.Keys.Count - 1;
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (itemDict.Count > 0 && selectItemKey != null && !"".Equals(selectItemKey))
+                {
+                    logger.LOG("是否在菜单:" + GlobalVariables.GetGlobalVariables().fsmBoolPlayerInMenu.Value);
+                    if (GlobalVariables.GetGlobalVariables().fsmBoolPlayerInMenu.Value)
+                    {
+                        GlobalVariables.GetGlobalVariables().teleport.TeleportTo(itemDict[selectItemKey], GlobalVariables.GetGlobalVariables().gameObjectPalyer);
+                    }
+                    else
+                    {
+                        TeleportToCamera(itemDict[selectItemKey]);
+                    }
+
+                    itemDict.Remove(selectItemKey);
+                    selectItemKey = null;
+                    selectItemKeyIndex--;
+                    if (selectItemKeyIndex < 0)
+                    {
+                        selectItemKeyIndex = 0;
+                    }
+                }
+
+            }
+
         }
         
         public void WindowFunction(int windowsId)

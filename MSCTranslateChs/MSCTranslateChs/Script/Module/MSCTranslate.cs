@@ -8,9 +8,8 @@ namespace MSCTranslateChs.Script.Module
     public class MSCTranslate : BaseModule
     {
         private static readonly LOGGER logger = new LOGGER(typeof(MSCTranslate));
-        public new string ModuleComment = "文本翻译";
+        public override string ModuleComment { get => "文本翻译"; }
 
-        public new bool IsEnable = true;
         public bool isTranslateSubtitles = true;
         public bool isTranslatePartnames = true;
         public bool isTranslateInteractions = true;

@@ -1,13 +1,14 @@
-﻿using MSCTranslateChs.Script.Module.Base;
+﻿using MSCTranslateChs.Script.Common;
+using MSCTranslateChs.Script.Module.Base;
 using UnityEngine;
 
 namespace MSCTranslateChs.Script.Module
 {
     public class WelcomeWindows: BaseModule
     {
-        public new string ModuleComment = "欢迎窗口";
+        private static LOGGER logger = new LOGGER(typeof(WelcomeWindows));
+        public override string ModuleComment { get => "欢迎窗口"; }
 
-        public new bool IsEnable = true;
         Rect welcomeWindowsRect;
         readonly float windowsWidth = 800;
         readonly float windowsHeight = 600;
@@ -52,14 +53,57 @@ namespace MSCTranslateChs.Script.Module
                 Application.OpenURL("https://steamcommunity.com/sharedfiles/filedetails/?id=1384837781");
             }
             GUILayout.EndHorizontal();
+
+            GUILayout.Label("点击下面窗口按钮将默认启用需要的功能");
+            GUILayout.BeginHorizontal("box");
+            if (GUILayout.Button("开发测试窗口"))
+            {
+                GlobalVariables.GetGlobalVariables().physicsRaycast.IsEnable = true;
+                GlobalVariables.GetGlobalVariables().develop.IsEnable = true;
+                GlobalVariables.GetGlobalVariables().developWindows.IsEnable = true;
+            }
+            if (GUILayout.Button("远程传送窗口"))
+            {
+                GlobalVariables.GetGlobalVariables().teleport.IsEnable = true;
+                GlobalVariables.GetGlobalVariables().teleport.isShowWindow = true;
+            }
+            if (GUILayout.Button("金钱调整窗口"))
+            {
+                GlobalVariables.GetGlobalVariables().money.IsEnable = true;
+                GlobalVariables.GetGlobalVariables().money.isShowWindow = true;
+            }
+            if (GUILayout.Button("螺栓提示窗口"))
+            {
+                GlobalVariables.GetGlobalVariables().physicsRaycast.IsEnable = true;
+                GlobalVariables.GetGlobalVariables().boltTip.IsEnable = true;
+                GlobalVariables.GetGlobalVariables().boltTip.isShowWindow = true;
+            }
+            if (GUILayout.Button("物品传送窗口"))
+            {
+                GlobalVariables.GetGlobalVariables().physicsRaycast.IsEnable = true;
+                GlobalVariables.GetGlobalVariables().itemTransmitter.IsEnable = true;
+                GlobalVariables.GetGlobalVariables().itemTransmitter.isShowWindow = true;
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.Label("");
+            // 凌晨12点是60度,递减 , 早上4点 299 晚上10点 116度 , 凌晨2点 260
+            // int viewHour = 1 - Mathf.FloorToInt(GlobalVariables.GetGlobalVariables().fsmFloatTimeRotationHour.Value / (360 / 12)) + 12;
+            int viewHour = 12 - Mathf.FloorToInt(GlobalVariables.GetGlobalVariables().fsmFloatTimeRotationHour.Value / (360 / 12)) + 1;
+            // 0分是360度,递减
+            int viewMinutes =  Mathf.FloorToInt((360 - GlobalVariables.GetGlobalVariables().fsmFloatTimeRotationMinute.Value) / (360 / 60));
+            GUILayout.Label("游戏内时间(好像有BUG):" + viewHour.ToString("D2") + ":" + viewMinutes.ToString("D2"));
+
+            GUILayout.Label("");
+            GUILayout.Label("超简单说明");
             GUILayout.Label("  欢迎使用我的夏季汽车中文翻译Mod(...缓慢更新...)");
-            int viewHour = 1 - Mathf.FloorToInt(GlobalVariables.GetGlobalVariables().fsmFloatTimeRotationHour.Value / (360 / 12)) + 12;
-            int viewMinutes = 60 - Mathf.FloorToInt(GlobalVariables.GetGlobalVariables().fsmFloatTimeRotationMinute.Value / (360 / 60));
-            GUILayout.Label("游戏内时间:" + viewHour.ToString("D2") + ":" + viewMinutes.ToString("D2"));
             GUILayout.Label("翻译内容：状态UI、操作动作、配件、字幕(需要打开英文字幕),中英文对照显示，不会覆盖原有英文内容。");
             GUILayout.Label("详细使用教程请参考steam中文模组指南（建议分辨率:1024x768或以上,低了?你可能看不全本Mod的所有窗口内容）");
+            GUILayout.Label("MOD加载器默认设置按\"`\"键可查看日志,如果帧数非常低,可能是本MOD或其他MOD出项异常等原因...");
+            GUILayout.Label("...可以告诉我们(GitHub的问题单或steam指南留言等)...以便解决...");
+            GUILayout.Label("");
 
-
+            GUILayout.Label("Mod明细选项");
             GlobalVariables.GetGlobalVariables().mscTranslateChs.IsEnable = GUILayout.Toggle(GlobalVariables.GetGlobalVariables().mscTranslateChs.IsEnable, "是否启用本Mod");
             GUILayout.Label("取消该选项,会加载Mod的相关信息和初始化,并启用欢迎窗口的OnGUI监听和Update");
             GUILayout.Label("(快捷键[显示/隐藏本窗口（左边ALT+W[Welcome]）/（右边ALT+W[Welcome]）]),其他所有功能均无法使用");
@@ -102,7 +146,7 @@ namespace MSCTranslateChs.Script.Module
             GUILayout.Label(" ");
             GUILayout.Label("金钱调整");
             GlobalVariables.GetGlobalVariables().money.IsEnable = GUILayout.Toggle(GlobalVariables.GetGlobalVariables().money.IsEnable, "是否启用金钱调整功能");
-            GUILayout.Label("启用后,滚动到窗口最底部,点金钱调整窗口,要多少就有多少,显示存在上限,可惜这只是个游戏...");
+            GUILayout.Label("启用后,金钱,要多少就有多少,显示存在上限,可惜这只是个游戏...");
             
             GUILayout.Label(" ");
             GUILayout.Label("物品传送");
@@ -110,35 +154,15 @@ namespace MSCTranslateChs.Script.Module
             GUILayout.Label("背包,这就是可以放无限个东东的背包 快捷键: 显示界面:TAB; 捡起/丢出物品:E/R;切换选中物品:鼠标滚轮;");
             GUILayout.Label("按下E,将能捡起来的物品传送到垃圾堆(不要传送到垃圾堆再捡起来了,这么做你除了能看到一堆东东从天上掉下来没其他意义)");
             GUILayout.Label("按下R,将能列表中选中的物品从垃圾堆中传送到你的摄像机前方;如果在列表,点击物品名称会传送到你边上而不是摄像机前方");
-            GUILayout.Label("如果列表中有内容,退出游戏后请自行到垃圾堆找(启用远程传送功能后按右边ALT+7)");
+            GUILayout.Label("如果列表中有内容,退出游戏后请自行到垃圾堆找(启用远程传送功能后按右边Ctrl+7)");
             
             GUILayout.Label(" ");
             GUILayout.Label("螺栓提示");
             GlobalVariables.GetGlobalVariables().boltTip.IsEnable = GUILayout.Toggle(GlobalVariables.GetGlobalVariables().boltTip.IsEnable, "是否启用螺栓提示功能");
-            GUILayout.Label("启用后,滚动到窗口最底部,点螺栓提示窗口");
-
-            GUILayout.BeginHorizontal("box");
-            if (GUILayout.Button("开发测试窗口"))
-            {
-                GlobalVariables.GetGlobalVariables().developWindows.IsEnable = true;
-            }
-            if (GUILayout.Button("远程传送窗口"))
-            {
-                GlobalVariables.GetGlobalVariables().teleport.isShowWindow = true;
-            }
-            if (GUILayout.Button("金钱调整窗口"))
-            {
-                GlobalVariables.GetGlobalVariables().money.isShowWindow = true;
-            }
-            if (GUILayout.Button("螺栓提示窗口"))
-            {
-                GlobalVariables.GetGlobalVariables().boltTip.isShowWindow = true;
-            }
-            if (GUILayout.Button("物品传送窗口"))
-            {
-                GlobalVariables.GetGlobalVariables().itemTransmitter.isShowWindow = true;
-            }
-            GUILayout.EndHorizontal();
+            GUILayout.Label("启用后,鼠标指向车辆,看提示(螺栓提示窗口不要关)");
+            GUILayout.Label(" ");
+           
+            
             GUILayout.EndScrollView();
             GUI.DragWindow();
         }

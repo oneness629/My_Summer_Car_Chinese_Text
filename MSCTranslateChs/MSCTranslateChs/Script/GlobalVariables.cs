@@ -5,6 +5,7 @@ using MSCTranslateChs.Script.Common;
 using HutongGames.PlayMaker;
 using MSCTranslateChs.Script.Module.Base;
 using MSCTranslateChs.Script.Module;
+using System.Reflection;
 
 namespace MSCTranslateChs.Script
 {
@@ -40,9 +41,9 @@ namespace MSCTranslateChs.Script
         public GuiGameObjectExplorer guiGameObjectExplorer = new GuiGameObjectExplorer();
 
 
-        public string fsmFloatTimeRotationHourName = "TimeRotationMinute";
+        public string fsmFloatTimeRotationHourName = "TimeRotationHour";
         public FsmFloat fsmFloatTimeRotationHour;
-        public string fsmFloatTimeRotationMinuteName = "TimeRotationHour";
+        public string fsmFloatTimeRotationMinuteName = "TimeRotationMinute";
         public FsmFloat fsmFloatTimeRotationMinute;
         public string fsmFloatPlayerMoneyName = "PlayerMoney";
         public FsmFloat fsmFloatPlayerMoney;
@@ -78,17 +79,6 @@ namespace MSCTranslateChs.Script
         public void Init()
         {
             logger.LOG("Mod初始化 ... ");
-            executeModuleList = new List<BaseModule>
-            {
-                physicsRaycast,
-                develop,
-                developWindows,
-                mscTranslate,
-                money,
-                teleport,
-                boltTip,
-                itemTransmitter
-            };
 
             ModelInit();
             GameObjectInit();
@@ -107,8 +97,32 @@ namespace MSCTranslateChs.Script
 
         public void ModelInit()
         {
+            executeModuleList = new List<BaseModule>
+            {
+                physicsRaycast,
+                develop,
+                developWindows,
+                mscTranslate,
+                money,
+                teleport,
+                boltTip,
+                itemTransmitter,
+                guiGameObjectExplorer,
+            };
+
             welcomeWindows = new WelcomeWindows();
             welcomeWindows.Init();
+
+            welcomeWindows.IsEnable = true;
+            physicsRaycast.IsEnable = true;
+            develop.IsEnable = false;
+            developWindows.IsEnable = false;
+            mscTranslate.IsEnable = true;
+            money.IsEnable = true;
+            teleport.IsEnable = true;
+            boltTip.IsEnable = true;
+            itemTransmitter.IsEnable = true;
+            guiGameObjectExplorer.IsEnable = true;
 
             foreach (BaseModule baseModule in executeModuleList)
             {
@@ -125,6 +139,21 @@ namespace MSCTranslateChs.Script
             gameObjectLandfillSpawn = GameObject.Find(gameObjectLandfillSpawnName);
             gameObjectSatsuma = GameObject.Find(gameObjectSatsumaName);
             
+        }
+
+        public void CheckIsInit()
+        {
+            // logger.LOG("CheckIsInit");
+            Type type = GetGlobalVariables().GetType();
+            foreach (FieldInfo fieldInfo in type.GetFields())
+            {
+                // logger.LOG("fieldInfo.GetValue(GetGlobalVariables()) " + fieldInfo.GetValue(GetGlobalVariables()));
+                if (Convert.ToString(fieldInfo.GetValue(GetGlobalVariables())).ToLower().Equals("null"))
+                {
+                    logger.LOG("检查到部分全局变量为空,可能尚未初始化成功,下一帧将重新初始化...过程中可能存在异常...");
+                    GetGlobalVariables().isInit = false;
+                }
+            }
         }
 
     }

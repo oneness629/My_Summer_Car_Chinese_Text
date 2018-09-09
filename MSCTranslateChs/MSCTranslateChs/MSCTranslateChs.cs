@@ -48,11 +48,14 @@ namespace MSCTranslateChs
             GlobalVariables.GetGlobalVariables().executionTime.Start("OnGUI");
             try
             {
-                if (!GlobalVariables.GetGlobalVariables().isInit || Application.loadedLevelName != "GAME")
+                GlobalVariables.GetGlobalVariables().CheckIsInit();
+                if (!GlobalVariables.GetGlobalVariables().isInit)
                 {
-                    logger.LOG("尚未初始化");
+                    logger.LOG("尚未初始化,初始化中...");
+                    GlobalVariables.GetGlobalVariables().Init();
                     return;
                 }
+                
 
                 GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.ModuleComment + onGUITip);
                 if (GlobalVariables.GetGlobalVariables().welcomeWindows.IsEnable)
@@ -98,12 +101,12 @@ namespace MSCTranslateChs
         {
             try
             {
-                if (!GlobalVariables.GetGlobalVariables().isInit || Application.loadedLevelName != "GAME")
+                if (!GlobalVariables.GetGlobalVariables().isInit)
                 {
                     logger.LOG("尚未初始化,初始化中...");
                     GlobalVariables.GetGlobalVariables().Init();
+                    return;
                 }
-
 
                 GlobalVariables.GetGlobalVariables().executionTime.Start(GlobalVariables.GetGlobalVariables().welcomeWindows.ModuleComment + updateTip);
                 GlobalVariables.GetGlobalVariables().welcomeWindows.Update();
@@ -130,7 +133,7 @@ namespace MSCTranslateChs
                     }
                     GlobalVariables.GetGlobalVariables().executionTime.End(baseModule.ModuleComment + updateTip);
                 }
-
+                
             }
             catch (Exception e)
             {

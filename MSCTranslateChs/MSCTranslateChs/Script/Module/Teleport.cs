@@ -10,9 +10,8 @@ namespace MSCTranslateChs.Script.Module
     public class Teleport : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(Teleport));
-        public new string ModuleComment = "远程传送";
+        public override string ModuleComment { get => "远程传送"; }
 
-        public new bool IsEnable = true;
         public bool isShowWindow = false;
         Rect windowsRect;
         Vector2 scrollPoint;
@@ -45,7 +44,7 @@ namespace MSCTranslateChs.Script.Module
         {
 
             windowsRect = new Rect(Screen.width - windowsWidth, Screen.height - windowsHeight , windowsWidth, windowsHeight);
-
+            targetDynamicPosition.Clear();
             targetDynamicPosition.Add("SATSUMA", SATSUMA);
             targetDynamicPosition.Add("FERNDALE", FERNDALE);
             targetDynamicPosition.Add("GIFU", GIFU);
@@ -53,7 +52,7 @@ namespace MSCTranslateChs.Script.Module
             targetDynamicPosition.Add("HAYOSIKO", HAYOSIKO);
             targetDynamicPosition.Add("JONNEZ_ES", JONNEZ_ES);
             targetDynamicPosition.Add("RCO_RUSCKO12", RCO_RUSCKO12);
-
+            targetStaticPosition.Clear();
             targetStaticPosition.Add("GRAVE_YARD_SPAWN", GRAVE_YARD_SPAWN);
             targetStaticPosition.Add("SPAWN_TO_STORE", SPAWN_TO_STORE);
             targetStaticPosition.Add("SPAWN_TO_REPAIR", SPAWN_TO_REPAIR);

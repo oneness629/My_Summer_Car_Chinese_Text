@@ -11,9 +11,8 @@ namespace MSCTranslateChs.Script.Module
     public class GuiGameObjectExplorer : BaseModule
     {
         private static LOGGER logger = new LOGGER(typeof(GuiGameObjectExplorer));
-        public new string ModuleComment = "GameObject查看";
+        public override string ModuleComment { get => "GameObject查看"; }
 
-        public new bool IsEnable = true;
         public bool isShow = false;
         public float windowsWidth = 1000;
         public float windowsHeight = 600;
