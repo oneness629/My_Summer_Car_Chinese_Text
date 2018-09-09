@@ -189,7 +189,7 @@ namespace MSCTranslateChs.Script.Module
                     FsmFloat fsmFloat = playMakerFSM.FsmVariables.FindFsmFloat("Tightness");
                     if (fsmFloat != null && fsmFloat.Value > 0f)
                     {
-                        logger.LOG(gameObject + "Tightness属性大于0");
+                        logger.LOG(gameObject + "Tightness属性大于0,螺栓/丝已安装");
                         return false;
                     }
                 }

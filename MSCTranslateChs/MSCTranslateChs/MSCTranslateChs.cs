@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-[assembly: AssemblyVersionAttribute("2.7")]
+[assembly: AssemblyVersionAttribute("2.8")]
 namespace MSCTranslateChs
 {
     [ComVisible(false)]
@@ -19,9 +19,9 @@ namespace MSCTranslateChs
 
         public override string Name => "MSCTranslateChs";
 
-        public override string Author => "oneness629";
+        public override string Author => "oneness629(program) & MapleCrown(translate)";
 
-        public override string Version => "2.7";
+        public override string Version => "2.8";
 
         public override bool UseAssetsFolder => true;
 
@@ -51,7 +51,7 @@ namespace MSCTranslateChs
                 GlobalVariables.GetGlobalVariables().CheckIsInit();
                 if (!GlobalVariables.GetGlobalVariables().isInit)
                 {
-                    logger.LOG("ÉÐÎ´³õÊ¼»¯,³õÊ¼»¯ÖÐ...");
+                    logger.LOG("å°šæœªåˆå§‹åŒ–,åˆå§‹åŒ–ä¸­...");
                     GlobalVariables.GetGlobalVariables().Init();
                     return;
                 }
@@ -80,7 +80,7 @@ namespace MSCTranslateChs
                         }
                         catch (Exception e)
                         {
-                            logger.LOG(baseModule.ModuleComment + " OnGUI ÖÐ³öÏÖÒì³£ -> " + e.Message);
+                            logger.LOG(baseModule.ModuleComment + " OnGUI ä¸­å‡ºçŽ°å¼‚å¸¸ -> " + e.Message);
                             logger.LOG(e);
                         }
                     }
@@ -103,7 +103,7 @@ namespace MSCTranslateChs
             {
                 if (!GlobalVariables.GetGlobalVariables().isInit)
                 {
-                    logger.LOG("ÉÐÎ´³õÊ¼»¯,³õÊ¼»¯ÖÐ...");
+                    logger.LOG("å°šæœªåˆå§‹åŒ–,åˆå§‹åŒ–ä¸­...");
                     GlobalVariables.GetGlobalVariables().Init();
                     return;
                 }
@@ -127,7 +127,7 @@ namespace MSCTranslateChs
                         }
                         catch (Exception e)
                         {
-                            logger.LOG(baseModule.ModuleComment + " Update ÖÐ³öÏÖÒì³£ -> " + e.Message);
+                            logger.LOG(baseModule.ModuleComment + " Update ä¸­å‡ºçŽ°å¼‚å¸¸ -> " + e.Message);
                             logger.LOG(e);
                         }
                     }
