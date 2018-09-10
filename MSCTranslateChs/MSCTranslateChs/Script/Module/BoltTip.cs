@@ -80,7 +80,13 @@ namespace MSCTranslateChs.Script.Module
                 foreach (RaycastHit hitInfo in GlobalVariables.GetGlobalVariables().physicsRaycast.mainCameraRaycastHits)
                 {
                     GameObject targetGameObject = hitInfo.collider.gameObject;
-                    if (GlobalVariables.GetGlobalVariables().gameObjectSatsumaName.Equals(targetGameObject.transform.root.gameObject.name))
+                    if (GlobalVariables.GetGlobalVariables().gameObjectSatsuma == targetGameObject.transform.root.gameObject
+                        || 
+                            (
+                            GlobalVariables.GetGlobalVariables().gameObjectEngine != null && 
+                            GlobalVariables.GetGlobalVariables().gameObjectEngine == targetGameObject.transform.root.gameObject
+                            )
+                        )
                     {
                         Color heightLightColor = Color.yellow;
                         GameObject partAssembledGameObject = null;
@@ -88,6 +94,8 @@ namespace MSCTranslateChs.Script.Module
                         FsmFloat fsmFloatTireHealth = null;
                         FsmString fsmStringPart = null;
                         List<GameObject> allBoltPmGameObjectList = null;
+
+
                         if (targetGameObject.name.ToLower().IndexOf("boltpm") > -1)
                         {
                             PlayMakerFSM[] playMakerFSMArray = targetGameObject.GetComponents<PlayMakerFSM>();
@@ -108,81 +116,72 @@ namespace MSCTranslateChs.Script.Module
                             {
                                 allBoltPmGameObjectList = GameObjectUtil.GetChildGameObjectLikeName(parentGameObject, "boltpm");
                             }
-                        }
-                        if (partAssembledGameObject == null)
-                        {
-                            partAssembledGameObject = targetGameObject;
-                        }
-                        
-                        PlayMakerFSM[] partAssembledPlayMakerFSMArray = partAssembledGameObject.GetComponents<PlayMakerFSM>();
 
-                        foreach (PlayMakerFSM playMakerFSM in partAssembledPlayMakerFSMArray)
-                        {
-                            if (playMakerFSM != null && playMakerFSM.FsmName != null && 
-                                    (
-                                    playMakerFSM.FsmName.ToLower().Equals("use") ||
-                                    playMakerFSM.FsmName.ToLower().Equals("boltcheck")
+                            PlayMakerFSM[] partAssembledPlayMakerFSMArray = partAssembledGameObject.GetComponents<PlayMakerFSM>();
+
+                            foreach (PlayMakerFSM playMakerFSM in partAssembledPlayMakerFSMArray)
+                            {
+                                if (playMakerFSM != null && playMakerFSM.FsmName != null &&
+                                        (
+                                        playMakerFSM.FsmName.ToLower().Equals("use") ||
+                                        playMakerFSM.FsmName.ToLower().Equals("boltcheck")
+                                        )
                                     )
-                                )
-                            {
-                                fsmFloatTightness = playMakerFSM.FsmVariables.FindFsmFloat("Tightness");
-                                fsmFloatTireHealth = playMakerFSM.FsmVariables.FindFsmFloat("TireHealth");
-                            }
-                            if (playMakerFSM != null && playMakerFSM.FsmName != null && playMakerFSM.FsmName.ToLower().Equals("paint"))
-                            {
-                                fsmStringPart = playMakerFSM.FsmVariables.FindFsmString("Part");
-                            }
-                        }
-                        if (partAssembledGameObject == null || fsmFloatTightness == null) // || fsmFloatTireHealth == null || fsmStringPart == null)
-                        {
-                            text += "\n 取不到部件数据 路径 -> partAssembled:" + partAssembledGameObject + " Tightness:" + fsmFloatTightness + " TireHealth:" + fsmFloatTireHealth + " Part" + fsmStringPart +  "\n";
-                            text += "\n -> " + GameObjectUtil.GetGameObjectPath(targetGameObject) + "\n";
-                        }
-                        else
-                        {
-                            text += "\n -> " + GameObjectUtil.GetGameObjectPath(targetGameObject) + "\n";
-                            if (fsmStringPart == null)
-                            {
-                                text += "\n 部件名称 -> (GameObject)" + partAssembledGameObject.name.Replace("(Clone)", "").Replace("(itemx)", "").Replace("(xxxxx)", "") + "\n";
-                            }
-                            else
-                            {
-                                text += "\n 部件名称 -> (PART)" + fsmStringPart.Value + "\n";
-                            }
-                            if (fsmFloatTireHealth == null)
-                            {
-                                text += "\n 部件生命值 -> 无\n";
-                            }
-                            else
-                            {
-                                text += "\n 部件生命值 -> " + fsmFloatTireHealth.Value + "\n";
-                            }
-                            if (allBoltPmGameObjectList == null)
-                            {
-                                allBoltPmGameObjectList = GameObjectUtil.GetChildGameObjectLikeName(partAssembledGameObject, "boltpm");
-                            }
-                            
-                            text += "\n 部件螺栓情况 -> " + fsmFloatTightness.Value + " -> ";
-                            if (allBoltPmGameObjectList.Count * 8 == fsmFloatTightness.Value)
-                            {
-                                text += "已经锁紧";
-                                heightLightColor = Color.yellow;
-                            }
-                            else
-                            {
-                                text += "尚未锁紧,请检查.";
-                                heightLightColor = Color.red;
-                            }
-                            text += "\n一共应该有" + allBoltPmGameObjectList.Count + "个螺栓/丝";
-                            text += "应该是" + Convert.ToInt32(Math.Round(targetGameObject.transform.localScale.x * 10)) + "号扳手";
-
-                            foreach (GameObject gameObject in allBoltPmGameObjectList)
-                            {
-                                if (gameObject == targetGameObject)
                                 {
-                                    continue;
+                                    fsmFloatTightness = playMakerFSM.FsmVariables.FindFsmFloat("Tightness");
+                                    fsmFloatTireHealth = playMakerFSM.FsmVariables.FindFsmFloat("TireHealth");
                                 }
-                                HeightLight(gameObject, heightLightColor);
+                                if (playMakerFSM != null && playMakerFSM.FsmName != null && playMakerFSM.FsmName.ToLower().Equals("paint"))
+                                {
+                                    fsmStringPart = playMakerFSM.FsmVariables.FindFsmString("Part");
+                                }
+                            }
+                            if (partAssembledGameObject == null || fsmFloatTightness == null) // || fsmFloatTireHealth == null || fsmStringPart == null)
+                            {
+                                text += "\n 取不到部件数据 路径 -> partAssembled:" + partAssembledGameObject + " Tightness:" + fsmFloatTightness + " TireHealth:" + fsmFloatTireHealth + " Part" + fsmStringPart + "\n";
+                                text += "\n -> " + GameObjectUtil.GetGameObjectPath(targetGameObject) + "\n";
+                            }
+                            else
+                            {
+                                text += "\n -> " + GameObjectUtil.GetGameObjectPath(targetGameObject) + "\n";
+                                if (fsmStringPart == null)
+                                {
+                                    text += "\n 部件名称 -> (GameObject)" + partAssembledGameObject.name.Replace("(Clone)", "").Replace("(itemx)", "").Replace("(xxxxx)", "") + "\n";
+                                }
+                                else
+                                {
+                                    text += "\n 部件名称 -> (PART)" + fsmStringPart.Value + "\n";
+                                }
+                                if (fsmFloatTireHealth == null)
+                                {
+                                    text += "\n 部件生命值 -> 无\n";
+                                }
+                                else
+                                {
+                                    text += "\n 部件生命值 -> " + fsmFloatTireHealth.Value + "\n";
+                                }
+                                text += "\n 部件螺栓情况 -> " + fsmFloatTightness.Value + " -> ";
+                                if (allBoltPmGameObjectList.Count * 8 == fsmFloatTightness.Value)
+                                {
+                                    text += "已经锁紧";
+                                    heightLightColor = Color.yellow;
+                                }
+                                else
+                                {
+                                    text += "尚未锁紧,请检查.";
+                                    heightLightColor = Color.red;
+                                }
+                                text += "\n一共应该有" + allBoltPmGameObjectList.Count + "个螺栓/丝";
+                                text += "应该是" + Convert.ToInt32(Math.Round(targetGameObject.transform.localScale.x * 10)) + "号扳手";
+
+                                foreach (GameObject gameObject in allBoltPmGameObjectList)
+                                {
+                                    if (gameObject == targetGameObject)
+                                    {
+                                        continue;
+                                    }
+                                    HeightLight(gameObject, heightLightColor);
+                                }
                             }
                         }
 

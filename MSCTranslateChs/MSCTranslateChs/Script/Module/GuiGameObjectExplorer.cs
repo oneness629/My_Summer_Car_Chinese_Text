@@ -63,7 +63,7 @@ namespace MSCTranslateChs.Script.Module
                     parentGameObject = null;
                     gameObjectList = GameObjectUtil.GetAllGameObject();
                 }
-                if (GUILayout.Button("所有GameObject写入txt(out目录,会卡)"))
+                if (GUILayout.Button("所有GameObject写入txt(out目录,会卡到吐血)"))
                 {
                     parentGameObject = null;
                     gameObjectList = GameObjectUtil.GetAllGameObject();
@@ -129,11 +129,11 @@ namespace MSCTranslateChs.Script.Module
                             parentGameObject = gameObject;
                             gameObjectList = GameObjectUtil.GetChildGameObjectList(gameObject);
                         }
-                        if (GUILayout.Button("去"))
+                        if (GUILayout.Button("传过去"))
                         {
                             GlobalVariables.GetGlobalVariables().teleport.TeleportTo(GameObjectUtil.GetGameObjectPath(gameObject));
                         }
-                        if (GUILayout.Button("来"))
+                        if (GUILayout.Button("传过来"))
                         {
                             GameObject playerGameObject = GameObject.Find("PLAYER");
                             Vector3 clonePosition = new Vector3(playerGameObject.transform.position.x, playerGameObject.transform.position.y + 3f, playerGameObject.transform.position.z);
@@ -177,7 +177,7 @@ namespace MSCTranslateChs.Script.Module
                     GUILayout.Label("选中GameObject:" + GameObjectUtil.GetGameObjectPath(selectGameObject));
                     if (GUILayout.Button("写入txt"))
                     {
-                        File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), "_gameObject.txt"), GameObjectUtil.GetGameObjectText(selectGameObject, 0, false, true, true, false, false));
+                        File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), "_gameObject.txt"), GameObjectUtil.GetGameObjectText(selectGameObject, 0, true, true, true, false, false));
                     }
 
                     viewScrollPosition = GUILayout.BeginScrollView(viewScrollPosition);
@@ -219,12 +219,12 @@ namespace MSCTranslateChs.Script.Module
 
                         GUILayout.EndVertical();
                     }
-
-                    GUILayout.EndScrollView();
                     if (GUILayout.Button("写入显示内容到txt"))
                     {
                         File.WriteAllText(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), "_gameObjectViewText.txt"), text);
                     }
+                    GUILayout.EndScrollView();
+                    
                 }
                 GUILayout.EndArea();
 

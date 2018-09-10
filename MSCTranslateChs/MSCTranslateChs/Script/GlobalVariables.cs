@@ -39,6 +39,7 @@ namespace MSCTranslateChs.Script
         public ItemTransmitter itemTransmitter = new ItemTransmitter();
         public MSCTranslate mscTranslate = new MSCTranslate();
         public GuiGameObjectExplorer guiGameObjectExplorer = new GuiGameObjectExplorer();
+        public CarReport carReport = new CarReport();
 
 
         public string fsmFloatTimeRotationHourName = "TimeRotationHour";
@@ -62,10 +63,18 @@ namespace MSCTranslateChs.Script
         public string gameObjectLandfillSpawnName = "LandfillSpawn";
         public GameObject gameObjectLandfillSpawn;
 
-        public String gameObjectSatsumaName = "SATSUMA(557kg, 248)";
+        public string gameObjectSatsumaName = "SATSUMA(557kg, 248)";
         public GameObject gameObjectSatsuma;
 
+        public string gameObjectEngineName = "block(Clone)";
+        public GameObject gameObjectEngine;
+
         public List<BaseModule> executeModuleList;
+
+        public List<string> checkWhiteList = new List<string>()
+        {
+            "gameObjectEngine"
+        };
 
         private GlobalVariables()
         {
@@ -138,7 +147,10 @@ namespace MSCTranslateChs.Script
             gameObjectGuiHud = GameObject.Find(gameObjectGuiHudName);
             gameObjectLandfillSpawn = GameObject.Find(gameObjectLandfillSpawnName);
             gameObjectSatsuma = GameObject.Find(gameObjectSatsumaName);
+            gameObjectEngine = GameObject.Find(gameObjectEngineName);
             
+
+
         }
 
         public void CheckIsInit()
@@ -150,8 +162,17 @@ namespace MSCTranslateChs.Script
                 // logger.LOG("fieldInfo.GetValue(GetGlobalVariables()) " + fieldInfo.GetValue(GetGlobalVariables()));
                 if (Convert.ToString(fieldInfo.GetValue(GetGlobalVariables())).ToLower().Equals("null"))
                 {
-                    logger.LOG("检查到部分全局变量为空,可能尚未初始化成功,下一帧将重新初始化...过程中可能存在异常...");
-                    GetGlobalVariables().isInit = false;
+                    if (checkWhiteList.Contains(fieldInfo.Name))
+                    {
+                        logger.LOG("检查到部分全局变量为空,但是该变量在白名单中...");
+                        
+                    }
+                    else
+                    {
+                        logger.LOG("检查到部分全局变量为空,可能尚未初始化成功,下一帧将重新初始化...过程中可能存在异常...");
+                        GetGlobalVariables().isInit = false;
+                    }
+                    
                 }
             }
         }

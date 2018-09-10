@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Script\Module\Base\BaseModule.cs" />
+    <Compile Include="Script\Module\CarReport.cs" />
     <Compile Include="Script\Module\BoltTip.cs" />
     <Compile Include="Script\Module\PhysicsRaycast.cs" />
     <Compile Include="Script\GlobalVariables.cs" />
