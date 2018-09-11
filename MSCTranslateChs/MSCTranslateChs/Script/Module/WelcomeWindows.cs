@@ -78,6 +78,11 @@ namespace MSCTranslateChs.Script.Module
                 GlobalVariables.GetGlobalVariables().boltTip.IsEnable = true;
                 GlobalVariables.GetGlobalVariables().boltTip.isShowWindow = true;
             }
+            if (GUILayout.Button("车辆报告窗口"))
+            {
+                GlobalVariables.GetGlobalVariables().carReport.IsEnable = true;
+                GlobalVariables.GetGlobalVariables().carReport.isShowWindow = true;
+            }
             if (GUILayout.Button("物品传送窗口"))
             {
                 GlobalVariables.GetGlobalVariables().physicsRaycast.IsEnable = true;
@@ -155,14 +160,20 @@ namespace MSCTranslateChs.Script.Module
             GUILayout.Label("按下E,将能捡起来的物品传送到垃圾堆(不要传送到垃圾堆再捡起来了,这么做你除了能看到一堆东东从天上掉下来没其他意义)");
             GUILayout.Label("按下R,将能列表中选中的物品从垃圾堆中传送到你的摄像机前方;如果在列表,点击物品名称会传送到你边上而不是摄像机前方");
             GUILayout.Label("如果列表中有内容,退出游戏后请自行到垃圾堆找(启用远程传送功能后按右边Ctrl+7)");
-            
+
             GUILayout.Label(" ");
             GUILayout.Label("螺栓提示");
             GlobalVariables.GetGlobalVariables().boltTip.IsEnable = GUILayout.Toggle(GlobalVariables.GetGlobalVariables().boltTip.IsEnable, "是否启用螺栓提示功能");
             GUILayout.Label("启用后,鼠标指向车辆,看提示(螺栓提示窗口不要关)");
             GUILayout.Label(" ");
-           
-            
+
+            GUILayout.Label(" ");
+            GUILayout.Label("车辆报告");
+            GlobalVariables.GetGlobalVariables().carReport.IsEnable = GUILayout.Toggle(GlobalVariables.GetGlobalVariables().carReport.IsEnable, "是否启用车辆报告功能");
+            GUILayout.Label("启用后,?????还没想好????怎么写");
+            GUILayout.Label(" ");
+
+
             GUILayout.EndScrollView();
             GUI.DragWindow();
         }

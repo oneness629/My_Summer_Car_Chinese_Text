@@ -22,7 +22,8 @@ namespace MSCTranslateChs.Script
         public const int windowsIdByMoney = 6294;
         public const int windowsIdByItemTransmitter = 6295;
         public const int windowsIdByGuiGameObjectExplorer = 6296;
-
+        public const int windowsIdByCarReport = 6297;
+        
         private static readonly GlobalVariables globalVariables = new GlobalVariables();
 
         public MSCTranslateChs mscTranslateChs;
@@ -117,6 +118,7 @@ namespace MSCTranslateChs.Script
                 boltTip,
                 itemTransmitter,
                 guiGameObjectExplorer,
+                carReport,
             };
 
             welcomeWindows = new WelcomeWindows();

@@ -107,8 +107,7 @@ namespace MSCTranslateChs.Script.Module
                         GameObject gameObject = hitInfo.collider.gameObject;
                         if (gameObject != null)
                         {
-                            text += GameObjectUtil.GetGameObjectText(gameObject);
-                            
+                            text += gameObject.name + "->"  + GameObjectUtil.GetGameObjectPath(gameObject);
                         }
                     }
                 }

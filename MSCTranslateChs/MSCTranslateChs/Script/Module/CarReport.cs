@@ -25,7 +25,7 @@ namespace MSCTranslateChs.Script.Module
         public float windowsHeight = 600;
 
         // 名称（车辆/引擎） 对应部件和螺栓
-        public Dictionary<string, Dictionary<string, object>> reportDict = new Dictionary<string, Dictionary<string, object>>();
+        public static Dictionary<string, Dictionary<string, object>> reportDict = new Dictionary<string, Dictionary<string, object>>();
 
         public override void Init()
         {
@@ -36,7 +36,7 @@ namespace MSCTranslateChs.Script.Module
         {
             if (isShowWindow)
             {
-                windowsRect = GUI.Window(GlobalVariables.windowsIdByBoltTip, windowsRect, WindowFunction, "车辆报告");
+                windowsRect = GUI.Window(GlobalVariables.windowsIdByCarReport, windowsRect, WindowFunction, "车辆报告");
             }
         }
 
@@ -74,12 +74,13 @@ namespace MSCTranslateChs.Script.Module
                 Dictionary<GameObject, List<GameObject>> partDict = new Dictionary<GameObject, List<GameObject>>();
                 if (partAndBoltDict.ContainsKey(CarReport.PART_AND_BOLT))
                 {
-                    partAndBoltDict[CarReport.PART_AND_BOLT] = allBoltPmGameObjectList.Count;
+                    partAndBoltDict[CarReport.PART_AND_BOLT] = partDict;
                 }
                 else
                 {
-                    partAndBoltDict.Add(CarReport.PART_AND_BOLT, allBoltPmGameObjectList.Count);
+                    partAndBoltDict.Add(CarReport.PART_AND_BOLT, partDict);
                 }
+
 
                 foreach (GameObject booltPmGameObject in allBoltPmGameObjectList)
                 {
@@ -116,14 +117,35 @@ namespace MSCTranslateChs.Script.Module
             {
                 GUILayout.Label("");
                 GUILayout.Label(name);
-                Dictionary<string, List<GameObject>> partAndBoltDict = reportDict[name][CarReport.PART_AND_BOLT] as Dictionary<GameObject, List<GameObject>>;
-                Dictionary<GameObject, List<GameObject>> partAndBoltDict = reportDict[name][CarReport.PART_AND_BOLT] as Dictionary<GameObject, List<GameObject>>;
-                GUILayout.Label("已安装部件一共有个" +  + "螺栓/丝");
+                if (reportDict.ContainsKey(name))
+                {
+                    Dictionary<string, object> partAndBoltDict = reportDict[name] as Dictionary<string, object>;
+                    if (partAndBoltDict.ContainsKey(CarReport.BOLT_COUNT) && partAndBoltDict.ContainsKey(CarReport.PART_AND_BOLT))
+                    {
+                        int boltCount = Convert.ToInt16(partAndBoltDict[CarReport.BOLT_COUNT]);
+                        Dictionary<GameObject, List<GameObject>> partDict = partAndBoltDict[CarReport.PART_AND_BOLT] as Dictionary<GameObject, List<GameObject>>;
 
+                        GUILayout.Label("已安装部件一共有个" + boltCount + "螺栓/丝");
+
+                        foreach (GameObject partGameObject in partDict.Keys)
+                        {
+                            GUILayout.Label("部件名称:" + partGameObject.name);
+                            List<GameObject> boltPmGameObjectList = partDict[partGameObject];
+                            if (boltPmGameObjectList != null)
+                            {
+                                GUILayout.Label("该部件有" + boltPmGameObjectList .Count + "个螺栓/丝");
+                            }
+                            else
+                            {
+                                GUILayout.Label("该部件没有螺栓/丝");
+                            }
+
+                        }
+
+                    }
+                }
             }
             
-            
-           
             GUILayout.EndScrollView();
             GUI.DragWindow();
         }
