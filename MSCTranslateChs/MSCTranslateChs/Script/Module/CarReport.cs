@@ -57,9 +57,10 @@ namespace MSCTranslateChs.Script.Module
                 {
                     partAndBoltDict = reportDict[name];
                 }
-                
 
-                List<GameObject> allBoltPmGameObjectList = GameObjectUtil.GetChildGameObjectLikeName(rootGameObject, "boltpm");
+
+                // List<GameObject> allBoltPmGameObjectList = GameObjectUtil.GetChildGameObjectLikeName(rootGameObject, "boltpm");
+                List<GameObject> allBoltPmGameObjectList = GameObjectUtil.FindChildGameObjectByLikeName(rootGameObject, "boltpm");
                 if (partAndBoltDict.ContainsKey(CarReport.BOLT_COUNT))
                 {
                     partAndBoltDict[CarReport.BOLT_COUNT] = allBoltPmGameObjectList.Count;
