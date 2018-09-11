@@ -11,7 +11,11 @@ namespace MSCTranslateChs.Script.Module
     public class CarReport : BaseModule
     {
         private static readonly LOGGER logger = new LOGGER(typeof(CarReport));
+        public static readonly string BOLT_COUNT = "bolt_count";
+        public static readonly string PART_AND_BOLT = "part_and_bolt";
+
         public override string ModuleComment { get => "车辆报告"; }
+        
 
         public bool isShowWindow = false;
 
@@ -20,6 +24,7 @@ namespace MSCTranslateChs.Script.Module
         public float windowsWidth = 800;
         public float windowsHeight = 600;
 
+        // 名称（车辆/引擎） 对应部件和螺栓
         public Dictionary<string, Dictionary<string, object>> reportDict = new Dictionary<string, Dictionary<string, object>>();
 
         public override void Init()
@@ -41,12 +46,57 @@ namespace MSCTranslateChs.Script.Module
             foreach (GameObject rootGameObject in checkGameObjectList)
             {
                 string name = GetShowRootGameObjectName(rootGameObject);
-                Dictionary<string, object> dict = new Dictionary<string, object>();
-                dict.Add(name, dict);
+                Dictionary<string, object> partAndBoltDict = null;
+
+                if (!reportDict.ContainsKey(name))
+                {
+                    partAndBoltDict = new Dictionary<string, object>();
+                    reportDict.Add(name, partAndBoltDict);
+                }
+                else
+                {
+                    partAndBoltDict = reportDict[name];
+                }
+                
 
                 List<GameObject> allBoltPmGameObjectList = GameObjectUtil.GetChildGameObjectLikeName(rootGameObject, "boltpm");
+                if (partAndBoltDict.ContainsKey(CarReport.BOLT_COUNT))
+                {
+                    partAndBoltDict[CarReport.BOLT_COUNT] = allBoltPmGameObjectList.Count;
+                }
+                else
+                {
+                    partAndBoltDict.Add(CarReport.BOLT_COUNT, allBoltPmGameObjectList.Count);
+                }
 
-                dict.Add(CarReport.BOLT_COUNT);
+
+                // 部件GameObject -> 螺栓GameObject List
+                Dictionary<GameObject, List<GameObject>> partDict = new Dictionary<GameObject, List<GameObject>>();
+                if (partAndBoltDict.ContainsKey(CarReport.PART_AND_BOLT))
+                {
+                    partAndBoltDict[CarReport.PART_AND_BOLT] = allBoltPmGameObjectList.Count;
+                }
+                else
+                {
+                    partAndBoltDict.Add(CarReport.PART_AND_BOLT, allBoltPmGameObjectList.Count);
+                }
+
+                foreach (GameObject booltPmGameObject in allBoltPmGameObjectList)
+                {
+                    FsmGameObject partFsmGameObject = GameObjectUtil.GetPlayMakerFSMGameObject(booltPmGameObject, "screw", "PartAssembled");
+                    if (partFsmGameObject != null && partFsmGameObject.Value != null)
+                    {
+                        if (partDict.ContainsKey(partFsmGameObject.Value))
+                        {
+                            partDict[partFsmGameObject.Value].Add(booltPmGameObject);
+                        }
+                        else
+                        {
+                            partDict.Add(partFsmGameObject.Value , new List<GameObject>() { booltPmGameObject });
+                        }
+                    }
+                }
+
 
             }
 
@@ -61,6 +111,17 @@ namespace MSCTranslateChs.Script.Module
             {
                 isShowWindow = false;
             }
+
+            foreach (string name in reportDict.Keys)
+            {
+                GUILayout.Label("");
+                GUILayout.Label(name);
+                Dictionary<string, List<GameObject>> partAndBoltDict = reportDict[name][CarReport.PART_AND_BOLT] as Dictionary<GameObject, List<GameObject>>;
+                Dictionary<GameObject, List<GameObject>> partAndBoltDict = reportDict[name][CarReport.PART_AND_BOLT] as Dictionary<GameObject, List<GameObject>>;
+                GUILayout.Label("已安装部件一共有个" +  + "螺栓/丝");
+
+            }
+            
             
            
             GUILayout.EndScrollView();

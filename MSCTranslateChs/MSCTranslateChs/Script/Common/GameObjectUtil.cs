@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HutongGames.PlayMaker;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +10,20 @@ namespace MSCTranslateChs.Script.Common
 {
     class GameObjectUtil
     {
+        public static FsmGameObject GetPlayMakerFSMGameObject(GameObject targetGameObject, string fsmNameLower, string variablesName)
+        {
+            PlayMakerFSM[] playMakerFSMArray = targetGameObject.GetComponents<PlayMakerFSM>();
+
+            foreach (PlayMakerFSM playMakerFSM in playMakerFSMArray)
+            {
+                if (playMakerFSM != null && playMakerFSM.FsmName != null && playMakerFSM.FsmName.ToLower().Equals(fsmNameLower))
+                {
+                    return playMakerFSM.FsmVariables.FindFsmGameObject(variablesName);
+                }
+            }
+            return null;
+        }
+
 
         public static List<GameObject> GetChildGameObjectList(GameObject gameObject)
         {
