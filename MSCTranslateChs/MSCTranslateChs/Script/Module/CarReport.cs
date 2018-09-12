@@ -4,6 +4,7 @@ using UnityEngine;
 using MSCTranslateChs.Script.Common;
 using MSCTranslateChs.Script.Module.Base;
 using HutongGames.PlayMaker;
+using MSCTranslateChs.Script.Common.Translate;
 
 namespace MSCTranslateChs.Script.Module
 {
@@ -189,7 +190,10 @@ namespace MSCTranslateChs.Script.Module
 
                         foreach (GameObject partGameObject in partDict.Keys)
                         {
-                            GUILayout.Label("部件名称:" + partGameObject.name);
+                            string partName = partGameObject.name.Replace("_", " ").Replace("(Clone)", "").Replace("(itemx)", "").Replace("(xxxxx)", "");
+
+                            GUILayout.Label("部件名称:" + partName + "(" + GlobalVariables.GetGlobalVariables().mscTranslate.translateText.TranslateString(partName, TranslateText.DICT_PARTNAME) + ")");
+                            GUILayout.Label("路径:" + GameObjectUtil.GetGameObjectPath(partGameObject));
                             List<GameObject> boltPmGameObjectList = partDict[partGameObject];
                             if (boltPmGameObjectList != null)
                             {
@@ -202,17 +206,67 @@ namespace MSCTranslateChs.Script.Module
                                     {
                                         FsmFloat fsmFloatTightness = partAttrDataDict[CarReport.FSM_FLOAT_TIGHTNESS] as FsmFloat;
 
-                                        GUILayout.Label("部件螺栓锁定状态" + fsmFloatTightness.Value + " -> 完全锁紧需要值 -> " + (8 * boltPmGameObjectList.Count) );
-                                        if (GUILayout.Button("锁紧"))
+                                        GUILayout.Label("部件螺栓锁定状态 -> 值" + fsmFloatTightness.Value + " -> 完全锁紧值 -> " + (8 * boltPmGameObjectList.Count));
+                                        GUILayout.BeginHorizontal();
+                                        Color heightLightColor = Color.yellow;
+                                        if (fsmFloatTightness.Value == 8 * boltPmGameObjectList.Count)
                                         {
-                                            fsmFloatTightness.Value = 8 * boltPmGameObjectList.Count;
+                                            GUILayout.Label("螺栓全部锁紧");
+                                            heightLightColor = Color.yellow;
                                         }
+                                        else
+                                        {
+                                            GUILayout.Label("螺栓未完全锁紧");
+                                            heightLightColor = Color.red;
+                                        }
+                                        if (GUILayout.Button("高亮显示"))
+                                        {
+                                            foreach (GameObject boltGameObject in boltPmGameObjectList)
+                                            {
+                                                GlobalVariables.GetGlobalVariables().boltTip.HeightLightNotKeyDown(boltGameObject, heightLightColor);
+                                            }
+                                            
+                                        }
+                                        GUILayout.EndHorizontal();
                                     }
                                     if (partAttrDataDict.ContainsKey(CarReport.FSM_FLOAT_TIREHEALTH) && partAttrDataDict[CarReport.FSM_FLOAT_TIREHEALTH] != null)
                                     {
+                                        GUILayout.BeginHorizontal();
                                         FsmFloat fsmFloatTireHealth = partAttrDataDict[CarReport.FSM_FLOAT_TIREHEALTH] as FsmFloat;
                                         GUILayout.Label("部件生命值:" + fsmFloatTireHealth.Value);
-
+                                        if (GUILayout.Button("-0.1"))
+                                        {
+                                            fsmFloatTireHealth.Value -= 0.1f;
+                                        }
+                                        if (GUILayout.Button("-1"))
+                                        {
+                                            fsmFloatTireHealth.Value -= 1f;
+                                        }
+                                        if (GUILayout.Button("-10"))
+                                        {
+                                            fsmFloatTireHealth.Value -= 10f;
+                                        }
+                                        if (GUILayout.Button("0"))
+                                        {
+                                            fsmFloatTireHealth.Value = 0f;
+                                        }
+                                        if (GUILayout.Button("100"))
+                                        {
+                                            fsmFloatTireHealth.Value = 100f;
+                                        }
+                                        if (GUILayout.Button("+0.1"))
+                                        {
+                                            fsmFloatTireHealth.Value += 0.1f;
+                                        }
+                                        if (GUILayout.Button("+1"))
+                                        {
+                                            fsmFloatTireHealth.Value += 1f;
+                                        }
+                                        if (GUILayout.Button("+10"))
+                                        {
+                                            fsmFloatTireHealth.Value += 10f;
+                                        }
+                                        GUILayout.EndHorizontal();
                                     }
                                 }
                                 else

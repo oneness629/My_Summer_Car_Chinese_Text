@@ -192,7 +192,8 @@ namespace MSCTranslateChs.Script.Module
             
         }
 
-        public void HeightLight(GameObject gameObject, Color color){
+        public void HeightLight(GameObject gameObject, Color color)
+        {
             GameObject boltGameObject = GameObjectUtil.GetChildGameObjectLikeNameFirst(gameObject, "bolt");
             if (boltGameObject != null && Input.GetKey(KeyCode.LeftAlt))
             {
@@ -203,6 +204,17 @@ namespace MSCTranslateChs.Script.Module
             else
             {
                 GameObjectUtil.ChangeGameObjectMaterial(boltGameObject, defaultBoltMaterial);
+            }
+        }
+
+        public void HeightLightNotKeyDown(GameObject gameObject, Color color)
+        {
+            GameObject boltGameObject = GameObjectUtil.GetChildGameObjectLikeNameFirst(gameObject, "bolt");
+            if (boltGameObject != null)
+            {
+
+                GameObjectUtil.ChangeGameObjectMaterial(boltGameObject, activeBoltMaterial);
+                GameObjectUtil.ChangeGameObjectColor(boltGameObject, color);
             }
         }
 
