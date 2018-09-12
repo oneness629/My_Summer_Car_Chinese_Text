@@ -226,16 +226,12 @@ namespace MSCTranslateChs.Script.Module
                 isShowWindow = false;
             }
             IsEnable = GUILayout.Toggle(IsEnable, "是否启用部件螺栓提示");
-            GUILayout.Label("···应该没有人一直需要检查螺丝吧···");
             GUILayout.Label("···功能说明···");
             GUILayout.Label("1、鼠标移到螺丝上，能看到螺丝的扳手型号、部件下有几个螺丝");
-            GUILayout.Label("2、鼠标移到螺丝上，按左边的ALT，能高亮标识出这个部件的其他螺丝");
-            GUILayout.Label("3、鼠标移到到车上的任意位置（必须是车辆GameObject下面），能看到部件螺丝数量（什么部件？都是英文···我哪知道···）");
-            GUILayout.Label("4、鼠标移到到车上的任意位置（必须是车辆GameObject下面），按下左边的ALT高亮显示部件下的螺丝");
-            GUILayout.Label("5、我不能100%肯定该功能所有内容一定正确");
-            GUILayout.Label("6、为了不影响太多帧数（应该影响不大），开着这个窗口，才能使用螺栓提示，把窗口拖到一个角落去···关了就没用了");
+            GUILayout.Label("2、鼠标移到螺丝上，按左边的ALT，能高亮标(红色,黄色)识出这个部件的其他螺丝");
+            GUILayout.Label("5、我不能100%肯定该功能所有内容一定正确,比如那个一字形螺丝刀的那个提示");
             
-            if (GUILayout.Button("重置车辆中的所有螺栓/螺丝纹理"))
+            if (GUILayout.Button("重置车辆中的所有螺栓/螺丝纹理(如果你鼠标移动特别快...)"))
             {
                 List<GameObject> boltGameObjectList = GameObjectUtil.FindChildGameObjectByLikeName(GlobalVariables.GetGlobalVariables().gameObjectSatsuma, "bolt");
                 foreach (GameObject bolt in boltGameObjectList)

@@ -172,6 +172,7 @@ namespace MSCTranslateChs.Script.Module
             {
                 isShowWindow = false;
             }
+            GUILayout.Label("暂时只有列出当前车辆安装的那些部件中的所有螺栓/丝情况(数据仅供参考并非100%准确)");
 
             foreach (string name in reportDict.Keys)
             {
