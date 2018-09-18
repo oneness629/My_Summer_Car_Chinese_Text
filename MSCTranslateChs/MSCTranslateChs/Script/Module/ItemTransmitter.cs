@@ -41,12 +41,12 @@ namespace MSCTranslateChs.Script.Module
 
         public override void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Tab))
+            if (GlobalVariables.GetGlobalVariables().keyBindShowItemListUI.IsDown())
             {
                 GlobalVariables.GetGlobalVariables().itemTransmitter.isShowWindow = !GlobalVariables.GetGlobalVariables().itemTransmitter.isShowWindow;
             }
             
-            if (Input.GetKeyDown(KeyCode.E))
+            if (GlobalVariables.GetGlobalVariables().keyBindAddGameObjectToItemList.IsDown())
             {
                 if (GlobalVariables.GetGlobalVariables().physicsRaycast.mainCameraRaycastHits != null && GlobalVariables.GetGlobalVariables().physicsRaycast.mainCameraRaycastHits.Length > 0)
                 {
@@ -88,7 +88,7 @@ namespace MSCTranslateChs.Script.Module
                 selectItemKeyIndex = itemDict.Keys.Count - 1;
             }
 
-            if (Input.GetKeyDown(KeyCode.R))
+            if (GlobalVariables.GetGlobalVariables().keyBindRemoveGameObjectFormItemList.IsDown())
             {
                 if (itemDict.Count > 0 && selectItemKey != null && !"".Equals(selectItemKey))
                 {

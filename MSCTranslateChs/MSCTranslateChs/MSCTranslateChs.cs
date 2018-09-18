@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-[assembly: AssemblyVersionAttribute("2.8")]
+[assembly: AssemblyVersionAttribute("2.9")]
 namespace MSCTranslateChs
 {
     [ComVisible(false)]
@@ -19,9 +19,9 @@ namespace MSCTranslateChs
 
         public override string Name => "MSCTranslateChs";
 
-        public override string Author => "oneness629(program) & MapleCrown(translate)";
+        public override string Author => "oneness629(program)\n & \nMapleCrown(translate)";
 
-        public override string Version => "2.8";
+        public override string Version => "2.9";
 
         public override bool UseAssetsFolder => true;
 
@@ -35,6 +35,23 @@ namespace MSCTranslateChs
             try
             {
                 GlobalVariables.GetGlobalVariables().mscTranslateChs = this;
+
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindShowWelcomeWindows);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindHideWelcomeWindows);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindTargetTeleportToPlayer);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindStaticTargetTeleportToPlayer);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindPlayerTeleportToTarget);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindGameOverTextToTxt);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindAddGameObjectToItemList);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindRemoveGameObjectFormItemList);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindShowItemListUI);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindShowDevelopWindows);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindHideDevelopWindows);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindReadAllTxt);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindWriteGameObjectToTxt);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindWriteFVToTxt);
+                Keybind.Add(this, GlobalVariables.GetGlobalVariables().keyBindShowOtherBolt);
+
             }
             catch (Exception e)
             {

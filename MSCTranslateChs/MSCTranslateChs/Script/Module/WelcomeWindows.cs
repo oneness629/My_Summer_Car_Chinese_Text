@@ -30,11 +30,11 @@ namespace MSCTranslateChs.Script.Module
 
         public override void Update()
         {
-            if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.W))
+            if (GlobalVariables.GetGlobalVariables().keyBindShowWelcomeWindows.IsDown())
             {
                 GlobalVariables.GetGlobalVariables().welcomeWindows.IsEnable = true;
             }
-            if (Input.GetKey(KeyCode.RightAlt) && Input.GetKey(KeyCode.W))
+            if (GlobalVariables.GetGlobalVariables().keyBindHideWelcomeWindows.IsDown())
             {
                 GlobalVariables.GetGlobalVariables().welcomeWindows.IsEnable = false;
             }
@@ -105,6 +105,7 @@ namespace MSCTranslateChs.Script.Module
             GUILayout.Label("翻译内容：状态UI、操作动作、配件、字幕(需要打开英文字幕),中英文对照显示，不会覆盖原有英文内容。");
             GUILayout.Label("详细使用教程请参考steam中文模组指南（建议分辨率:1024x768或以上,低了?你可能看不全本Mod的所有窗口内容）");
             GUILayout.Label("MOD加载器默认设置按\"`\"键可查看日志,如果帧数非常低,可能是本MOD或其他MOD出项异常等原因...");
+            GUILayout.Label("如果快捷键和您的按键冲突,请按左边Ctrl+M,找到本Mod,并修改对应快捷键");
             GUILayout.Label("...可以告诉我们(GitHub的问题单或steam指南留言等)...以便解决...");
             GUILayout.Label("");
 

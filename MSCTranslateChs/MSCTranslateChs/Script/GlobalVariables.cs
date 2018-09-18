@@ -6,6 +6,7 @@ using HutongGames.PlayMaker;
 using MSCTranslateChs.Script.Module.Base;
 using MSCTranslateChs.Script.Module;
 using System.Reflection;
+using MSCLoader;
 
 namespace MSCTranslateChs.Script
 {
@@ -71,6 +72,30 @@ namespace MSCTranslateChs.Script
         public GameObject gameObjectEngine;
 
         public List<BaseModule> executeModuleList;
+
+        public Keybind keyBindShowWelcomeWindows = new Keybind("keyBindShowWelcomeWindows", "欢迎界面-> 显示欢迎界面窗口", KeyCode.W, KeyCode.LeftAlt);
+        public Keybind keyBindHideWelcomeWindows = new Keybind("keyBindHideWelcomeWindows", "欢迎界面-> 隐藏欢迎界面窗口", KeyCode.W, KeyCode.RightAlt);
+
+        public Keybind keyBindTargetTeleportToPlayer = new Keybind("keyBindTargetTeleportToPlayer", "远程传送-> (部分快捷键)将动态目标(如:摩托车,拖拉机等)传送到玩家", KeyCode.LeftAlt);
+        public Keybind keyBindStaticTargetTeleportToPlayer = new Keybind("keyBindStaticTargetTeleportToPlayer", "远程传送-> (部分快捷键)将玩家传送到静态目标(如:家,商店,修车店等)", KeyCode.RightControl);
+        public Keybind keyBindPlayerTeleportToTarget = new Keybind("keyBindPlayerTeleportToTarget", "远程传送-> (部分快捷键)将玩家传送到动态目标(如:摩托车,拖拉机等)", KeyCode.RightAlt);
+
+        public Keybind keyBindGameOverTextToTxt = new Keybind("keyBindGameOverTextToTxt", "文本翻译-> 在GameOver报纸显示原因界面按下快捷键写入所有英文原因", KeyCode.G, KeyCode.LeftAlt);
+
+        public Keybind keyBindAddGameObjectToItemList = new Keybind("keyBindAddGameObjectToItemList", "物品传送-> 拾取物品", KeyCode.E);
+        public Keybind keyBindRemoveGameObjectFormItemList = new Keybind("keyBindRemoveGameObjectFormItemList", "物品传送-> 取出物品", KeyCode.R);
+        public Keybind keyBindShowItemListUI = new Keybind("keyBindShowItemListUI", "物品传送-> 显示物品栏", KeyCode.Tab);
+
+        public Keybind keyBindShowDevelopWindows = new Keybind("keyBindShowDevelopWindows", "开发模式-> 显示开发模式窗口", KeyCode.T, KeyCode.LeftAlt );
+        public Keybind keyBindHideDevelopWindows = new Keybind("keyBindHideDevelopWindows", "开发模式-> 隐藏开发模式窗口", KeyCode.T, KeyCode.RightAlt);
+        public Keybind keyBindReadAllTxt = new Keybind("keyBindReadAllTxt", "开发模式-> 重新读取所有TXT文件", KeyCode.R, KeyCode.LeftControl);
+        public Keybind keyBindWriteGameObjectToTxt = new Keybind("keyBindWriteGameObjectToTxt", "开发模式-> 写入Systems下的内容到TXT", KeyCode.W, KeyCode.LeftControl);
+        public Keybind keyBindWriteFVToTxt = new Keybind("keyBindWriteFVToTxt", "开发模式-> 写入所有全局变量到TXT", KeyCode.F, KeyCode.LeftControl);
+
+        public Keybind keyBindShowOtherBolt = new Keybind("keyBindShowOtherBolt", "螺栓提示-> 显示其他螺栓", KeyCode.LeftAlt);
+
+
+
 
         public List<string> checkWhiteList = new List<string>()
         {

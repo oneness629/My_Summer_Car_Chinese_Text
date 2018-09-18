@@ -80,7 +80,7 @@ namespace MSCTranslateChs.Script.Module
                 string view = targetDynamicPosition[key].Split('|')[1];
                 string targetName = targetDynamicPosition[key].Split('|')[0];
                 view = "(左Alt+" + keyIndex + ")" + view;
-                if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.Alpha0 + keyIndex))
+                if (GlobalVariables.GetGlobalVariables().keyBindTargetTeleportToPlayer.IsDown() && Input.GetKey(KeyCode.Alpha0 + keyIndex))
                 {
                     TeleportTo(targetName, GlobalVariables.GetGlobalVariables().gameObjectPalyer);
                 }
@@ -93,7 +93,7 @@ namespace MSCTranslateChs.Script.Module
                 string view = targetStaticPosition[key].Split('|')[1];
                 string targetName = targetStaticPosition[key].Split('|')[0];
                 view = "(右Ctrl+" + keyIndex + ")" + view;
-                if (Input.GetKey(KeyCode.RightControl) && Input.GetKey(KeyCode.Alpha0 + keyIndex))
+                if (GlobalVariables.GetGlobalVariables().keyBindStaticTargetTeleportToPlayer.IsDown() && Input.GetKey(KeyCode.Alpha0 + keyIndex))
                 {
                     TeleportTo(GlobalVariables.GetGlobalVariables().gameObjectPalyer, targetName);
                 }
@@ -106,7 +106,7 @@ namespace MSCTranslateChs.Script.Module
                 string view = targetDynamicPosition[key].Split('|')[1];
                 string targetName = targetDynamicPosition[key].Split('|')[0];
                 view = "(右ALT+" + keyIndex + ")" + view;
-                if (Input.GetKey(KeyCode.RightAlt) && Input.GetKey(KeyCode.Alpha0 + keyIndex))
+                if (GlobalVariables.GetGlobalVariables().keyBindPlayerTeleportToTarget.IsDown() && Input.GetKey(KeyCode.Alpha0 + keyIndex))
                 {
                     TeleportTo(GlobalVariables.GetGlobalVariables().gameObjectPalyer, targetName);
                 }

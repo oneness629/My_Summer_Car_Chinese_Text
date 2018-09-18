@@ -28,24 +28,24 @@ namespace MSCTranslateChs.Script.Module
 
         public override void Update()
         {
-            if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.T))
+            if (GlobalVariables.GetGlobalVariables().keyBindShowDevelopWindows.IsDown())
             {
                 GlobalVariables.GetGlobalVariables().developWindows.IsEnable = true;
             }
-            if (Input.GetKey(KeyCode.RightAlt) && Input.GetKey(KeyCode.T))
+            if (GlobalVariables.GetGlobalVariables().keyBindHideDevelopWindows.IsDown())
             {
                 GlobalVariables.GetGlobalVariables().developWindows.IsEnable = false;
             }
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.R))
+            if (GlobalVariables.GetGlobalVariables().keyBindReadAllTxt.IsDown())
             {
                 GlobalVariables.GetGlobalVariables().mscTranslate.translateText.ReadTranslateTextDict();
             }
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.W))
+            if (GlobalVariables.GetGlobalVariables().keyBindWriteGameObjectToTxt.IsDown())
             {
                 WriteGameObject("Systems");
                 logger.LOG("写入所有Systems路径下的GameObject到txt");
             }
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.F))
+            if (GlobalVariables.GetGlobalVariables().keyBindWriteFVToTxt.IsDown())
             {
                 string[] text = { FsmVariablesUtil.GetAllFsmVariablesAndVaule() };
                 File.WriteAllLines(Path.Combine(ModLoader.GetModAssetsFolder(GlobalVariables.GetGlobalVariables().mscTranslateChs), "_FsmVariables.txt"), text);

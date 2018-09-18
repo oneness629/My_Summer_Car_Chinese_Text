@@ -220,7 +220,7 @@ namespace MSCTranslateChs.Script.Module
             for (int i = 0; i < gameObjectSystemsDeathGameOverScreenPaper.transform.childCount; i++)
             {
                 GameObject childGameObject = gameObjectSystemsDeathGameOverScreenPaper.transform.GetChild(i).gameObject;
-                if (childGameObject != null && (childGameObject.activeSelf || Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.G)))
+                if (childGameObject != null && (childGameObject.activeSelf || GlobalVariables.GetGlobalVariables().keyBindGameOverTextToTxt.IsDown()))
                 {
                     GameObject textEnGameObject = GameObjectUtil.GetChildGameObject(childGameObject, "TextEN");
                     if (textEnGameObject != null)
